@@ -1,0 +1,18 @@
+---
+description: Hand off trading work to the project subagents in order
+alwaysApply: true
+---
+
+# Trading workflow
+
+For a trading design, analysis, backtest, sizing, or risk question, delegate with the Task tool. Set `subagent_type` to the agent name. Each subagent starts fresh, so put the user request and every prior finding in its prompt. Run the steps in order. A later step waits for the earlier result.
+
+- Crypto or DeFi analysis: `crypto-defi-analyst`, then `risk-manager`.
+- US equity or index options: `derivatives-analyst`, then `options-strategist`, then `risk-manager`. Add `volatility-trader` when the idea is skew, term structure, implied versus realized vol, or an event. A repeating options rule also runs `quant-researcher`, `algo-strategist`, and `backtesting-engineer` before `risk-manager`.
+- Designing a strategy: `quant-researcher`, then `algo-strategist`, then `backtesting-engineer`, then `risk-manager`. If the asset is crypto or DeFi, start with `crypto-defi-analyst`. If it is options, use the options chain above instead.
+- How to get the trade on: add `execution-specialist` after the risk check.
+- The user asks to deploy or go live: add `regulatory-compliance` last. A failed risk or compliance check stops the workflow.
+
+Do not place live orders. Do not invent prices, implied vols, on-chain figures, or backtest results. Read the matching skill under `.cursor/skills/` before the step that needs it.
+
+If a named subagent is unavailable, read `.cursor/agents/<name>.md` and do that step in this chat.
