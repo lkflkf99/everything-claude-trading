@@ -1,0 +1,314 @@
+{
+  "books": {
+    "A": {
+      "label": "unverified maker 1.5bp / taker 4.0bp",
+      "concat_oos": {
+        "trades": 29,
+        "wins": 8,
+        "win_rate": 0.27586206896551724,
+        "mean_net_bps": -23.93918585914182,
+        "t_stat": -1.9640055578335327,
+        "mean_hold_hours": 2.1724137931034484,
+        "net_pnl": -439.75846272246685,
+        "gross_pnl": -325.4901161637785,
+        "fees": 114.26834655868836,
+        "book": "A",
+        "halted": false,
+        "open_at_end": false,
+        "max_drawdown": -0.09940721617479065,
+        "sharpe": {
+          "net_sharpe_annualized": -1.1169940471106536,
+          "bar_n": 24854,
+          "reason": null
+        },
+        "final_equity_if_flat": 4560.241537277533
+      },
+      "windows": [
+        {
+          "oos": [
+            "2024-01-01",
+            "2024-07-01"
+          ],
+          "oos_trades": 5,
+          "oos_mean_net_bps": -23.75298849488434,
+          "oos_t": -0.6474411724843401,
+          "oos_hold_h": 0.8,
+          "oos_sharpe": -0.3079390504068706,
+          "oos_dd": -0.016383222704090872,
+          "oos_halted": false,
+          "is_sharpe": -0.5626898267319709,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2024-07-01",
+            "2025-01-01"
+          ],
+          "oos_trades": 4,
+          "oos_mean_net_bps": 24.05813062056462,
+          "oos_t": 0.5778615932282988,
+          "oos_hold_h": 3.5,
+          "oos_sharpe": 0.2537813435522234,
+          "oos_dd": -0.01878673212183335,
+          "oos_halted": false,
+          "is_sharpe": -0.42465177011581695,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2025-01-01",
+            "2025-07-01"
+          ],
+          "oos_trades": 11,
+          "oos_mean_net_bps": -5.708537494481309,
+          "oos_t": -0.3062073076072209,
+          "oos_hold_h": 1.8181818181818181,
+          "oos_sharpe": -0.8401679667313825,
+          "oos_dd": -0.047907689886138916,
+          "oos_halted": false,
+          "is_sharpe": 0.27184840440951097,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2025-07-01",
+            "2026-01-01"
+          ],
+          "oos_trades": 2,
+          "oos_mean_net_bps": -66.35471614408101,
+          "oos_t": -6.406185236642807,
+          "oos_hold_h": 5.5,
+          "oos_sharpe": -2.0252026896652278,
+          "oos_dd": -0.017063474777683663,
+          "oos_halted": false,
+          "is_sharpe": -0.136981840617501,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2026-01-01",
+            "2026-07-01"
+          ],
+          "oos_trades": 6,
+          "oos_mean_net_bps": -70.28149566632986,
+          "oos_t": -5.950103634924605,
+          "oos_hold_h": 2.1666666666666665,
+          "oos_sharpe": -3.4802233854888094,
+          "oos_dd": -0.048416552561842185,
+          "oos_halted": false,
+          "is_sharpe": -0.5383698412034664,
+          "wfe": null
+        }
+      ],
+      "wfe_mean_defined": null
+    },
+    "B1": {
+      "label": "Hyperliquid base taker 4.5bp both legs",
+      "concat_oos": {
+        "trades": 29,
+        "wins": 8,
+        "win_rate": 0.27586206896551724,
+        "mean_net_bps": -27.440318089733527,
+        "t_stat": -2.251223883360625,
+        "mean_hold_hours": 2.1724137931034484,
+        "net_pnl": -507.3287609504407,
+        "gross_pnl": -321.73850608034826,
+        "fees": 185.59025487009242,
+        "book": "B1",
+        "halted": false,
+        "open_at_end": false,
+        "max_drawdown": -0.10894609387797594,
+        "sharpe": {
+          "net_sharpe_annualized": -1.2828605469345167,
+          "bar_n": 24854,
+          "reason": null
+        },
+        "final_equity_if_flat": 4492.67123904956
+      },
+      "windows": [
+        {
+          "oos": [
+            "2024-01-01",
+            "2024-07-01"
+          ],
+          "oos_trades": 5,
+          "oos_mean_net_bps": -27.252812955538207,
+          "oos_t": -0.7428253826292708,
+          "oos_hold_h": 0.8,
+          "oos_sharpe": -0.498357897547055,
+          "oos_dd": -0.017301751828839418,
+          "oos_halted": false,
+          "is_sharpe": -0.7668919161937449,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2024-07-01",
+            "2025-01-01"
+          ],
+          "oos_trades": 4,
+          "oos_mean_net_bps": 20.55949812247401,
+          "oos_t": 0.49382849997344486,
+          "oos_hold_h": 3.5,
+          "oos_sharpe": 0.13681483672301015,
+          "oos_dd": -0.019174219567834605,
+          "oos_halted": false,
+          "is_sharpe": -0.6510300519225152,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2025-01-01",
+            "2025-07-01"
+          ],
+          "oos_trades": 11,
+          "oos_mean_net_bps": -9.210429864231616,
+          "oos_t": -0.4940539344729803,
+          "oos_hold_h": 1.8181818181818181,
+          "oos_sharpe": -1.1300777374934114,
+          "oos_dd": -0.05139760809896099,
+          "oos_halted": false,
+          "is_sharpe": 0.05539099119049603,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2025-07-01",
+            "2026-01-01"
+          ],
+          "oos_trades": 2,
+          "oos_mean_net_bps": -69.85775766328054,
+          "oos_t": -6.744047684775091,
+          "oos_hold_h": 5.5,
+          "oos_sharpe": -2.1046291667111547,
+          "oos_dd": -0.017507283947671537,
+          "oos_halted": false,
+          "is_sharpe": -0.36212204782533947,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2026-01-01",
+            "2026-07-01"
+          ],
+          "oos_trades": 6,
+          "oos_mean_net_bps": -73.7839514745066,
+          "oos_t": -6.246187872615911,
+          "oos_hold_h": 2.1666666666666665,
+          "oos_sharpe": -3.523096145698298,
+          "oos_dd": -0.05110841105340147,
+          "oos_halted": false,
+          "is_sharpe": -0.7221127521289156,
+          "wfe": null
+        }
+      ],
+      "wfe_mean_defined": null
+    },
+    "B2": {
+      "label": "maker 2.0bp / taker 5.0bp, stop slip 2bp",
+      "concat_oos": {
+        "trades": 29,
+        "wins": 8,
+        "win_rate": 0.27586206896551724,
+        "mean_net_bps": -26.893486574828202,
+        "t_stat": -2.1775423863610777,
+        "mean_hold_hours": 2.1724137931034484,
+        "net_pnl": -497.0485401403125,
+        "gross_pnl": -352.43913827571225,
+        "fees": 144.60940186460027,
+        "book": "B2",
+        "halted": false,
+        "open_at_end": false,
+        "max_drawdown": -0.10830493163406474,
+        "sharpe": {
+          "net_sharpe_annualized": -1.2361740826687975,
+          "bar_n": 24854,
+          "reason": null
+        },
+        "final_equity_if_flat": 4502.951459859688
+      },
+      "windows": [
+        {
+          "oos": [
+            "2024-01-01",
+            "2024-07-01"
+          ],
+          "oos_trades": 5,
+          "oos_mean_net_bps": -26.452335462795702,
+          "oos_t": -0.7118516717436277,
+          "oos_hold_h": 0.8,
+          "oos_sharpe": -0.43700870383072327,
+          "oos_dd": -0.017297773305218422,
+          "oos_halted": false,
+          "is_sharpe": -0.7072415572959312,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2024-07-01",
+            "2025-01-01"
+          ],
+          "oos_trades": 4,
+          "oos_mean_net_bps": 21.565563905433745,
+          "oos_t": 0.5109972652473381,
+          "oos_hold_h": 3.5,
+          "oos_sharpe": 0.16031602069495338,
+          "oos_dd": -0.019358685142074727,
+          "oos_halted": false,
+          "is_sharpe": -0.5855057629372308,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2025-01-01",
+            "2025-07-01"
+          ],
+          "oos_trades": 11,
+          "oos_mean_net_bps": -8.489670692924278,
+          "oos_t": -0.4481211706990918,
+          "oos_hold_h": 1.8181818181818181,
+          "oos_sharpe": -1.0581427526984017,
+          "oos_dd": -0.05147222865555434,
+          "oos_halted": false,
+          "is_sharpe": 0.11337802506140164,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2025-07-01",
+            "2026-01-01"
+          ],
+          "oos_trades": 2,
+          "oos_mean_net_bps": -69.87397134231563,
+          "oos_t": -6.743927051149975,
+          "oos_hold_h": 5.5,
+          "oos_sharpe": -2.0487199554206654,
+          "oos_dd": -0.017875965009551242,
+          "oos_halted": false,
+          "is_sharpe": -0.30303810727555824,
+          "wfe": null
+        },
+        {
+          "oos": [
+            "2026-01-01",
+            "2026-07-01"
+          ],
+          "oos_trades": 6,
+          "oos_mean_net_bps": -73.79690365824119,
+          "oos_t": -6.245044181619302,
+          "oos_hold_h": 2.1666666666666665,
+          "oos_sharpe": -3.491900063557368,
+          "oos_dd": -0.051116055523755644,
+          "oos_halted": false,
+          "is_sharpe": -0.6729650858543955,
+          "wfe": null
+        }
+      ],
+      "wfe_mean_defined": null
+    }
+  },
+  "data": {
+    "bars_1h": 42376,
+    "bars_4h": 10594
+  }
+}
