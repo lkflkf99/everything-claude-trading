@@ -1,399 +1,399 @@
-# Strategy Evaluation Framework
+# 策略评估框架（Strategy Evaluation Framework）
 
-## When to Activate
-- Conducting comprehensive evaluation of a trading strategy before deployment
-- Adjusting Sharpe ratios for autocorrelation, non-normality, and multiple testing
-- Assessing parameter stability and regime robustness
-- Estimating strategy capacity and transaction cost sensitivity
-- Making go/no-go decisions on strategy deployment
+## 何时启用
+- 在部署之前，对一项交易策略做全面评估
+- 针对自相关（autocorrelation）、非正态性（non-normality）与多重检验（multiple testing），调整夏普比率（Sharpe）
+- 评估参数稳定性（parameter stability）与市场状态稳健性（regime robustness）
+- 估计策略容量（capacity），以及交易成本（transaction cost）敏感性
+- 就策略能否部署，做出放行/否决（go/no-go）决策
 
-## Core Concepts
+## 核心概念
 
-### Strategy Evaluation Checklist
+### 策略评估检查清单
 
-**Five Pillars of Strategy Evaluation:**
+**策略评估的五大支柱：**
 ```
-1. Statistical Significance — Is the edge real or noise?
-2. Robustness — Does it survive regime changes, parameter perturbation, and alternative data?
-3. Capacity — How much capital can the strategy absorb before degrading?
-4. Implementation — Can it be executed at realistic costs?
-5. Risk Profile — Are the drawdowns and tail risks acceptable?
+1. 统计显著性（statistical significance）——优势（edge）是真实的，还是噪声（noise）？
+2. 稳健性（robustness）——它能否经受市场状态切换、参数扰动（parameter perturbation）以及另类数据（alternative data）的检验？
+3. 容量——在绩效开始下滑之前，策略能够吸收多少资金？
+4. 实施（implementation）——能否以现实成本执行？
+5. 风险特征（risk profile）——回撤（drawdown）与尾部风险（tail risk）是否可以接受？
 ```
 
-### Sharpe Ratio Adjustments
+### 夏普比率调整
 
-**Adjustment for Autocorrelation:**
+**自相关调整：**
 ```
-Many strategies have autocorrelated returns (momentum strategies: positive,
-mean reversion: negative). Standard Sharpe assumes IID returns.
+许多策略的收益都有自相关（动量（momentum）策略为正，
+均值回归（mean reversion）为负）。标准夏普比率假设收益独立同分布（IID）。
 
-Adjusted annualization:
+调整后的年化（annualization）：
 SR_adjusted = SR_daily * sqrt(252 / (1 + 2*sum(rho_k for k=1..n)))
 
-Where rho_k is the autocorrelation at lag k
+其中 rho_k 是滞后（lag）k 期的自相关系数
 
-Positive autocorrelation (momentum): SR is OVERSTATED
-- If lag-1 autocorrelation = 0.1:
+正自相关（动量）：SR 被高估
+- 若滞后 1 期的自相关 = 0.1：
   SR_adjusted ≈ SR_standard * sqrt(252/(1+2*0.1+2*0.05+...)) ≈ SR * 0.85
-  15% overstatement from ignoring autocorrelation
+  忽略自相关会带来 15% 的高估
 
-Negative autocorrelation (mean reversion): SR is UNDERSTATED
-- If lag-1 autocorrelation = -0.1:
+负自相关（均值回归）：SR 被低估
+- 若滞后 1 期的自相关 = -0.1：
   SR_adjusted ≈ SR_standard * sqrt(252/(1-0.2-0.1+...)) ≈ SR * 1.10
-  Mean reversion strategies are slightly better than they appear
+  均值回归策略的实际表现，略好于它表面上看起来的水平
 
-Always compute ACF of strategy returns and apply this correction.
+始终计算策略收益的自相关函数（autocorrelation function, ACF），并施加这一修正。
 ```
 
-**Adjustment for Non-Normality:**
+**非正态性调整：**
 ```
-Sharpe ratio assumes normally distributed returns.
-Real trading returns have:
-- Negative skewness (fat left tail, common in equity strategies)
-- Excess kurtosis (fatter tails than normal in both directions)
+夏普比率假设收益服从正态分布（normal distribution）。
+真实的交易收益具有：
+- 负偏度（skewness）（左尾肥厚，这在股票策略（equity strategy）中很常见）
+- 超额峰度（excess kurtosis）（左右两侧的尾部都比正态分布更厚）
 
-Adjusted Sharpe (Lo, 2002):
+调整后的夏普（Lo, 2002）：
 SR_adjusted = SR * [1 - (skewness/6)*SR + ((kurtosis-3)/24)*SR^2]^(-1/2)
 
-Example:
-SR = 1.5, skewness = -1.0, kurtosis = 6 (excess = 3)
-Adjustment factor ≈ 0.88
+示例：
+SR = 1.5，偏度 = -1.0，峰度（kurtosis） = 6（超额 = 3）
+调整因子 ≈ 0.88
 SR_adjusted = 1.5 * 0.88 = 1.32
 
-Strategies that appear to have high Sharpe but negative skew
-(selling options, carry trades) are less attractive after adjustment.
+那些看上去夏普很高、但偏度为负的策略
+（卖出期权、套息交易（carry trade）），在调整之后吸引力会下降。
 ```
 
-**Adjustment for Multiple Testing:**
+**多重检验调整：**
 ```
-See overfitting-prevention skill for full treatment.
+完整处理见 overfitting-prevention 技能。
 
-Quick reference:
-If N strategies tested, minimum Sharpe for significance:
+速查：
+若检验过的策略数量为 N，达到显著性所需的最低夏普为：
 N=1:   0.40
 N=10:  0.70
 N=50:  0.95
 N=100: 1.10
 
-Apply Deflated Sharpe Ratio (DSR) for formal testing.
+正式检验时，使用紧缩夏普比率（Deflated Sharpe Ratio, DSR）。
 ```
 
-### Parameter Stability
+### 参数稳定性
 
-**Assessment Methods:**
+**评估方法：**
 
-1. **Walk-Forward Stability:**
+1. **滚动前进稳定性（Walk-Forward Stability）：**
 ```
-Record optimal parameters in each walk-forward window
-Calculate coefficient of variation (CV) for each parameter
-CV < 0.15: stable (good)
-CV 0.15-0.30: moderately stable (acceptable)
-CV > 0.30: unstable (concerning)
-```
-
-2. **Parameter Heatmap:**
-```
-For strategies with 2 parameters:
-- Create a grid of parameter combinations
-- Color by performance metric (Sharpe, return)
-- Robust strategy: broad warm region (plateau)
-- Overfit strategy: narrow hot spot (peak)
+记录每一个滚动前进（walk-forward）窗口中的最优参数
+逐个参数计算变异系数（coefficient of variation, CV）
+CV < 0.15：稳定（良好）
+CV 0.15-0.30：中等稳定（可接受）
+CV > 0.30：不稳定（值得警惕）
 ```
 
-3. **Performance Degradation Test:**
+2. **参数热力图（Parameter Heatmap）：**
 ```
-Perturb each parameter by ±10%, ±20%
-If performance drops >30% with ±20% perturbation: fragile
-If performance drops <15% with ±20% perturbation: robust
-```
-
-### Regime Robustness
-
-**Regime Classification:**
-```
-Define regimes by:
-1. Trend regime: trending (ADX>25) vs ranging (ADX<20)
-2. Volatility regime: low vol (VIX<15), medium (15-25), high (>25)
-3. Correlation regime: normal correlation vs correlation breakdown
-4. Macro regime: expansion, slowdown, recession, recovery
-
-Evaluate strategy in each regime independently:
-- Sharpe ratio per regime
-- Max drawdown per regime
-- Hit rate per regime
-
-Red flag: strategy performs well in only one regime
-(e.g., only works in bull markets -> not a strategy, just beta exposure)
+对于有 2 个参数的策略：
+- 建立参数组合的网格
+- 按绩效指标（performance metric）着色（夏普、收益（return））
+- 稳健的策略：一片宽阔的暖色区域（平台区（plateau））
+- 过拟合（overfit）的策略：一处狭窄的热点（peak）
 ```
 
-**Regime-Conditional Analysis:**
+3. **绩效衰减测试（Performance Degradation Test）：**
 ```
-Regime         | Sharpe | Max DD | % of Time | Contribution to P&L
-Bull/Low Vol   | 1.8    | 5%     | 35%       | 45%
-Bull/High Vol  | 0.9    | 12%    | 15%       | 15%
-Bear/Low Vol   | 0.3    | 8%     | 20%       | 5%
-Bear/High Vol  | -0.2   | 22%    | 15%       | -10%
-Sideways       | 0.6    | 10%    | 15%       | 10%
-
-Assessment: Strategy is primarily a bull market strategy.
-45% of P&L from 35% of time (bull/low vol). Negative in bear/high vol.
-If deployed, needs bear market hedge or position reduction trigger.
+对每个参数做 ±10%、±20% 的扰动
+若 ±20% 的扰动使绩效下降超过 30%：脆弱（fragile）
+若 ±20% 的扰动使绩效下降不足 15%：稳健
 ```
 
-### Capacity Estimation
+### 市场状态稳健性
 
-**Definition:** Maximum capital the strategy can manage before transaction costs, market impact, and liquidity constraints erode performance.
-
-**Estimation Framework:**
+**市场状态分类：**
 ```
-Capacity factors:
-1. Average daily volume of traded instruments
-2. Strategy turnover (annual turnover = trades per year * average position)
-3. Market impact model
-4. Target impact threshold (e.g., max 10% of daily volume)
+按以下方式划分市场状态：
+1. 趋势状态：趋势（ADX>25）相对震荡（ADX<20）
+2. 波动率（volatility）状态：低波动（VIX<15）、中等（15-25）、高波动（>25）
+3. 相关性（correlation）状态：相关性正常，相对相关性崩溃（correlation breakdown）
+4. 宏观状态：扩张、放缓、衰退、复苏
 
-Simple capacity estimate:
+在每一个市场状态中单独评估策略：
+- 每个状态的夏普比率
+- 每个状态的最大回撤
+- 每个状态的命中率（hit rate）
+
+危险信号（red flag）：策略只在一个市场状态中表现良好
+（例如只在牛市（bull market）里有效 -> 这并不是一项策略，只是贝塔敞口（beta exposure））
+```
+
+**市场状态条件分析：**
+```
+市场状态       | 夏普   | 最大回撤 | 时间占比 | 对损益（P&L）的贡献
+牛市/低波动    | 1.8    | 5%     | 35%       | 45%
+牛市/高波动    | 0.9    | 12%    | 15%       | 15%
+熊市/低波动    | 0.3    | 8%     | 20%       | 5%
+熊市/高波动    | -0.2   | 22%    | 15%       | -10%
+横盘           | 0.6    | 10%    | 15%       | 10%
+
+评估：该策略主要是一项牛市策略。
+45% 的损益来自 35% 的时间（牛市/低波动）。在熊市/高波动中为负。
+若要部署，需要熊市对冲（hedge），或者减仓触发条件（position reduction trigger）。
+```
+
+### 容量估计
+
+**定义：** 在交易成本、市场冲击（market impact）与流动性约束（liquidity constraint）开始侵蚀绩效之前，策略能够管理的最大资金。
+
+**估计框架：**
+```
+容量因素：
+1. 所交易工具的日均成交量（average daily volume）
+2. 策略换手率（turnover）（年换手率 = 每年交易次数 * 平均仓位）
+3. 市场冲击模型
+4. 目标冲击阈值（例如，最多占日成交量的 10%）
+
+简单的容量估计：
 Capacity = ADV * max_participation_rate / daily_turnover
 
-Where:
-- ADV = average daily dollar volume of traded instrument
-- max_participation_rate = 1-5% (higher for liquid markets)
-- daily_turnover = strategy's daily trading volume as % of AUM
+其中：
+- ADV = 所交易工具的日均美元成交量
+- max_participation_rate = 1-5%（流动性越好的市场，这一比率可以越高）
+- daily_turnover = 策略的日交易量占管理规模（AUM）的百分比
 
-Example:
-- Trading SPY: ADV = $30B
-- Participation rate: 1%
-- Daily turnover: 20% of AUM
+示例：
+- 交易 SPY：ADV = $30B
+- 参与率（participation rate）：1%
+- 日换手率：占管理规模的 20%
 - Capacity = $30B * 0.01 / 0.20 = $1.5B
 
-For less liquid instruments:
-- Small cap stocks: capacity might be $10-50M
-- Crypto altcoins: capacity might be $1-5M
-- FX G10: capacity effectively unlimited for most strategies
+对于流动性较差的工具：
+- 小盘股（small cap）：容量可能在 $10-50M
+- 加密山寨币（crypto altcoin）：容量可能在 $1-5M
+- 外汇（FX）G10：对大多数策略来说，容量实际上没有上限
 ```
 
-**Market Impact Models:**
+**市场冲击模型：**
 ```
-Square root impact model:
+平方根冲击模型（square root impact model）：
 Impact (bps) = sigma * sqrt(V_trade / V_daily) * C
 
-Where:
-sigma = daily volatility (bps)
-V_trade = trade volume
-V_daily = average daily volume
-C = constant (~1 for equities)
+其中：
+sigma = 日波动率（基点（bps））
+V_trade = 成交量
+V_daily = 日均成交量
+C = 常数（股票大约为 ~1）
 
-Example: sigma=100bps, V_trade=1M shares, V_daily=10M shares
-Impact = 100 * sqrt(0.1) * 1 = 31.6 bps one-way
-Round-trip impact: ~63 bps
+示例：sigma=100bps，V_trade=1M 股，V_daily=10M 股
+Impact = 100 * sqrt(0.1) * 1 = 31.6 bps 单边（one-way）
+往返（round-trip）冲击：~63 bps
 
-For 200% annual turnover (daily turnover ≈ 0.8%):
-Annual impact cost: 63 bps * 200% / 100 = 126 bps
-If gross Sharpe = 1.5 and vol = 15%: gross return = 22.5%
-Net of impact: 22.5% - 1.26% = 21.24%
-Impact is manageable at this AUM level.
+在年换手率为 200% 时（日换手率 ≈ 0.8%）：
+年度冲击成本：63 bps * 200% / 100 = 126 bps
+若毛夏普（gross Sharpe） = 1.5，且波动率 = 15%：毛收益（gross return） = 22.5%
+扣除冲击后的净值（net）：22.5% - 1.26% = 21.24%
+在这一管理规模上，冲击是可以承受的。
 ```
 
-### Transaction Cost Sensitivity
+### 交易成本敏感性
 
-**Cost Components:**
+**成本构成：**
 ```
-Total round-trip cost = commission + spread + market impact + slippage
+总往返成本 = 佣金（commission） + 价差（spread） + 市场冲击 + 滑点（slippage）
 
-Commission: mostly negligible now ($0 for retail, $0.002-0.005/share institutional)
-Spread: bid-ask spread, varies by instrument
-  - SPY: ~$0.01 (~0.002%)
-  - Small caps: $0.05-0.50 (0.1-1.0%)
-  - Crypto (BTC): ~0.01% on major venues
-  - Crypto (altcoins): 0.1-1.0%
-Market impact: from square root model above
-Slippage: execution price vs decision price (latency-dependent)
-```
-
-**Sensitivity Analysis:**
-```
-Run backtest at multiple cost assumptions:
-Cost scenario | Sharpe | CAGR  | Assessment
-Zero cost     | 1.80   | 25%   | Theoretical upper bound (meaningless)
-Low (5 bps)   | 1.55   | 21%   | Best case realistic
-Medium (10bps)| 1.30   | 18%   | Base case
-High (20 bps) | 0.85   | 12%   | Conservative / stress case
-Very high(50) | 0.15   | 3%    | Capacity-constrained scenario
-
-Critical cost threshold: the cost level where Sharpe drops below 0.5
-If critical threshold < 15 bps: strategy is cost-sensitive, needs low-cost execution
-If critical threshold > 50 bps: strategy is cost-robust
+佣金：现在大多可以忽略（零售（retail）为 $0，机构（institutional）为每股 $0.002-0.005）
+价差：买卖价差（bid-ask spread），随工具不同而变化
+  - SPY：约 $0.01（约 0.002%）
+  - 小盘股：$0.05-0.50（0.1-1.0%）
+  - 加密货币（BTC）：主流交易场所约 0.01%
+  - 加密货币（山寨币）：0.1-1.0%
+市场冲击：来自上面的平方根模型
+滑点：成交价相对决策价的差额（取决于延迟（latency））
 ```
 
-## Methodology
-
-### Comprehensive Evaluation Process
-
-**Phase 1: Statistical Validation**
-1. Calculate raw performance metrics (Sharpe, drawdown, etc.)
-2. Adjust Sharpe for autocorrelation and non-normality
-3. Apply DSR for multiple testing correction
-4. Run walk-forward analysis and calculate WFE
-5. Run CPCV and assess path distribution
-6. Determine statistical significance
-
-**Phase 2: Robustness Testing**
-1. Parameter stability across walk-forward windows
-2. Parameter sensitivity (perturbation analysis)
-3. Regime-conditional performance breakdown
-4. Alternative asset/universe testing
-5. Alternative time period testing
-6. Monte Carlo simulation for confidence intervals
-
-**Phase 3: Practical Assessment**
-1. Capacity estimation
-2. Transaction cost sensitivity
-3. Execution feasibility (latency, infrastructure requirements)
-4. Operational risk assessment
-5. Regulatory and compliance review
-6. Correlation with existing portfolio strategies
-
-**Phase 4: Go/No-Go Decision**
+**敏感性分析：**
 ```
-Deploy (full allocation) when ALL of:
-- Adjusted Sharpe > 0.8
-- DSR significant at p < 0.05
+在多档成本假设下运行回测（backtest）：
+成本情景     | 夏普   | 复合年增长率（CAGR） | 评估
+零成本       | 1.80   | 25%   | 理论上限（没有意义）
+低（5 bps）  | 1.55   | 21%   | 现实条件下的最好情形
+中（10bps）  | 1.30   | 18%   | 基准情形（base case）
+高（20 bps） | 0.85   | 12%   | 保守 / 压力情形（stress case）
+极高（50）   | 0.15   | 3%    | 容量受限情形
+
+临界成本阈值（critical cost threshold）：夏普跌到 0.5 以下时的成本水平
+若临界阈值 < 15 bps：策略对成本敏感（cost-sensitive），需要低成本的执行
+若临界阈值 > 50 bps：策略对成本稳健（cost-robust）
+```
+
+## 方法论
+
+### 综合评估流程
+
+**阶段 1：统计验证（Statistical Validation）**
+1. 计算原始绩效指标（夏普、回撤等）
+2. 针对自相关与非正态性调整夏普
+3. 用 DSR 做多重检验修正
+4. 做滚动前进分析，并计算滚动前进效率（walk-forward efficiency, WFE）
+5. 运行组合净化交叉验证（Combinatorial Purged Cross-Validation, CPCV），并评估路径（path）的分布
+6. 判定统计显著性
+
+**阶段 2：稳健性测试（Robustness Testing）**
+1. 各个滚动前进窗口之间的参数稳定性
+2. 参数敏感性（parameter sensitivity）（扰动分析）
+3. 按市场状态分解绩效
+4. 换一套资产或投资域（universe）再做测试
+5. 换一段时期再做测试
+6. 用蒙特卡洛（Monte Carlo）模拟给出置信区间（confidence interval）
+
+**阶段 3：实务评估（Practical Assessment）**
+1. 容量估计
+2. 交易成本敏感性
+3. 执行可行性（execution feasibility）（延迟、基础设施（infrastructure）要求）
+4. 操作风险（operational risk）评估
+5. 监管（regulatory）与合规（compliance）复核
+6. 与组合中已有策略的相关性
+
+**阶段 4：放行/否决决策**
+```
+当下列条件全部成立时，按全额配置（full allocation）部署：
+- 调整后夏普 > 0.8
+- DSR 在 p < 0.05 下显著
 - WFE > 0.6
-- CPCV: >80% paths profitable
-- Robust across 2+ regimes
-- Capacity > 2x planned allocation
-- Net-of-cost Sharpe > 0.5
-- Economic rationale documented
+- CPCV：超过 80% 的路径盈利
+- 在 2 个以上的市场状态中都稳健
+- 容量 > 计划配置的 2 倍
+- 扣除成本后的夏普（net-of-cost Sharpe） > 0.5
+- 经济逻辑（economic rationale）已经写下来
 
-Paper trade when:
-- Adjusted Sharpe > 0.5
-- Some robustness concerns
-- Limited out-of-sample history
-- Capacity may be constrained
+在下列情况下做模拟交易（paper trade）：
+- 调整后夏普 > 0.5
+- 稳健性方面还有一些疑虑
+- 样本外（out-of-sample）历史有限
+- 容量可能会受到约束
 
-Reject when:
-- Adjusted Sharpe < 0.5 or DSR not significant
+在下列情况下否决：
+- 调整后夏普 < 0.5，或者 DSR 不显著
 - WFE < 0.4
-- Only works in one regime
-- Transaction costs erode most of the edge
-- No clear economic rationale
+- 只在一个市场状态中有效
+- 交易成本侵蚀了大部分优势
+- 没有清楚的经济逻辑
 ```
 
-### Correlation with Existing Strategies
+### 与已有策略的相关性
 ```
-Before adding a new strategy to a portfolio:
-1. Calculate correlation of returns with each existing strategy
-2. Calculate correlation during stress periods (may differ from average)
-3. Assess marginal Sharpe contribution:
+在把一项新策略加入组合之前：
+1. 计算它的收益与每一项已有策略收益之间的相关性
+2. 计算压力时期的相关性（它可能不同于平均相关性）
+3. 评估边际夏普贡献（marginal Sharpe contribution）：
    Marginal SR = (SR_new - rho * SR_existing) / sqrt(1 - rho^2)
-   If marginal SR < 0.3: strategy does not add enough diversification
-4. Run portfolio optimization including new strategy
-5. Check if new strategy displaces existing strategies or adds new capacity
+   若边际 SR < 0.3：这项策略没有带来足够的分散化（diversification）
+4. 把新策略纳进去，重新做组合优化（portfolio optimization）
+5. 检查新策略是挤占了已有策略，还是增加了新的容量
 ```
 
-## Examples
+## 示例
 
-### Example 1: Full Evaluation Report
+### 示例 1：完整评估报告
 ```
-Strategy: Mean reversion on S&P 500 sector ETFs
-Backtest: Jan 2010 - Dec 2024 (15 years, daily)
+策略：标普 500 行业 ETF 上的均值回归
+回测：2010 年 1 月 - 2024 年 12 月（15 年，日频）
 
-Raw metrics:
-- CAGR: 14.2%, Vol: 10.5%, Sharpe: 1.35
-- Max DD: 11.3%, Calmar: 1.26
-- Win rate: 54%, Avg Win/Loss: 1.3x
+原始指标：
+- 复合年增长率：14.2%，波动率：10.5%，夏普：1.35
+- 最大回撤：11.3%，卡玛比率（Calmar）：1.26
+- 胜率（win rate）：54%，平均盈利/亏损：1.3x
 
-Adjustments:
-- Autocorrelation (lag-1 = -0.08): adjusted SR = 1.42 (slight boost, mean reversion)
-- Non-normality (skew=-0.5, kurt=4.2): adjusted SR = 1.28
-- Multiple testing (15 variants tested): DSR significant at p=0.03
+调整：
+- 自相关（滞后 1 期 = -0.08）：调整后 SR = 1.42（小幅上调，因为是均值回归）
+- 非正态性（偏度=-0.5，峰度=4.2）：调整后 SR = 1.28
+- 多重检验（检验了 15 个变体）：DSR 在 p=0.03 下显著
 
-Walk-forward (4Y IS, 1Y OOS, rolling):
-- Average OOS Sharpe: 0.88
-- WFE: 0.65 (acceptable)
-- All 11 OOS windows positive
+滚动前进（样本内（in-sample, IS）4 年，样本外 1 年，滚动）：
+- 平均样本外夏普：0.88
+- WFE：0.65（可接受）
+- 全部 11 个样本外窗口都为正
 
-Parameter stability:
-- Lookback: CV=0.12 (stable)
-- Threshold: CV=0.18 (moderately stable)
+参数稳定性：
+- 回看窗口（lookback）：CV=0.12（稳定）
+- 阈值（threshold）：CV=0.18（中等稳定）
 
-Regime analysis:
-- Bull markets: SR=1.1 (good)
-- Bear markets: SR=0.6 (acceptable, not negative)
-- High vol: SR=1.4 (excellent — mean reversion thrives)
-- Low vol: SR=0.7 (lower but still positive)
+市场状态分析：
+- 牛市：SR=1.1（良好）
+- 熊市：SR=0.6（可接受，而且不是负数）
+- 高波动：SR=1.4（优秀——均值回归在这里表现得很强）
+- 低波动：SR=0.7（更低，但仍然为正）
 
-Capacity: ~$500M (sector ETFs are liquid)
-Cost sensitivity: Sharpe at 20bps cost = 1.05 (robust)
+容量：约 $500M（行业 ETF 流动性好）
+成本敏感性：成本为 20bps 时，夏普 = 1.05（稳健）
 
-Decision: DEPLOY at 75% target allocation. Paper trade for 3 months
-to verify live execution matches backtest assumptions.
-```
-
-### Example 2: Rejected Strategy
-```
-Strategy: Earnings momentum on small caps
-Backtest: Jan 2015 - Dec 2024 (10 years, monthly)
-
-Raw metrics:
-- CAGR: 22%, Vol: 18%, Sharpe: 1.22
-- Max DD: 28%
-
-Red flags identified:
-- 45 parameter combinations tested -> DSR requires SR > 1.05
-- SR of 1.22 passes marginally, but:
-- Walk-forward WFE: 0.32 (poor — significant OOS degradation)
-- CPCV: 14/28 paths profitable (50% — coin flip)
-- Regime analysis: SR=2.1 in bull markets, SR=-0.3 in bear markets
-  -> Strategy is leveraged beta exposure, not alpha
-- Cost sensitivity: at 30bps (realistic for small caps), Sharpe = 0.55
-
-Decision: REJECT
-Rationale: Poor WFE, regime-dependent performance (only works in bull),
-and CPCV shows 50% chance of loss. The "edge" is market exposure
-disguised as alpha by favorable backtest period.
+决策：按目标配置（target allocation）的 75% 部署（DEPLOY）。先做 3 个月模拟交易，
+用来核对实盘执行（live execution）是否与回测假设一致。
 ```
 
-### Example 3: Transaction Cost Impact
+### 示例 2：被否决的策略
 ```
-Strategy: Intraday mean reversion on SPY (5-minute bars)
-Backtest period: 2020-2024
+策略：小盘股上的盈利动量（earnings momentum）
+回测：2015 年 1 月 - 2024 年 12 月（10 年，月频）
 
-Performance at different cost levels:
-Cost (bps/side) | Sharpe | Trades/Year | Annual Return
+原始指标：
+- 复合年增长率：22%，波动率：18%，夏普：1.22
+- 最大回撤：28%
+
+已经识别出的危险信号：
+- 检验了 45 组参数组合 -> DSR 要求 SR > 1.05
+- 1.22 的 SR 只是勉强通过，但是：
+- 滚动前进的 WFE：0.32（差——样本外下滑很明显）
+- CPCV：14/28 条路径盈利（50%——和抛硬币一样）
+- 市场状态分析：牛市中 SR=2.1，熊市中 SR=-0.3
+  -> 这项策略是加了杠杆的贝塔敞口，不是阿尔法（alpha）
+- 成本敏感性：在 30bps（对小盘股来说是现实成本）时，夏普 = 0.55
+
+决策：否决（REJECT）
+理由：WFE 很差，绩效取决于市场状态（只在牛市里有效），
+而且 CPCV 显示有 50% 的概率会亏损。这个“优势”是市场敞口，
+只是被一段有利的回测时期伪装成了阿尔法。
+```
+
+### 示例 3：交易成本的影响
+```
+策略：SPY 上的日内（intraday）均值回归（5 分钟 K 线）
+回测区间：2020-2024
+
+不同成本水平上的绩效：
+成本（bps/单边） | 夏普   | 每年交易次数 | 年化收益
 0               | 3.20   | 12,000      | 35%
 1               | 2.45   | 12,000      | 28%
 2               | 1.70   | 12,000      | 21%
 3               | 0.95   | 12,000      | 14%
 5               | -0.55  | 12,000      | -1%
 
-Analysis:
-- Strategy is extremely cost-sensitive
-- Each 1 bps increase in round-trip cost reduces Sharpe by ~0.75
-- Break-even cost: ~4.2 bps round-trip
-- Realistic cost for institutional: 2-3 bps (SPY is very liquid)
-- Realistic cost for retail: 5-10 bps (wider spreads, worse execution)
+分析：
+- 这项策略对成本极度敏感
+- 往返成本每增加 1 bps，夏普大约下降 0.75
+- 盈亏平衡（break-even）成本：往返约 4.2 bps
+- 机构的现实成本：2-3 bps（SPY 的流动性非常好）
+- 零售的现实成本：5-10 bps（价差更宽，执行也更差）
 
-Recommendation:
-- Viable for institutional traders with direct market access (Sharpe ~1.7)
-- NOT viable for retail traders (negative Sharpe at realistic costs)
-- Capacity: ~$50M before market impact becomes significant
-  (intraday strategies have limited capacity)
+建议：
+- 对于有直接市场接入（direct market access）的机构交易者，这项策略可行（夏普约 1.7）
+- 对于零售交易者，这项策略不可行（按现实成本计算，夏普为负）
+- 容量：约 $50M，超过这一规模之后，市场冲击就会变得显著
+  （日内策略的容量有限）
 ```
 
-## Quality Gate
+## 质量关卡（Quality Gate）
 
-Before deploying a strategy, verify:
+在部署一项策略之前，逐项核实：
 
-- [ ] Sharpe ratio adjusted for autocorrelation and non-normality
-- [ ] Deflated Sharpe Ratio is significant after accounting for ALL strategies tested
-- [ ] Walk-forward efficiency ratio (WFE) exceeds 0.6
-- [ ] CPCV shows >80% of paths are profitable
-- [ ] Parameter stability verified — CV < 0.20 for all key parameters
-- [ ] Regime robustness tested — positive performance in at least 3/4 regimes
-- [ ] Capacity estimated and exceeds planned allocation by 2x+
-- [ ] Transaction cost sensitivity analyzed — net Sharpe > 0.5 at realistic costs
-- [ ] Monte Carlo confidence intervals calculated — 90th percentile drawdown acceptable
-- [ ] Economic rationale documented — strategy exploits an identifiable and persistent inefficiency
-- [ ] Correlation with existing strategies assessed — adds diversification benefit
-- [ ] Implementation plan documented — infrastructure, data, execution, monitoring requirements
+- [ ] 夏普比率已经针对自相关与非正态性做过调整
+- [ ] 把全部检验过的策略都计入之后，紧缩夏普比率仍然显著
+- [ ] 滚动前进效率比（WFE）高于 0.6
+- [ ] CPCV 显示超过 80% 的路径是盈利的
+- [ ] 参数稳定性已经核实——所有关键参数的 CV < 0.20
+- [ ] 市场状态稳健性已经测试——至少在 3/4 的市场状态中绩效为正
+- [ ] 容量已经估计，并且比计划配置高出 2 倍以上
+- [ ] 交易成本敏感性已经分析——在现实成本下，净值夏普 > 0.5
+- [ ] 蒙特卡洛置信区间已经算出——第 90 百分位（percentile）的回撤可以接受
+- [ ] 经济逻辑已经写下来——策略利用的是一种可以识别、而且会持续存在的无效率（inefficiency）
+- [ ] 与已有策略的相关性已经评估——能够带来分散化上的好处
+- [ ] 实施方案已经写下来——基础设施、数据、执行、监控这些要求都包括在内

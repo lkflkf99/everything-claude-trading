@@ -1,199 +1,199 @@
-# Volatility Surface Construction and Analysis
+# 波动率曲面（volatility surface）构建与分析
 
-> Implied vol surface, smile/skew, SVI parameterization, SABR model, sticky strike vs sticky delta, surface dynamics, and arbitrage constraints.
+> 隐含波动率曲面（implied volatility surface）、微笑（smile）/偏斜（skew）、SVI 参数化、SABR 模型、粘性行权价（sticky strike）与粘性 delta（sticky delta）、曲面动态（surface dynamics），以及套利约束（arbitrage constraints）。
 
-## When to Activate
+## 何时启用
 
-- User constructing or calibrating an implied volatility surface
-- Analyzing volatility smile, skew, or term structure patterns
-- Choosing between SVI, SABR, or other surface models
-- Understanding sticky strike vs sticky delta dynamics for hedging
-- Checking a vol surface for arbitrage violations (butterfly, calendar spread)
-- Interpolating or extrapolating implied volatilities for unlisted strikes/expiries
+- 用户正在构建或校准隐含波动率曲面
+- 分析波动率微笑、偏斜或期限结构（term structure）的形态
+- 在 SVI、SABR 或其他曲面模型之间进行选择
+- 理解粘性行权价与粘性 delta 的动态，以便用于对冲（hedging）
+- 检查波动率曲面是否存在套利违规（蝶式（butterfly）、日历价差（calendar spread））
+- 为未挂牌的行权价（strikes）或到期日（expiries）对隐含波动率做插值（interpolation）或外推（extrapolation）
 
-## Core Concepts
+## 核心概念
 
-### Implied Volatility Surface
+### 隐含波动率曲面
 
-The implied volatility surface maps sigma_IV(K, T) for all strikes K and expiries T:
+隐含波动率曲面将全部行权价 K 与到期期限 T 映射为 sigma_IV(K, T)：
 
-- **Smile**: IV is higher for OTM puts and OTM calls relative to ATM — typical in FX, short-dated equity index
-- **Skew**: IV decreases monotonically from low strikes to high strikes — dominant pattern for equity indices
-- **Term structure**: IV varies by maturity — often upward-sloping (contango), can invert in stress
-- **Skew steepens in stress**: when markets sell off, the put skew becomes more pronounced
-- **Term structure inverts in stress**: short-dated vol spikes above long-dated vol
+- **微笑**：相对于平值（at-the-money, ATM），虚值看跌期权（out-of-the-money puts, OTM puts）与虚值看涨期权（OTM calls）的隐含波动率（implied volatility, IV）更高——典型见于外汇（FX）与短期限股指
+- **偏斜**：隐含波动率从低行权价到高行权价单调下降——股指的主导形态
+- **期限结构**：隐含波动率随期限变化——通常向上倾斜（升水（contango）），在压力时期可以倒挂
+- **压力下偏斜变陡**：市场抛售时，看跌偏斜变得更加显著
+- **压力下期限结构倒挂**：短期限波动率飙升至长期限波动率之上
 
-### Why the Smile/Skew Exists
+### 微笑/偏斜为何存在
 
-1. **Fat tails**: real returns have excess kurtosis — OTM options are worth more than BSM predicts
-2. **Negative skewness**: equity returns are left-skewed — OTM puts are particularly valuable
-3. **Supply/demand**: institutional demand for downside protection (puts) drives up put IV
-4. **Leverage effect**: when stock drops, firm leverage increases, increasing volatility
-5. **Jump risk**: crash risk is not captured by BSM; OTM puts compensate holders for jump risk
-6. **Stochastic volatility**: spot-vol correlation (negative for equities) generates skew
+1. **肥尾（fat tails）**：真实收益具有超额峰度（excess kurtosis）——虚值期权的价值高于 BSM 的预测
+2. **负偏度（negative skewness）**：权益收益呈左偏——虚值看跌期权尤其有价值
+3. **供需（supply/demand）**：机构对下行保护（看跌期权）的需求推高看跌期权的隐含波动率
+4. **杠杆效应（leverage effect）**：股价下跌时，公司杠杆上升，波动率随之升高
+5. **跳跃风险（jump risk）**：崩盘风险未被 BSM 捕捉；虚值看跌期权补偿持有人所承担的跳跃风险
+6. **随机波动率（stochastic volatility）**：现货-波动率相关性（spot-vol correlation）（权益市场为负）会产生偏斜
 
-### Surface Coordinates
+### 曲面坐标
 
-**Strike-based**: sigma(K, T) — intuitive but scale-dependent
-**Moneyness**: sigma(K/S, T) or sigma(K/F, T) where F = forward price — scale-independent
-**Delta-based**: sigma(delta, T) — common in FX markets (25-delta put, ATM, 25-delta call)
-**Log-moneyness**: sigma(ln(K/F), T) — symmetric, used in SVI parameterization
-**Standardized moneyness**: x = ln(K/F) / (sigma_ATM * sqrt(T)) — normalizes across maturities
+**基于行权价（strike-based）**：sigma(K, T) — 直观，但依赖于尺度（scale-dependent）
+**价值状态（moneyness）**：sigma(K/S, T) 或 sigma(K/F, T)，其中 F = 远期价格（forward price）— 与尺度无关（scale-independent）
+**基于 delta（delta-based）**：sigma(delta, T) — 外汇市场常用（25-delta 看跌、平值、25-delta 看涨）
+**对数价值状态（log-moneyness）**：sigma(ln(K/F), T) — 对称，用于 SVI 参数化
+**标准化价值状态（standardized moneyness）**：x = ln(K/F) / (sigma_ATM * sqrt(T)) — 跨期限做归一化
 
-## Methodology
+## 方法论
 
-### SVI (Stochastic Volatility Inspired) Parameterization
+### SVI（Stochastic Volatility Inspired）参数化
 
-Gatheral's SVI parameterizes total implied variance w(k) = sigma^2 * T as a function of log-moneyness k = ln(K/F):
+Gatheral 的 SVI 将总隐含方差（total implied variance）w(k) = sigma^2 * T 参数化为对数价值状态 k = ln(K/F) 的函数：
 
 w(k) = a + b * (rho * (k - m) + sqrt((k - m)^2 + sigma^2))
 
-Parameters:
-- a: overall variance level
-- b: slope of the wings (controls how fast variance increases for OTM options)
-- rho: rotation/skew (-1 to 1; negative for equity skew)
-- m: translation (shifts the smile horizontally)
-- sigma: smoothness of the ATM region (controls curvature at the vertex)
+参数：
+- a：整体方差水平
+- b：翼部（wings）斜率（控制虚值期权的方差上升有多快）
+- rho：旋转（rotation）/偏斜（-1 到 1；权益偏斜为负）
+- m：平移（translation）（使微笑沿水平方向移动）
+- sigma：平值区域的平滑程度（控制顶点（vertex）处的曲率（curvature））
 
-Properties:
-- Linear in the wings: w(k) -> a + b*(rho +/- 1)*(k - m) as k -> +/- infinity
-- Minimum variance at k = m - rho*sigma/sqrt(1-rho^2)
-- 5 parameters per expiry slice — parsimonious but flexible
+性质：
+- 翼部呈线性：当 k -> +/- infinity 时，w(k) -> a + b*(rho +/- 1)*(k - m)
+- 最小方差位于 k = m - rho*sigma/sqrt(1-rho^2)
+- 每个到期切片（expiry slice）5 个参数——简约（parsimonious）但灵活
 
-**SSVI (Surface SVI)**
-- Extends SVI across the entire surface with fewer parameters
-- Parameterizes theta(T) (ATM total variance) and phi(theta) (wing shape)
-- Guarantees calendar spread arbitrage-free by construction
+**SSVI（Surface SVI）**
+- 以更少的参数将 SVI 扩展到整张曲面
+- 参数化 theta(T)（平值总方差（ATM total variance））与 phi(theta)（翼部形状）
+- 由构造保证日历价差无套利
 - w(k, T) = theta/2 * (1 + rho*phi*k + sqrt((phi*k + rho)^2 + (1-rho^2)))
 
-### SABR Model
+### SABR 模型
 
-The SABR (Stochastic Alpha Beta Rho) model is standard for interest rate and FX options:
+SABR（Stochastic Alpha Beta Rho）模型是利率期权与外汇期权的标准模型：
 
 dF = sigma * F^beta * dW_1
 d(sigma) = alpha * sigma * dW_2
 corr(dW_1, dW_2) = rho
 
-Parameters:
-- alpha (vol of vol): controls the curvature of the smile — higher alpha = more convex smile
-- beta (CEV exponent): controls the backbone (how ATM vol moves with forward) — 0 = normal, 1 = lognormal
-- rho (spot-vol correlation): controls skew — negative rho = downward skew
-- sigma_0 (initial vol): ATM vol level
+参数：
+- alpha（波动率的波动率（vol of vol））：控制微笑的曲率——alpha 越高，微笑越凸（convex）
+- beta（CEV 指数）：控制主干（backbone）（平值波动率如何随远期变动）——0 = 正态（normal），1 = 对数正态（lognormal）
+- rho（现货-波动率相关性）：控制偏斜——rho 为负 = 向下偏斜
+- sigma_0（初始波动率）：平值波动率水平
 
-**Hagan's Approximation** for implied vol:
+**Hagan 近似（Hagan's approximation）**给出的隐含波动率：
 sigma_B(K) = alpha / (F*K)^((1-beta)/2) * {z/x(z)} * [1 + corrections * T]
 
-where z = (alpha/sigma_0) * (FK)^((1-beta)/2) * ln(F/K) and x(z) involves rho.
+其中 z = (alpha/sigma_0) * (FK)^((1-beta)/2) * ln(F/K)，且 x(z) 涉及 rho。
 
-Calibration:
-1. Fix beta (often 0, 0.5, or 1 based on market convention or backbone analysis)
-2. Fit alpha, rho, sigma_0 to market quotes (ATM, 25-delta risk reversal, 25-delta butterfly)
-3. Minimize sum of squared differences between model and market IVs
+校准：
+1. 固定 beta（通常取 0、0.5 或 1，依据市场惯例或主干分析）
+2. 将 alpha、rho、sigma_0 拟合到市场报价（平值、25-delta 风险逆转（risk reversal）、25-delta 蝶式）
+3. 最小化模型隐含波动率与市场隐含波动率之差的平方和
 
-SABR limitations:
-- Hagan formula can produce negative densities for very low strikes
-- Extrapolation to extreme strikes requires care
-- Does not capture term structure dynamics without per-expiry calibration
+SABR 的局限性：
+- 对极低行权价，Hagan 公式可能产生负密度
+- 向极端行权价外推需要谨慎
+- 若不做逐到期校准（per-expiry calibration），则无法捕捉期限结构动态
 
-### Arbitrage Constraints on the Vol Surface
+### 波动率曲面上的套利约束
 
-**No Butterfly Arbitrage (within a single expiry)**
-- The call price must be convex in strike: d^2C/dK^2 >= 0
-- Equivalently: the risk-neutral density must be non-negative everywhere
-- In variance terms: d^2w/dk^2 > certain lower bound involving dw/dk
-- SVI with b > 0 and |rho| < 1 is typically butterfly-free
+**无蝶式套利（单个到期内）**
+- 看涨期权价格对行权价必须为凸：d^2C/dK^2 >= 0
+- 等价地：风险中性密度（risk-neutral density）必须处处非负
+- 用方差表述：d^2w/dk^2 必须高于某个涉及 dw/dk 的下界
+- 当 b > 0 且 |rho| < 1 时，SVI 通常不存在蝶式套利
 
-**No Calendar Spread Arbitrage (across expiries)**
-- Total variance w(k, T) must be non-decreasing in T for each k
-- If w(k, T_2) < w(k, T_1) for T_2 > T_1, a calendar spread arbitrage exists
-- SSVI handles this by construction; raw SVI per slice requires manual checking
+**无日历价差套利（跨到期）**
+- 对每个 k，总方差 w(k, T) 对 T 必须非递减
+- 若 T_2 > T_1 时 w(k, T_2) < w(k, T_1)，则存在日历价差套利
+- SSVI 由构造处理这一点；逐切片的原始 SVI 需要人工检查
 
-**Combined Constraints**
-- The implied vol surface must produce non-negative risk-neutral densities at all points
-- In practice: check numerically on a fine grid of strikes and expiries
-- Flag any violations and adjust parameters or add penalty terms in calibration
+**联合约束**
+- 隐含波动率曲面必须在所有点上产生非负的风险中性密度
+- 实践中：在细密的行权价与到期网格上做数值检查
+- 标记任何违规，并调整参数或在校准中加入惩罚项（penalty terms）
 
-### Sticky Strike vs Sticky Delta Dynamics
+### 粘性行权价相对粘性 delta 的动态
 
-How the vol surface moves when the underlying moves:
+标的变动时，波动率曲面如何移动：
 
-**Sticky Strike** (absolute sticky):
-- sigma(K, T) stays constant as S moves
-- The vol at strike K=100 does not change when S moves from 100 to 105
-- The ATM vol (at the new S=105) is read from the existing surface at K=105
-- Implies: ATM vol changes as spot moves along the existing smile
-- Hedging: BSM delta is correct (vol does not depend on S)
+**粘性行权价**（绝对粘性（absolute sticky））：
+- 当 S 移动时，sigma(K, T) 保持不变
+- 当 S 从 100 移动到 105 时，行权价 K=100 处的波动率并不改变
+- 新的平值波动率（位于新的 S=105）从现有曲面上的 K=105 处读取
+- 含义：平值波动率随现货沿现有微笑移动而改变
+- 对冲：BSM delta 是正确的（波动率不依赖于 S）
 
-**Sticky Delta** (relative sticky / sticky moneyness):
-- sigma(K/S, T) stays constant — the smile moves with the underlying
-- ATM vol stays the same as S moves (the smile shifts)
-- An option at K=100 with S=100 (ATM) has the same IV as K=105 when S=105
-- Implies: IV at a fixed strike changes as spot moves
-- Hedging: BSM delta needs adjustment (dVol/dS is non-zero)
-- More empirically supported for equity index options in most regimes
+**粘性 delta**（相对粘性（relative sticky）/ 粘性价值状态（sticky moneyness））：
+- sigma(K/S, T) 保持不变——微笑随标的移动
+- 当 S 移动时，平值波动率保持不变（微笑发生平移）
+- S=100 时 K=100（平值）的期权，与 S=105 时 K=105 具有相同的隐含波动率
+- 含义：固定行权价处的隐含波动率随现货移动而改变
+- 对冲：BSM delta 需要调整（dVol/dS 不为零）
+- 在大多数市场状态（regimes）下，这对股指期权有更强的经验支持
 
-**Impact on Hedging**
-- Under sticky strike: delta_hedge = BSM_delta
-- Under sticky delta: delta_hedge = BSM_delta + vega * dIV/dS
-- The adjustment dIV/dS comes from the skew slope
-- For negative skew: sticky delta delta > BSM delta for calls (further from zero)
+**对对冲的影响**
+- 在粘性行权价下：delta_hedge = BSM_delta
+- 在粘性 delta 下：delta_hedge = BSM_delta + vega * dIV/dS
+- 调整项 dIV/dS 来自偏斜的斜率
+- 对于负偏斜：看涨期权在粘性 delta 下的 delta 大于 BSM delta（离零更远）
 
-## Examples
+## 示例
 
-### SVI Calibration
+### SVI 校准
 ```
-SPX 1-month options, ATM forward = 4500
-Market implied vols:
+SPX 1 个月期权，平值远期 = 4500
+市场隐含波动率：
   K=4050 (90%): 28.5%    K=4275 (95%): 23.2%    K=4500 (100%): 19.5%
   K=4725 (105%): 17.8%   K=4950 (110%): 17.2%
 
-SVI fit (total variance w = IV^2 * T):
+SVI 拟合（总方差 w = IV^2 * T）：
   a = 0.0029, b = 0.18, rho = -0.72, m = -0.02, sigma = 0.08
 
-Fitted IVs: 28.4%, 23.3%, 19.5%, 17.9%, 17.1%
-Max error: 0.1 vol point — excellent fit.
-Negative rho captures the equity skew.
+拟合隐含波动率：28.4%, 23.3%, 19.5%, 17.9%, 17.1%
+最大误差：0.1 个波动率点（vol point） — 拟合极佳。
+负的 rho 捕捉了权益偏斜。
 ```
 
-### SABR for Swaptions
+### 用于掉期期权（swaptions）的 SABR
 ```
-5Y10Y swaption, ATM forward = 3.5%, market quotes:
-  ATM vol: 45bp (normal vol)
-  25d RR: -5bp (skew)
-  25d BF: +2bp (smile curvature)
+5Y10Y 掉期期权，平值远期 = 3.5%，市场报价：
+  平值波动率：45bp（正态波动率）
+  25d 风险逆转：-5bp（偏斜）
+  25d 蝶式：+2bp（微笑曲率）
 
-SABR calibration (beta = 0.5 fixed):
+SABR 校准（beta = 0.5 固定）：
   sigma_0 = 0.032, alpha = 0.45, rho = -0.25
 
-Model implied normal vols:
-  F-100bp: 48.2bp    F-50bp: 46.1bp    ATM: 45.0bp
+模型隐含正态波动率：
+  F-100bp: 48.2bp    F-50bp: 46.1bp    平值: 45.0bp
   F+50bp: 44.5bp     F+100bp: 44.8bp
 ```
 
-### Arbitrage Check
+### 套利检查
 ```
-Calendar spread check for SVI surfaces at 1M and 2M:
-  At k = -0.10 (10% OTM put):
+对 1M 与 2M 的 SVI 曲面做日历价差检查：
+  在 k = -0.10（10% 虚值看跌）：
     w(1M) = 0.0092, w(2M) = 0.0198
-    w(2M) > w(1M) — OK, no calendar arbitrage
+    w(2M) > w(1M) — 通过，不存在日历套利
 
-  At k = -0.30 (30% OTM put):
+  在 k = -0.30（30% 虚值看跌）：
     w(1M) = 0.0285, w(2M) = 0.0260
-    w(2M) < w(1M) — VIOLATION: calendar spread arbitrage exists
+    w(2M) < w(1M) — 违规：存在日历价差套利
 
-Fix: increase the 2M wing parameter b or use SSVI for guaranteed consistency.
+修正：提高 2M 翼部参数 b，或使用 SSVI 以保证一致性。
 ```
 
-## Quality Gate
+## 质量门槛
 
-- Calibrated surface must fit market quotes within 0.5 vol points (or within bid-ask spread)
-- No butterfly arbitrage: verify d^2C/dK^2 >= 0 on a fine strike grid (at least 100 points per slice)
-- No calendar spread arbitrage: verify total variance is non-decreasing in T at every strike
-- Risk-neutral density must be non-negative at all points — plot and visually inspect
-- SVI: verify b > 0, |rho| < 1, and sigma > 0 after calibration
-- SABR: verify Hagan formula validity range; flag if low-strike densities become negative
-- Extrapolation beyond traded strikes must be documented: wing behavior (linear in variance) and bounds
-- Sticky strike vs sticky delta assumption must be stated and consistently applied in hedging
-- Surface must be updated intraday for liquid markets; end-of-day for less liquid
-- Cross-validate against at least two independent surface construction methods
-- Mark-to-market must use the calibrated surface; do not use raw BSM with a flat vol assumption
+- 校准后的曲面必须把市场报价拟合到 0.5 个波动率点以内（或买卖价差（bid-ask spread）以内）
+- 无蝶式套利：在细密行权价网格上验证 d^2C/dK^2 >= 0（每个切片至少 100 个点）
+- 无日历价差套利：在每个行权价上验证总方差对 T 非递减
+- 风险中性密度必须在所有点上非负——绘图并目视检查
+- SVI：校准后验证 b > 0、|rho| < 1，且 sigma > 0
+- SABR：验证 Hagan 公式的有效范围；若低行权价密度变为负值则予以标记
+- 超出已交易行权价的外推必须记录在案：翼部行为（在方差上呈线性）以及边界
+- 必须声明粘性行权价与粘性 delta 假设，并在对冲中一致地加以应用
+- 流动性充裕的市场必须在日内（intraday）更新曲面；流动性较差的市场在日终（end-of-day）更新
+- 至少对照两种独立的曲面构建方法做交叉验证
+- 盯市（mark-to-market）必须使用校准后的曲面；不要在平坦波动率（flat vol）假设下使用原始 BSM

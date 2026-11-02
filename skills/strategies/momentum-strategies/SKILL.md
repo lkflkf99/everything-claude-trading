@@ -1,254 +1,254 @@
-# Momentum Strategies
+# 动量（momentum）策略
 
 name: momentum-strategies
-description: Momentum strategy design — time-series, cross-sectional, and dual momentum approaches. Use when building momentum-based systems.
+description: 动量策略设计——时间序列动量（time-series momentum）、横截面动量（cross-sectional momentum）与双重动量（dual momentum）方法。在构建基于动量的系统时使用。
 
-## When to Activate
+## 何时启用
 
-- User wants to build a momentum-based trading strategy
-- Choosing between time-series and cross-sectional momentum
-- Designing lookback periods, rebalancing frequency, or volatility scaling
-- Understanding momentum crashes and how to mitigate them
-- Combining momentum with other factors or signals
+- 用户希望构建基于动量的交易策略
+- 在时间序列动量与横截面动量之间进行选择
+- 设计回看期（lookback period）、再平衡频率（rebalancing frequency）或波动率缩放（volatility scaling）
+- 理解动量崩盘（momentum crash）及其缓释（mitigation）
+- 将动量与其他因子（factor）或信号（signal）结合起来
 
-## First Questions
+## 首先要问的问题
 
-1. Which asset class and universe (equities, futures, ETFs, FX)?
-2. Time-series momentum (absolute returns) or cross-sectional (relative ranking)?
-3. What is the target holding period (days, weeks, months)?
-4. What is the AUM / capacity requirement?
-5. Are you implementing at the individual security or portfolio/sector level?
+1. 资产类别（asset class）与投资域（universe）是什么：股票、期货、ETF，或外汇（FX）？
+2. 做时间序列动量还是横截面动量：前者基于绝对收益（absolute return），后者基于相对排名（relative ranking）？
+3. 目标持有期（holding period）是多长（日、周、月）？
+4. 资产管理规模（AUM）/ 容量（capacity）的要求是什么？
+5. 是在单一个券（individual security）层面实施，还是在组合或行业层面实施？
 
-## Core Concepts
+## 核心概念
 
-### Time-Series Momentum (Trend-Following)
+### 时间序列动量（趋势跟踪，trend-following）
 
-Time-series momentum (TSMOM) refers to the tendency of an asset's own past returns to predict its future returns. If the asset went up, buy it. If it went down, sell/short it.
+时间序列动量（TSMOM）是指一项资产自身的过去收益率对其未来收益率具有预测力。若该资产上涨，则买入；若下跌，则卖出或做空。
 
-- Moskowitz, Ooi, Pedersen (2012): documented TSMOM across 58 liquid futures, spanning equities, bonds, FX, and commodities
-- Lookback: 12-month return is the classic signal
-- Holding period: 1 month with monthly rebalancing
-- Sharpe: approximately 1.0 for diversified futures TSMOM portfolio
-- Works across nearly all asset classes and time periods
+- Moskowitz、Ooi、Pedersen（2012）：在横跨股票、债券、外汇与商品的 58 个高流动性期货上记录了 TSMOM
+- 回看期：12 个月收益率是经典信号
+- 持有期：1 个月，并按月再平衡
+- 夏普比率（Sharpe ratio）：分散化期货 TSMOM 组合约为 1.0
+- 在几乎所有资产类别与各个时期都有效
 
-### Cross-Sectional Momentum (Relative Strength)
+### 横截面动量（相对强度，relative strength）
 
-Cross-sectional momentum (XSMOM) ranks assets by past returns and goes long winners, short losers.
+横截面动量（XSMOM）按过去收益率对资产排名，做多赢家、做空输家。
 
-- Jegadeesh and Titman (1993): formation period 3-12 months, holding period 3-12 months
-- Classic: 12-1 month momentum (skip most recent month to avoid short-term reversal)
-- Applied within a universe (e.g., rank all S&P 500 stocks)
-- Long top decile, short bottom decile
-- Sharpe: approximately 0.5-0.7 for US equities (before costs)
+- Jegadeesh 与 Titman（1993）：形成期（formation period）为 3-12 个月，持有期为 3-12 个月
+- 经典信号：12-1 个月动量，跳过最近一个月，以避免短期反转（short-term reversal）
+- 在某一投资域内部应用（例如对全部 S&P 500 股票排名）
+- 做多最高十分位（decile），做空最低十分位
+- 夏普比率：美股约为 0.5-0.7（成本扣除之前）
 
-### Dual Momentum (Antonacci)
+### 双重动量（Antonacci）
 
-Combines time-series and cross-sectional momentum:
-
-```
-Step 1: Compute 12-month return for each asset in universe
-Step 2: Rank assets by 12-month return (cross-sectional)
-Step 3: For the top-ranked asset(s), check if 12-month return > T-bill rate (time-series filter)
-Step 4: If yes, invest in the top-ranked asset
-Step 5: If no, move to safe haven (bonds or cash)
-
-Advantage: Avoids holding losers AND avoids long positions in down markets
-```
-
-### The Short-Term Reversal Effect
-
-Returns over the past 1 week to 1 month tend to REVERSE, not continue. This is the short-term reversal effect and is the reason the 12-1 momentum signal skips the most recent month.
-
-- Caused by: liquidity provision, overreaction, bid-ask bounce
-- Implication: Do NOT include the most recent month in momentum lookback
-- Can be exploited as a separate strategy (mean-reversion at short horizons)
-
-## Detailed Methodology
-
-### Lookback Period Selection
-
-The lookback period determines what "momentum" you are measuring:
+把时间序列动量与横截面动量结合起来：
 
 ```
-1 month lookback:   Short-term reversal (negative autocorrelation)
-2-6 month lookback: Intermediate momentum (positive, moderate)
-7-12 month lookback: Classic momentum (strongest, most documented)
-13-60 months:       Long-term reversal (value/mean-reversion territory)
+步骤 1：计算投资域内每项资产的 12 个月收益率
+步骤 2：按 12 个月收益率对资产排名（横截面）
+步骤 3：对排名居前的资产，检查其 12 个月收益率是否高于国库券（T-bill）利率，此即时间序列过滤（time-series filter）
+步骤 4：若是，则投资于排名居前的资产
+步骤 5：若否，则转入避险资产（safe haven），即债券或现金
 
-Recommended approach:
-- Single lookback: 12-1 month (skip last month)
-- Blended lookback: Average z-scores of 3m, 6m, 12m momentum
-  Blending reduces sensitivity to any single lookback
-- Adaptive lookback: Use the lookback with highest recent IC (but overfitting risk)
+优势：既避免持有输家，也避免在下跌市场中持有多头
 ```
 
-### Momentum Signal Construction
+### 短期反转效应
+
+过去 1 周至 1 个月的收益率倾向于反转，而不会延续。这就是短期反转效应，也是 12-1 动量信号要跳过最近一个月的原因。
+
+- 成因：流动性提供（liquidity provision）、过度反应（overreaction）、买卖价差反弹（bid-ask bounce）
+- 含义：动量的回看期不得纳入最近一个月
+- 可以当作一项独立策略来利用（短周期上的均值回归（mean reversion））
+
+## 详细方法论
+
+### 回看期选择
+
+回看期决定所度量的是哪一种“动量”：
 
 ```
-Basic momentum signal:
-  MOM_i = (Price_i,t-1 / Price_i,t-12) - 1    [skip last month with t-1]
+1 个月回看：     短期反转（负的自相关（autocorrelation））
+2-6 个月回看：   中期动量（intermediate momentum），效应为正，强度中等
+7-12 个月回看：  经典动量（最强，文献中记载最多）
+13-60 个月：     长期反转（long-term reversal），处于价值（value）与均值回归的区间
 
-Risk-adjusted momentum (better Sharpe):
+推荐做法：
+- 单一回看期：12-1 个月（跳过最近一个月）
+- 混合回看期：对 3 个月、6 个月、12 个月动量的 z 分数（z-score）取平均
+  混合可以降低对任何一个回看期的敏感度
+- 自适应回看期：采用近期信息系数（IC）最高的回看期（但有过拟合（overfitting）风险）
+```
+
+### 动量信号构建
+
+```
+基本动量信号：
+  MOM_i = (Price_i,t-1 / Price_i,t-12) - 1    [以 t-1 跳过最近一个月]
+
+风险调整动量（夏普比率更高）：
   MOM_i = Return_i,12m / Volatility_i,12m
 
-Residual momentum (Blitz, Huij, Martens 2011):
-  Step 1: Regress returns on Fama-French factors
-  Step 2: Compute cumulative residual return over lookback
-  Step 3: Rank by residual momentum
-  Advantage: Captures stock-specific momentum, not factor momentum
-  Lower crash risk than standard momentum
+残差动量（residual momentum，Blitz、Huij、Martens，2011）：
+  步骤 1：把收益率对 Fama-French 因子做回归
+  步骤 2：计算回看期内的累计残差收益
+  步骤 3：按残差动量排名
+  优势：捕捉的是个股特异动量（stock-specific momentum），而非因子动量（factor momentum）
+  崩盘风险低于标准动量
 
-Sector momentum:
-  Compute momentum at sector level, then trade sector ETFs
-  Lower turnover, higher capacity, still profitable
+行业动量（sector momentum）：
+  在行业层面计算动量，然后交易行业 ETF
+  换手率（turnover）更低，容量更高，并且仍然能够盈利
 ```
 
-### Momentum Crashes
+### 动量崩盘
 
-Momentum strategies experience rare but severe crashes, typically during market reversals:
+动量策略会遭遇罕见但严重的崩盘，通常发生在市场反转期间：
 
-**Historical momentum crashes:**
-- 1932: Great Depression reversal
-- 2001: Dot-com reversal
-- 2009: March reversal (momentum lost 40%+ in 2 months)
-- 2020: COVID reversal (momentum crashed in April-May)
+**历史上的动量崩盘：**
+- 1932 年：大萧条（Great Depression）反转
+- 2001 年：互联网泡沫（dot-com）反转
+- 2009 年：3 月反转（动量在 2 个月内亏损 40% 以上）
+- 2020 年：新冠（COVID）反转（动量在 4 月至 5 月崩盘）
 
-**Mechanism:** After extended bear markets, past losers rally sharply (short squeeze, risk reversal) while past winners lag. The long-short momentum portfolio gets hit on both legs.
+**机制：** 在持续已久的熊市（bear market）之后，过去的输家会急剧上涨（轧空（short squeeze）、风险反转（risk reversal）），而过去的赢家则表现滞后。多空（long-short）动量组合的多头腿与空头腿会同时受损。
 
-**Crash characteristics:**
-- Momentum crashes follow high-volatility, high-dispersion environments
-- They are concentrated in the short leg (losers rally more than winners decline)
-- They are preceded by momentum strategy drawdowns (negative convexity)
+**崩盘特征：**
+- 动量崩盘出现在高波动率、高离散度（dispersion）的环境之后
+- 亏损集中在空头腿（输家的涨幅大于赢家的跌幅）
+- 发生之前会先出现动量策略的回撤（drawdown），并呈现负凸性（negative convexity）
 
-### Crash Mitigation Techniques
+### 崩盘缓释技术
 
 ```
-1. Volatility scaling:
+1. 波动率缩放：
    w_t = target_vol / realized_vol_t
-   Scale position size inversely to recent volatility
-   Reduces exposure precisely when crash risk is highest
-   Improves Sharpe from ~0.5 to ~0.8 for XSMOM
+   按近期波动率的倒数缩放仓位规模
+   恰好在崩盘风险最高时降低敞口（exposure）
+   把 XSMOM 的夏普比率从约 0.5 提高到约 0.8
 
-2. Dynamic momentum (conditional):
-   Reduce momentum exposure when:
-   - Market volatility > 90th percentile
-   - Momentum factor has negative recent returns (12-month factor return < 0)
-   - Value spread is extreme (momentum vs value divergence)
+2. 条件式动态动量（conditional dynamic momentum）：
+   在下列情况下降低动量敞口：
+   - 市场波动率高于第 90 百分位（percentile）
+   - 动量因子近期收益为负（12 个月因子收益 < 0）
+   - 价值价差（value spread）处于极端水平（动量与价值出现背离）
 
-3. Capped shorts:
-   Limit short leg exposure (e.g., 30% of long leg)
-   Reduces crash magnitude at cost of some expected return
+3. 空头封顶（capped shorts）：
+   限制空头腿敞口（例如设为多头腿的 30%）
+   崩盘幅度会下降，代价是损失一部分预期收益
 
-4. Residual momentum:
-   Factor-neutral momentum has much lower crash risk
-   Removes systematic market and value exposure from momentum signal
+4. 残差动量：
+   因子中性（factor-neutral）的动量，崩盘风险低得多
+   从动量信号中剔除系统性的市场敞口与价值敞口
 
-5. Diversification:
-   Run momentum across multiple asset classes
-   Equity, FX, commodity, bond momentum have low cross-correlation
+5. 分散化（diversification）：
+   在多个资产类别上同时运行动量
+   股票、外汇、商品与债券上的动量，互相关（cross-correlation）较低
 ```
 
-### Position Sizing and Portfolio Construction
+### 仓位规模（position sizing）与组合构建（portfolio construction）
 
 ```
-Cross-sectional momentum portfolio:
-  Long: top quintile (or decile) by momentum signal
-  Short: bottom quintile (or decile)
-  Weighting within quintile: equal weight or volatility-inverse weight
-  Rebalance: monthly (align with momentum signal frequency)
+横截面动量组合：
+  多头：按动量信号选取前五分位（quintile），或前十分位
+  空头：后五分位，或后十分位
+  分组内部加权：等权（equal weight），或波动率倒数加权（volatility-inverse weight）
+  再平衡：每月（与动量信号的频率保持一致）
 
-Time-series momentum portfolio:
-  For each asset i:
-    Signal: sign(12m return) or z-score(12m return)
-    Position: signal_i * (target_vol / vol_i)
-  Aggregate: sum across all assets
-  Typical: 20-50 futures contracts for CTA implementation
+时间序列动量组合：
+  对每项资产 i：
+    信号：sign(12m return) 或 z-score(12m return)
+    仓位：signal_i * (target_vol / vol_i)
+  加总：对所有资产求和
+  典型配置：商品交易顾问（CTA）实施时使用 20-50 个期货合约
 
-Sector momentum:
-  Rank 11 GICS sectors by 12-month return
-  Long top 3, short bottom 3 (or long-only top 3)
-  Equal weight or vol-adjusted weight
-  Rebalance monthly
+行业动量：
+  按 12 个月收益率，对 11 个全球行业分类标准（GICS）行业排名
+  做多前 3 名、做空后 3 名（或只做多（long-only）前 3 名）
+  等权，或按波动率调整后的权重（volatility-adjusted weight）
+  每月再平衡
 ```
 
-## Templates / Examples
+## 模板 / 示例
 
-### Momentum Strategy Backtest Report
-
-```
-Strategy: 12-1 Cross-Sectional Momentum (US Large Cap)
-Universe: S&P 500 | Rebalance: Monthly | Period: 2000-2024
-
-Portfolio Construction:
-  Long: Top quintile (100 stocks, equal weight)
-  Short: Bottom quintile (100 stocks, equal weight)
-
---- Performance ---
-Annualized Return (L/S):   8.2%
-Annualized Volatility:     16.5%
-Sharpe Ratio:              0.50
-Max Drawdown:              -52% (2009 crash)
-Calmar Ratio:              0.16
-Hit Rate (monthly):        55%
-Monthly Turnover:          35%
-
---- With Volatility Scaling ---
-Annualized Return (L/S):   9.8%
-Annualized Volatility:     12.0%
-Sharpe Ratio:              0.82
-Max Drawdown:              -28%
-Calmar Ratio:              0.35
-
---- Factor Exposures ---
-Market (beta):             0.05 (approximately neutral)
-Size (SMB):                0.12 (slight small-cap tilt)
-Value (HML):              -0.35 (anti-value, as expected)
-Quality (RMW):            -0.10
-
---- Transaction Cost Analysis ---
-Gross Sharpe:              0.82
-Round-trip cost (est):     20 bps
-Net Sharpe:                0.58
-Break-even cost:           55 bps
-```
-
-### Momentum Signal Comparison
+### 动量策略回测报告
 
 ```
-Signal                  | IC    | ICIR  | Sharpe (L/S) | Turnover | Crash Max DD
-12-1 price momentum     | 0.035 | 0.22  | 0.50         | 35%      | -52%
-Risk-adjusted momentum  | 0.038 | 0.28  | 0.65         | 32%      | -42%
-Residual momentum       | 0.032 | 0.30  | 0.72         | 28%      | -25%
-Blended (3/6/12m)       | 0.040 | 0.32  | 0.70         | 30%      | -38%
-Sector momentum         | 0.028 | 0.18  | 0.45         | 15%      | -30%
+策略：12-1 横截面动量（美国大盘股，large cap）
+投资域：S&P 500 | 再平衡：每月 | 区间：2000-2024
+
+组合构建：
+  多头：前五分位（100 只股票，等权）
+  空头：后五分位（100 只股票，等权）
+
+--- 业绩 ---
+年化收益率（多空）：       8.2%
+年化波动率：               16.5%
+夏普比率：                 0.50
+最大回撤：                 -52%（2009 年崩盘）
+卡玛比率（Calmar ratio）： 0.16
+月度胜率（hit rate）：     55%
+月度换手率：               35%
+
+--- 施加波动率缩放之后 ---
+年化收益率（多空）：       9.8%
+年化波动率：               12.0%
+夏普比率：                 0.82
+最大回撤：                 -28%
+卡玛比率：                 0.35
+
+--- 因子敞口 ---
+市场（beta）：             0.05（近似中性）
+规模（SMB）：              0.12（轻度小盘倾斜（small-cap tilt））
+价值（HML）：             -0.35（反价值（anti-value），符合预期）
+质量（RMW）：             -0.10
+
+--- 交易成本分析 ---
+毛夏普比率：               0.82
+往返成本（round-trip cost，估计）： 20 bps
+净夏普比率：               0.58
+盈亏平衡成本（break-even cost）：   55 bps
 ```
 
-### Implementation Checklist
+### 动量信号比较
 
 ```
-[ ] Universe defined with liquidity filters (ADV, market cap)
-[ ] Lookback period selected (12-1m default, or blended)
-[ ] Short-term reversal handled (skip most recent month)
-[ ] Volatility scaling applied (target vol / realized vol)
-[ ] Portfolio construction rules defined (quintile, decile, N stocks)
-[ ] Rebalancing frequency set (monthly for standard momentum)
-[ ] Transaction costs estimated and net performance computed
-[ ] Crash mitigation in place (vol scaling, capped shorts, or residual)
-[ ] Sector and factor neutralization considered
-[ ] Capacity analysis performed (check ADV vs position size)
+信号                | IC    | IC信息比率（ICIR） | 夏普比率（多空） | 换手率 | 崩盘最大回撤
+12-1 价格动量       | 0.035 | 0.22              | 0.50            | 35%    | -52%
+风险调整动量        | 0.038 | 0.28              | 0.65            | 32%    | -42%
+残差动量            | 0.032 | 0.30              | 0.72            | 28%    | -25%
+混合（3/6/12 个月） | 0.040 | 0.32              | 0.70            | 30%    | -38%
+行业动量            | 0.028 | 0.18              | 0.45            | 15%    | -30%
 ```
 
-## Quality Gate
+### 实施检查清单
 
-Before deploying a momentum strategy:
+```
+[ ] 投资域已经界定，并设有流动性过滤（日均成交量（ADV）、市值（market cap））
+[ ] 已经选定回看期（默认 12-1 个月，或使用混合回看）
+[ ] 已经处理短期反转（跳过最近一个月）
+[ ] 已经施加波动率缩放（目标波动率 / 已实现波动率）
+[ ] 已经定义组合构建规则（五分位、十分位、N 只股票）
+[ ] 已经设定再平衡频率（标准动量为每月）
+[ ] 已经估计交易成本，并计算了净业绩
+[ ] 已经落实崩盘缓释（波动率缩放、空头封顶，或残差动量）
+[ ] 已经考虑行业中性化与因子中性化（neutralization）
+[ ] 已经完成容量分析（核对 ADV 与仓位规模）
+```
 
-- [ ] Signal has positive IC and Sharpe in out-of-sample period
-- [ ] Momentum crash risk is understood and mitigated (volatility scaling at minimum)
-- [ ] Transaction costs deducted — net Sharpe remains acceptable (> 0.3)
-- [ ] Turnover is manageable for the target universe and AUM
-- [ ] Short leg is implementable (borrow availability, cost of borrow)
-- [ ] Factor exposures are understood (momentum is anti-value by construction)
-- [ ] Lookback period is robust (test 6m, 9m, 12m — results should be directionally similar)
-- [ ] Capacity is sufficient for target AUM
-- [ ] Rebalancing schedule is practical (monthly for most applications)
-- [ ] Drawdown limits and risk controls are defined
+## 质量关卡（quality gate）
+
+在部署动量策略之前：
+
+- [ ] 信号在样本外（out-of-sample）区间具有正的信息系数与正的夏普比率
+- [ ] 已经理解并缓释动量崩盘风险（至少要做波动率缩放）
+- [ ] 已经扣除交易成本——净夏普比率仍然可接受（> 0.3）
+- [ ] 换手率对目标投资域和资产管理规模而言是可控的
+- [ ] 空头腿可以实施（券源可得性（borrow availability）、借券成本（cost of borrow））
+- [ ] 已经理解因子敞口（动量在构造上即为反价值）
+- [ ] 回看期是稳健的（robust）（检验 6 个月、9 个月、12 个月——结果在方向上应当相近）
+- [ ] 容量足以覆盖目标资产管理规模
+- [ ] 再平衡日程是可执行的（对大多数应用而言为每月）
+- [ ] 已经定义回撤限额与风险控制（risk control）

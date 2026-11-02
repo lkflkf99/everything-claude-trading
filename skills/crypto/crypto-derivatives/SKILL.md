@@ -1,299 +1,299 @@
-# Crypto Derivatives
+# 加密衍生品（crypto derivatives）
 
-## When to Activate
-- Analyzing perpetual swap mechanics, funding rates, and basis trading opportunities
-- Evaluating crypto futures across venues (CME, Deribit, Binance)
-- Designing funding rate arbitrage or basis trading strategies
-- Assessing crypto options strategies and volatility trading
-- Understanding liquidation cascades and their market impact
+## 何时启用
+- 分析永续合约（perpetual swap）机制、资金费率（funding rate）与基差（basis）交易机会
+- 评估各交易场所（venue）的加密期货（crypto futures）（CME、Deribit、Binance）
+- 设计资金费率套利（funding rate arbitrage）或基差交易策略
+- 评估加密期权（crypto options）策略与波动率交易（volatility trading）
+- 理解清算连环爆仓（liquidation cascade）及其市场影响
 
-## Core Concepts
+## 核心概念
 
-### Perpetual Swaps
+### 永续合约
 
-**Mechanics:**
-- No expiry date — positions can be held indefinitely
-- Price tracks spot via funding rate mechanism
-- Funding rate: periodic payment between longs and shorts
-- Positive funding: longs pay shorts (perp > spot, bullish bias)
-- Negative funding: shorts pay longs (perp < spot, bearish bias)
-- Funding interval: typically every 8 hours (Binance, Bybit) or every 1 hour (some protocols)
+**机制：**
+- 没有到期日（expiry）— 仓位（position）可以无限期持有
+- 价格通过资金费率机制跟踪现货（spot）
+- 资金费率：多头（long）与空头（short）之间的定期支付
+- 正资金费率：多头向空头支付（永续 > 现货，看涨偏向（bullish bias））
+- 负资金费率：空头向多头支付（永续 < 现货，看跌偏向（bearish bias））
+- 资金费率结算间隔（funding interval）：通常每 8 小时（Binance、Bybit），或每 1 小时（部分协议）
 
-**Funding Rate Calculation:**
+**资金费率计算：**
 ```
 Funding rate = clamp(Interest Rate + Premium, -0.75%, +0.75%)
 
-Where:
+其中：
 - Interest rate = (Quote interest - Base interest) / Funding interval
-  Usually 0.01% per 8 hours for USDT-margined perps
+  通常为以 USDT 为保证金的永续（USDT-margined perp）每 8 小时 0.01%
 
 - Premium = (Mark Price - Index Price) / Index Price
   Mark price = mid of impact bid/ask
   Index price = weighted average of spot prices across exchanges
 
-Annualized funding = funding_rate * 3 * 365  (for 8h intervals)
-Example: 0.01% per 8h = 0.03% daily = 10.95% annualized
+Annualized funding = funding_rate * 3 * 365  （适用于 8 小时结算间隔）
+示例：每 8 小时 0.01% = 每日 0.03% = 年化 10.95%
 ```
 
-**Mark Price and Liquidation:**
-- Mark price is used for liquidation (not last traded price) to prevent manipulation
-- Initial margin: typically 1-5% (20-100x max leverage)
-- Maintenance margin: typically 0.5-2%
-- Liquidation triggers when: position_value * (1 - 1/leverage) loss reached
-- Insurance fund absorbs remaining loss if liquidation price breached during gap
+**标记价格（mark price）与清算：**
+- 清算使用标记价格，而非最新成交价（last traded price），以防止操纵
+- 初始保证金（initial margin）：通常为 1-5%（最高杠杆（leverage）20-100 倍）
+- 维持保证金（maintenance margin）：通常为 0.5-2%
+- 清算触发条件：亏损达到 position_value * (1 - 1/leverage)
+- 若跳空（gap）期间价格击穿清算价，保险基金（insurance fund）吸收剩余亏损
 
-### Crypto Futures
+### 加密期货
 
-**CME Bitcoin Futures:**
-- Regulated venue, institutional participation
-- Cash-settled, monthly expiry
-- Contract size: 5 BTC (standard), 0.1 BTC (micro)
-- Margin: ~40% initial margin requirement
-- Basis: typically 5-15% annualized premium (reflects cost of carry + demand premium)
-- Gap risk: CME closes weekends, creating Monday gaps
+**CME 比特币期货：**
+- 受监管场所，有机构参与
+- 现金结算（cash-settled），按月到期
+- 合约规模：5 BTC（标准），0.1 BTC（微型（micro））
+- 保证金：初始保证金要求约 40%
+- 基差：年化溢价通常为 5-15%（反映持有成本（cost of carry）+ 需求溢价（demand premium））
+- 跳空风险（gap risk）：CME 周末休市，从而形成周一跳空
 
-**Deribit Futures:**
-- Crypto-native venue, dominant for options
-- BTC and ETH quarterly futures
-- Inverse contracts (BTC-margined) and linear (USDC-margined)
-- Basis tends to be higher than CME (less regulated, more leverage)
+**Deribit 期货：**
+- 加密原生场所，在期权上占主导
+- BTC 与 ETH 季度期货
+- 反向合约（inverse contract）（以 BTC 为保证金）与正向合约（linear contract）（以 USDC 为保证金）
+- 基差往往高于 CME（监管更少，杠杆更高）
 
-**Basis and Term Structure:**
+**基差与期限结构（term structure）：**
 ```
 Basis = Futures price - Spot price
 Annualized basis = (Basis / Spot) * (365 / Days to expiry)
 
-Term structure shapes:
-- Contango (normal): futures > spot; cost of carry + demand premium
-- Backwardation (unusual in crypto): futures < spot; extreme bearish sentiment
-- Steep contango: strong bullish sentiment, leveraged demand
-- Inverted: near-term futures below spot; immediate selling pressure
+期限结构形态：
+- 升水（contango）（常态）：期货 > 现货；持有成本 + 需求溢价
+- 贴水（backwardation）（在加密市场中不常见）：期货 < 现货；极端看跌情绪
+- 陡峭升水：强烈看涨情绪，杠杆需求旺盛
+- 倒挂（inverted）：近月期货低于现货；即时卖压
 
-Historical context:
-- Bull markets: 15-40% annualized basis
-- Bear markets: 0-5% annualized basis, occasionally negative
-- Extreme euphoria (late 2021): 40%+ annualized basis
+历史背景：
+- 牛市：年化基差 15-40%
+- 熊市：年化基差 0-5%，偶尔为负
+- 极端亢奋（2021 年末）：年化基差 40%+
 ```
 
-### Funding Rate Arbitrage
+### 资金费率套利
 
-**Cash-and-Carry (Basis Trade):**
+**期现套利（cash-and-carry）（基差交易）：**
 ```
-Strategy: Long spot + Short perpetual
-Profit source: Collect positive funding payments
+策略：做多现货 + 做空永续
+利润来源：收取正的资金费支付
 
-Setup:
-1. Buy 1 BTC spot at $50,000
-2. Short 1 BTC perpetual at $50,000
-3. Net delta: zero (market neutral)
-4. Income: funding rate (long pays short when positive)
+建仓：
+1. 以 $50,000 买入 1 BTC 现货
+2. 以 $50,000 做空 1 BTC 永续
+3. 净 delta：零（市场中性（market neutral））
+4. 收入：资金费率（费率为正时，多头向空头支付）
 
-Expected return:
-- Average funding: 0.01% per 8 hours = 10.95% APY
-- During bull markets: 0.05-0.10% per 8h = 54-110% APY
-- During bear markets: may go negative (strategy loses money)
+预期收益：
+- 平均资金费率：每 8 小时 0.01% = 10.95% 年化收益率（APY）
+- 牛市期间：每 8 小时 0.05-0.10% = 54-110% 年化收益率
+- 熊市期间：可能转为负值（策略会亏损）
 
-Risks:
-- Negative funding periods (must weather these)
-- Liquidation of short perp during sharp rally (need sufficient margin)
-- Exchange counterparty risk
-- Basis widening (unrealized loss on mark-to-market)
-```
-
-**Cross-Exchange Funding Arbitrage:**
-```
-When: Funding rates diverge significantly across exchanges
-
-Example:
-- Binance BTC funding: +0.05% per 8h (longs pay shorts)
-- Bybit BTC funding: +0.01% per 8h
-
-Trade:
-- Long BTC perp on Bybit (pay 0.01%)
-- Short BTC perp on Binance (receive 0.05%)
-- Net funding income: 0.04% per 8h = 43.8% APY
-
-Risks:
-- Funding rates converge (temporary opportunity)
-- Margin calls on one leg during volatile moves
-- Capital fragmented across exchanges
-- Exchange-specific risk (withdrawal freeze, insolvency)
+风险：
+- 负资金费率时期（必须承受这些阶段）
+- 急涨期间空头永续遭到清算（需要充足保证金）
+- 交易所交易对手风险（counterparty risk）
+- 基差走阔（盯市（mark-to-market）出现未实现亏损）
 ```
 
-### Crypto Options
-
-**Market Structure:**
-- Deribit: ~90% of crypto options volume
-- CME: growing institutional participation
-- DeFi options: Lyra, Hegic, Dopex (smaller scale, different mechanics)
-- BTC and ETH dominate; altcoin options are illiquid
-
-**Key Differences from TradFi Options:**
-- Higher implied volatility: BTC IV typically 50-100%, ETH 60-120%
-- Volatility smile is more pronounced (fat tails are real and frequent)
-- Put skew is less dominant than equities — crypto crashes AND pumps violently
-- 24/7 trading with no overnight gap risk (but also no theta advantage from weekends)
-- Limited market makers — wider spreads, less efficient pricing
-
-**Crypto Volatility Trading:**
+**跨交易所资金费率套利：**
 ```
-IV percentile framework:
-- IV below 20th percentile: buy straddles/strangles (vol is cheap)
-- IV above 80th percentile: sell straddles/strangles (vol is expensive)
-- BTC 30-day IV historical range: 30% (extreme lows) to 150% (extreme highs)
+时机：各交易所的资金费率显著背离
 
-Term structure:
-- Normal: longer-dated options have higher IV (typical in calm markets)
-- Inverted: short-dated IV > long-dated IV (during acute stress or event risk)
-- Event-driven: IV spike around halving, ETF decisions, macro events
+示例：
+- Binance BTC 资金费率：每 8 小时 +0.05%（多头向空头支付）
+- Bybit BTC 资金费率：每 8 小时 +0.01%
 
-Skew analysis:
-- Call skew > put skew: bullish sentiment (demand for upside exposure)
-- Put skew > call skew: hedging demand (typical in equities, less consistent in crypto)
-- Monitor 25-delta risk reversal: calls - puts, positive = call skew dominance
+交易：
+- 在 Bybit 做多 BTC 永续（支付 0.01%）
+- 在 Binance 做空 BTC 永续（收取 0.05%）
+- 净资金费收入：每 8 小时 0.04% = 43.8% 年化收益率
+
+风险：
+- 资金费率收敛（机会是暂时的）
+- 剧烈波动时其中一条腿（leg）被追加保证金（margin call）
+- 资金分散在各交易所
+- 交易所特有风险（提现冻结、资不抵债）
 ```
 
-### Liquidation Cascades
+### 加密期权
 
-**Cascade Mechanics:**
+**市场结构：**
+- Deribit：约占加密期权成交量的 90%
+- CME：机构参与不断增加
+- 去中心化金融（DeFi）期权：Lyra、Hegic、Dopex（规模较小，机制不同）
+- BTC 与 ETH 占主导；山寨币（altcoin）期权流动性不足
+
+**与传统金融（TradFi）期权的关键差异：**
+- 隐含波动率（implied volatility, IV）更高：BTC 的 IV 通常为 50-100%，ETH 为 60-120%
+- 波动率微笑（volatility smile）更显著（肥尾（fat tail）真实存在且频繁出现）
+- 看跌偏斜（put skew）不如在股票中那样占主导 — 加密资产的暴跌与暴涨都十分剧烈
+- 7×24 小时交易，没有隔夜跳空风险（但周末也没有 theta 优势）
+- 做市商（market maker）有限 — 买卖价差（spread）更宽，定价效率更低
+
+**加密波动率交易：**
 ```
-1. Price moves against leveraged positions
-2. Positions hit liquidation price
-3. Exchange force-closes positions at market
-4. Forced selling pushes price further
-5. More positions hit liquidation
-6. Feedback loop accelerates price movement
+IV 分位数（percentile）框架：
+- IV 低于第 20 分位数：买入跨式（straddle）/宽跨式（strangle）（波动率便宜）
+- IV 高于第 80 分位数：卖出跨式/宽跨式（波动率昂贵）
+- BTC 30 日 IV 的历史区间：30%（极端低位）至 150%（极端高位）
 
-Liquidation data sources:
-- Coinglass: real-time liquidation data across exchanges
-- Exchange APIs: open interest changes signal liquidation events
-- On-chain: DeFi liquidations are publicly visible
+期限结构：
+- 常态：较长期限期权的 IV 更高（平静市场中的典型情形）
+- 倒挂：短期 IV > 长期 IV（急性压力或事件风险期间）
+- 事件驱动：IV 在减半（halving）、交易所交易基金（ETF）决议、宏观事件附近飙升
 
-Key metrics:
-- Open interest / market cap ratio: >5% signals crowded positioning
-- Estimated liquidation levels: cluster analysis of likely stop/liquidation prices
-- Funding rate extremes: >0.1% per 8h = over-leveraged longs
-```
-
-**Trading Around Liquidation Events:**
-```
-Signal: Large liquidation cluster identified at $45,000 (BTC)
-Open interest: $20B, estimated $3B in long liquidations between $45K-$43K
-
-If price approaches $45K:
-- Expect acceleration through liquidation zone
-- Cascading liquidations may push price to $43K briefly
-- Buy orders placed at $42,500-$43,000 (below liquidation cascade)
-- Stop below $41,000 (next major liquidation cluster)
-- Target: $46,000-$48,000 (recovery after cascade exhaustion)
-
-Risk: cascade can extend further than expected if market structure is fragile
+偏斜分析：
+- 看涨偏斜（call skew）> 看跌偏斜：看涨情绪（对上涨敞口的需求）
+- 看跌偏斜 > 看涨偏斜：对冲需求（在股票中典型，在加密市场中不那么一致）
+- 监测 25-delta 风险逆转（risk reversal）：看涨期权（call）− 看跌期权（put），正值 = 看涨偏斜占主导
 ```
 
-## Methodology
+### 清算连环爆仓
 
-### Basis Trade Execution
-1. **Monitor funding rates** across exchanges (Coinglass, exchange APIs)
-2. **Calculate expected return** — average funding over 30-day lookback, annualize
-3. **Assess margin requirements** — need 2-3x maintenance margin buffer for volatile moves
-4. **Execute delta-neutral** — match spot purchase with perp short simultaneously
-5. **Monitor continuously** — rebalance if delta drifts; add margin if needed during rallies
-6. **Exit criteria** — funding turns negative for 3+ consecutive periods, or better opportunity elsewhere
-
-### Options Strategy Selection
+**连环爆仓机制：**
 ```
-Directional + vol view -> strategy:
-- Bullish + long vol: buy calls, bull call spread
-- Bullish + short vol: sell puts, short put spread
-- Bearish + long vol: buy puts, bear put spread
-- Bearish + short vol: sell calls, short call spread
-- Neutral + long vol: straddle, strangle
-- Neutral + short vol: iron condor, iron butterfly
+1. 价格朝杠杆仓位的不利方向运动
+2. 仓位触及清算价
+3. 交易所按市价强制平仓
+4. 强制卖出进一步推动价格
+5. 更多仓位触及清算
+6. 反馈循环加速价格运动
 
-Sizing: options positions sized at 1-3% of portfolio per trade
-Expiry: 30-60 DTE for most strategies (balances theta and gamma)
+清算数据来源：
+- Coinglass：跨交易所的实时清算数据
+- 交易所 API：持仓量（open interest）变化预示清算事件
+- 链上（on-chain）：去中心化金融的清算公开可见
+
+关键指标：
+- 持仓量 / 市值（market cap）比率：>5% 表示持仓拥挤
+- 估计清算价位：对可能的止损价与清算价做聚类分析
+- 资金费率极端值：每 8 小时 >0.1% = 多头杠杆过高
 ```
 
-## Examples
-
-### Example 1: Funding Rate Arbitrage
+**围绕清算事件的交易：**
 ```
-Current state:
-- BTC spot: $50,000
-- BTC perp funding (Binance): 0.04% per 8h (bullish market)
-- Annualized: 43.8%
+信号：在 $45,000（BTC）识别出大型清算聚集区
+持仓量：$20B，估计 $45K-$43K 之间有 $3B 多头清算
 
-Execution:
-- Deposit $55,000 to exchange (10% buffer for margin)
-- Buy 1 BTC spot: $50,000
-- Short 1 BTC perp: 2x leverage (margin: $25,000)
-- Total capital deployed: $75,000
+若价格接近 $45K：
+- 预期穿过清算区时会加速
+- 连环清算可能将价格短暂打至 $43K
+- 买单挂在 $42,500-$43,000（清算连环爆仓下方）
+- 止损设于 $41,000 下方（下一个主要清算聚集区）
+- 目标：$46,000-$48,000（连环爆仓衰竭后的修复）
 
-Daily income: $50,000 * 0.04% * 3 = $60/day
-Monthly income: ~$1,800
-Return on capital: 1,800 / 75,000 = 2.4% monthly = 28.8% APY
-
-Risk management:
-- If BTC rallies 30%: short perp unrealized loss = $15,000
-  Offset by spot gain of $15,000. Need margin for perp.
-  $25,000 margin - $15,000 loss = $10,000 remaining (above maintenance)
-- Add margin alert at $58,000 BTC price
+风险：若市场结构脆弱，连环爆仓的延伸幅度可能超出预期
 ```
 
-### Example 2: Liquidation Cascade Trade
+## 方法
+
+### 基差交易执行
+1. **监测各交易所的资金费率**（Coinglass、交易所 API）
+2. **计算预期收益** — 取 30 日回看（lookback）的平均资金费率并年化
+3. **评估保证金要求** — 波动行情需要 2-3 倍维持保证金缓冲
+4. **以 delta 中性（delta-neutral）方式执行** — 现货买入与永续做空同时匹配
+5. **持续监测** — 若 delta 漂移则再平衡（rebalance）；上涨期间按需追加保证金
+6. **退出标准** — 资金费率连续 3 个及以上周期为负，或别处出现更好的机会
+
+### 期权策略选择
 ```
-Setup:
-- BTC at $48,000 after steady rally
-- Open interest at all-time high: $25B
-- Funding rate: 0.08% per 8h (extremely high)
-- Estimated long liquidation cluster: $44,000-$46,000 (~$4B)
+方向观点 + 波动率观点 -> 策略：
+- 看涨 + 做多波动率（long vol）：买入看涨期权、牛市看涨价差（bull call spread）
+- 看涨 + 做空波动率（short vol）：卖出看跌期权、空头看跌价差（short put spread）
+- 看跌 + 做多波动率：买入看跌期权、熊市看跌价差（bear put spread）
+- 看跌 + 做空波动率：卖出看涨期权、空头看涨价差（short call spread）
+- 中性 + 做多波动率：跨式、宽跨式
+- 中性 + 做空波动率：铁鹰式（iron condor）、铁蝶式（iron butterfly）
 
-Strategy: Short-term reversal trade
-- No position above $46,000 (wait for cascade)
-- Limit buy orders laddered: $45K (25%), $44K (25%), $43K (25%), $42K (25%)
-- Stop loss: $40,000 (below next cluster)
-- Take profit: scale out $47K-$50K
-
-Execution:
-- Price drops to $46K, liquidations begin cascading
-- Fills at average $43,800
-- Bounce to $48,000 within 12 hours as leverage is flushed
-- Exit at $47,500 average
-- Return: 8.4% in 12 hours
-```
-
-### Example 3: BTC Options Straddle
-```
-Event: Bitcoin halving in 2 weeks
-BTC spot: $60,000
-30-day ATM IV: 85% (elevated due to event)
-
-Sell straddle (vol too expensive):
-- Sell $60K call (14 DTE): premium $3,500
-- Sell $60K put (14 DTE): premium $3,200
-- Total premium collected: $6,700
-- Breakeven range: $53,300 - $66,700 (±11.2%)
-
-Post-event: IV likely to crush from 85% to 60%
-If BTC stays within range: capture full premium
-If BTC moves ±10%: partial loss, offset by IV crush
-
-Alternative (less risk): sell strangle at 10-delta
-- Sell $70K call + $52K put
-- Lower premium ($2,500) but wider profit range
+仓位规模：每笔交易的期权仓位为组合的 1-3%
+到期：多数策略使用 30-60 距到期天数（DTE）（在 theta 与 gamma 之间取得平衡）
 ```
 
-## Quality Gate
+## 示例
 
-Before trading crypto derivatives, verify:
+### 示例 1：资金费率套利
+```
+当前状态：
+- BTC 现货：$50,000
+- BTC 永续资金费率（Binance）：每 8 小时 0.04%（看涨市场）
+- 年化：43.8%
 
-- [ ] Exchange counterparty risk assessed — use regulated venues for large positions, diversify across exchanges
-- [ ] Margin requirements calculated with buffer — 2-3x maintenance margin minimum for volatile markets
-- [ ] Funding rate analysis uses sufficient lookback period (30+ days) — do not extrapolate from short window
-- [ ] Basis trade delta is monitored and rebalanced — drift beyond 5% requires adjustment
-- [ ] Liquidation levels are mapped — know where cascades will occur above and below current price
-- [ ] Options positions are sized conservatively — max 1-3% of portfolio per trade, defined max loss
-- [ ] IV analysis uses historical context — is current IV high or low relative to realized vol?
-- [ ] Correlation between spot and derivatives positions is verified — inverse contracts have convexity risk
-- [ ] Withdrawal capability confirmed — can you exit the exchange quickly if needed?
-- [ ] Tax implications considered — derivatives have different tax treatment in most jurisdictions
+执行：
+- 向交易所存入 $55,000（10% 保证金缓冲）
+- 买入 1 BTC 现货：$50,000
+- 做空 1 BTC 永续：2 倍杠杆（保证金：$25,000）
+- 投入资金合计：$75,000
+
+每日收入：$50,000 * 0.04% * 3 = $60/日
+每月收入：约 $1,800
+资本回报：1,800 / 75,000 = 每月 2.4% = 28.8% 年化收益率
+
+风险管理：
+- 若 BTC 上涨 30%：空头永续未实现亏损 = $15,000
+  由现货盈利 $15,000 抵消。永续端需要保证金。
+  $25,000 保证金 - $15,000 亏损 = 剩余 $10,000（高于维持保证金）
+- 在 BTC 价格 $58,000 处设置追加保证金警报
+```
+
+### 示例 2：清算连环爆仓交易
+```
+设定：
+- 稳步上涨后 BTC 位于 $48,000
+- 持仓量处于历史高位：$25B
+- 资金费率：每 8 小时 0.08%（极高）
+- 估计多头清算聚集区：$44,000-$46,000（约 $4B）
+
+策略：短线反转交易
+- $46,000 以上不持仓（等待连环爆仓）
+- 限价买单分层：$45K（25%）、$44K（25%）、$43K（25%）、$42K（25%）
+- 止损：$40,000（下一个聚集区下方）
+- 止盈：在 $47K-$50K 分批离场
+
+执行：
+- 价格跌至 $46K，清算开始连环发生
+- 平均成交价 $43,800
+- 杠杆出清后，12 小时内反弹至 $48,000
+- 平均离场价 $47,500
+- 收益：12 小时内 8.4%
+```
+
+### 示例 3：BTC 期权跨式
+```
+事件：2 周后比特币减半
+BTC 现货：$60,000
+30 日平值（ATM）IV：85%（因该事件而抬升）
+
+卖出跨式（波动率过贵）：
+- 卖出 $60K 看涨期权（14 距到期天数）：权利金（premium）$3,500
+- 卖出 $60K 看跌期权（14 距到期天数）：权利金 $3,200
+- 收取权利金合计：$6,700
+- 盈亏平衡（breakeven）区间：$53,300 - $66,700（±11.2%）
+
+事件后：IV 很可能从 85% 坍缩至 60%
+若 BTC 留在区间内：获取全部权利金
+若 BTC 波动 ±10%：部分亏损，由隐含波动率坍缩（IV crush）抵消
+
+替代方案（风险更低）：卖出 10-delta 宽跨式
+- 卖出 $70K 看涨期权 + $52K 看跌期权
+- 权利金更低（$2,500），但盈利区间更宽
+```
+
+## 质量门槛（quality gate）
+
+交易加密衍生品之前，核实：
+
+- [ ] 已评估交易所交易对手风险 — 大额头寸使用受监管场所，并在多家交易所之间分散
+- [ ] 已按缓冲计算保证金要求 — 波动市场至少为维持保证金的 2-3 倍
+- [ ] 资金费率分析使用足够长的回看期（30 天以上）— 不要从短窗口外推
+- [ ] 基差交易的 delta 已受到监测并再平衡 — 漂移超过 5% 即需调整
+- [ ] 已标绘清算价位 — 知道当前价格上方与下方何处会发生连环爆仓
+- [ ] 期权仓位规模保守 — 每笔交易最多为组合的 1-3%，且最大亏损已明确界定
+- [ ] 隐含波动率分析使用历史背景 — 当前 IV 相对已实现波动率（realized vol）是偏高还是偏低？
+- [ ] 已核实现货与衍生品仓位之间的相关性（correlation）— 反向合约具有凸性（convexity）风险
+- [ ] 已确认提现能力 — 如有需要，能否迅速退出该交易所？
+- [ ] 已考虑税务影响 — 在多数司法辖区，衍生品的税务处理不同

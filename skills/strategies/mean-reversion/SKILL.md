@@ -1,275 +1,275 @@
-# Mean Reversion
+# 均值回归（mean reversion）
 
 name: mean-reversion
-description: Mean reversion strategies — Bollinger, Z-score, Ornstein-Uhlenbeck, and statistical approaches. Use when designing mean-reversion systems.
+description: 均值回归策略——布林带（Bollinger Bands）、z 分数（z-score）、奥恩斯坦-乌伦贝克（Ornstein-Uhlenbeck）与统计方法。用于设计均值回归系统。
 
-## When to Activate
+## 何时启用
 
-- User wants to trade assets that revert to a mean or equilibrium level
-- Building pairs trading or spread trading strategies
-- Using Bollinger Bands, Z-scores, or OU models for entry/exit
-- Estimating half-life of mean reversion
-- Distinguishing between mean-reverting and trending instruments
+- 用户希望交易那些会回归均值或均衡（equilibrium）水平的资产
+- 构建配对交易（pairs trading）或价差交易（spread trading）策略
+- 使用布林带、z 分数或 OU 模型确定入场与出场
+- 估计均值回归的半衰期（half-life）
+- 区分均值回归型品种与趋势型品种
 
-## First Questions
+## 首先要问的问题
 
-1. Are you trading a single asset, a pair, or a basket/spread?
-2. What time horizon — intraday, daily, weekly?
-3. Do you have evidence of mean reversion (stationarity tests, Hurst exponent)?
-4. What defines the "mean" — historical average, moving average, model-implied fair value?
-5. What are the costs and constraints (bid-ask spread, borrowing costs for shorts)?
+1. 你交易的是单一资产、一对资产，还是一篮子（basket）/价差？
+2. 时间跨度（time horizon）是什么——日内（intraday）、日频，还是周频？
+3. 你是否有均值回归的证据（平稳性检验（stationarity test）、赫斯特指数（Hurst exponent））？
+4. “均值”如何界定——历史平均、移动平均（moving average），还是模型隐含的公允价值（fair value）？
+5. 成本与约束是什么（买卖价差（bid-ask spread）、做空的融券成本（borrowing cost））？
 
-## Core Concepts
+## 核心概念
 
-### Ornstein-Uhlenbeck (OU) Process
+### 奥恩斯坦-乌伦贝克（OU）过程
 
-The mathematical foundation for mean-reversion trading:
+均值回归交易的数学基础：
 
 ```
 dx_t = theta * (mu - x_t) * dt + sigma * dW_t
 
-x_t:   current value of the spread/price
-mu:    long-run mean (equilibrium level)
-theta: speed of mean reversion (larger = faster reversion)
-sigma: volatility of the process
-dW_t:  Wiener process (random noise)
+x_t:   价差或价格的当前值
+mu:    长期均值（均衡水平）
+theta: 均值回归速度（越大则回归越快）
+sigma: 该过程的波动率（volatility）
+dW_t:  维纳过程（Wiener process，随机噪声）
 
-Key derived quantity — half-life of mean reversion:
+关键导出量——均值回归的半衰期：
   t_half = ln(2) / theta
 
-Interpretation:
-  Half-life < 5 days: Fast reversion, suitable for intraday/daily trading
-  Half-life 5-20 days: Sweet spot for daily mean-reversion strategies
-  Half-life 20-60 days: Slower, requires patience and wider stops
-  Half-life > 60 days: Too slow for practical mean-reversion trading
+解读：
+  半衰期 < 5 天：均值回归快，适合日内或日频交易
+  半衰期 5-20 天：日频均值回归策略的适宜区间（sweet spot）
+  半衰期 20-60 天：较慢，需要耐心，并设置更宽的止损（stop）
+  半衰期 > 60 天：对于可实际执行的均值回归交易而言过慢
 ```
 
-### Hurst Exponent
+### 赫斯特指数
 
-The Hurst exponent H characterizes the memory of a time series:
-
-```
-H < 0.5:  Mean-reverting (anti-persistent)
-H = 0.5:  Random walk (no memory)
-H > 0.5:  Trending (persistent)
-
-Estimation methods:
-- Rescaled range (R/S) analysis
-- Detrended Fluctuation Analysis (DFA) — more robust
-- Variance ratio test
-
-Practical interpretation:
-  H = 0.3-0.4:  Strong mean reversion, good candidate
-  H = 0.4-0.5:  Weak mean reversion, marginal
-  H = 0.5:      Random walk, avoid mean-reversion strategies
-  H > 0.5:      Use trend-following instead
-```
-
-### Mean Reversion vs Trending Detection
-
-Before deploying a mean-reversion strategy, verify the instrument actually mean-reverts:
+赫斯特指数 H 用于刻画时间序列的记忆性：
 
 ```
-Tests to apply:
-1. ADF test on the series (reject unit root = mean-reverting)
-2. Hurst exponent (H < 0.5)
-3. Variance ratio test (ratio < 1 at relevant horizon)
-4. Half-life estimation (finite and practical)
-5. Visual inspection of autocorrelation (negative at lag 1 for returns)
+H < 0.5:  均值回归（反持续（anti-persistent））
+H = 0.5:  随机游走（random walk，无记忆）
+H > 0.5:  趋势（持续（persistent））
 
-WARNING: Individual stock prices rarely mean-revert.
-Mean reversion is found in:
-  - Spreads between cointegrated pairs
-  - Deviations from fair value models
-  - Implied vs realized volatility
-  - Cross-sectional relative valuations
-  - Interest rate spreads
+估计方法：
+- 重标极差（rescaled range, R/S）分析
+- 去趋势波动分析（Detrended Fluctuation Analysis, DFA）——更为稳健
+- 方差比检验（variance ratio test）
+
+实务解读：
+  H = 0.3-0.4:  强均值回归，良好候选
+  H = 0.4-0.5:  弱均值回归，较为勉强
+  H = 0.5:      随机游走，应避免均值回归策略
+  H > 0.5:      应改用趋势跟踪（trend-following）
 ```
 
-## Detailed Methodology
+### 均值回归与趋势识别
 
-### Half-Life Estimation
+在部署均值回归策略之前，应先验证该品种确实会发生均值回归：
 
 ```
-Method 1: AR(1) regression
+应做的检验：
+1. 对序列做增广迪基-富勒检验（ADF test）（拒绝单位根（unit root）即视为均值回归）
+2. 赫斯特指数（H < 0.5）
+3. 方差比检验（在相应期限（horizon）上比值 < 1）
+4. 半衰期估计（有限且具有实操意义）
+5. 目视检查自相关（autocorrelation）（收益率在滞后 1 期（lag 1）为负）
+
+警告：个股价格很少均值回归。
+均值回归常见于：
+  - 协整配对（cointegrated pairs）之间的价差
+  - 相对公允价值模型的偏离
+  - 隐含波动率相对已实现波动率（implied vs realized volatility）
+  - 横截面相对估值（cross-sectional relative valuation）
+  - 利率价差（interest rate spread）
+```
+
+## 详细方法论
+
+### 半衰期估计
+
+```
+方法 1：一阶自回归（AR(1)）回归
   delta_y_t = a + b * y_{t-1} + epsilon_t
   theta = -b
-  half_life = -ln(2) / ln(1 + b)   [discrete time version]
-  Or approximately: half_life = -ln(2) / b  [when |b| is small]
+  half_life = -ln(2) / ln(1 + b)   [离散时间版本]
+  或近似：half_life = -ln(2) / b  [当 |b| 较小时]
 
-  b should be negative and significant for mean reversion
+  若要认定均值回归，b 应为负且统计显著
 
-Method 2: OU parameter estimation (MLE)
-  Estimate theta, mu, sigma by maximum likelihood
+方法 2：OU 参数估计（最大似然估计（maximum likelihood estimation, MLE））
+  用最大似然估计 theta、mu、sigma
   half_life = ln(2) / theta
 
-Method 3: Variance ratio
+方法 3：方差比
   VR(k) = Var(y_t - y_{t-k}) / (k * Var(y_t - y_{t-1}))
-  VR < 1 indicates mean reversion at horizon k
-  Plot VR(k) vs k to find the horizon of maximum mean reversion
+  VR < 1 表明在期限 k 上存在均值回归
+  绘制 VR(k) 相对 k 的曲线，找出均值回归最强的期限
 ```
 
-### Z-Score Trading
+### z 分数交易
 
-The Z-score normalizes the deviation from the mean:
+z 分数把相对均值的偏离标准化：
 
 ```
 z_t = (x_t - mu_t) / sigma_t
 
-Where:
-  x_t: current value of spread or price
-  mu_t: rolling mean (window = 2 * half_life or longer)
-  sigma_t: rolling standard deviation (same window)
+其中：
+  x_t: 价差或价格的当前值
+  mu_t: 滚动均值（rolling mean）（窗口 = 2 * half_life，或更长）
+  sigma_t: 滚动标准差（rolling standard deviation）（同一窗口）
 
-Trading rules:
-  Entry long:   z_t < -entry_threshold (e.g., -2.0)
-  Entry short:  z_t > +entry_threshold (e.g., +2.0)
-  Exit:         |z_t| < exit_threshold (e.g., 0.5)
-  Stop-loss:    |z_t| > stop_threshold (e.g., 4.0) — relationship may be broken
+交易规则：
+  做多入场：   z_t < -entry_threshold（例如 -2.0）
+  做空入场：   z_t > +entry_threshold（例如 +2.0）
+  出场：       |z_t| < exit_threshold（例如 0.5）
+  止损：       |z_t| > stop_threshold（例如 4.0）——关系可能已经破裂
 
-Parameter selection:
-  Entry at 2.0 sigma: captures ~95% of excursions
-  Entry at 1.5 sigma: more trades, lower per-trade P&L
-  Exit at 0.5 sigma: partial mean reversion capture
-  Exit at 0.0 sigma: full mean reversion (longer holding period)
+参数选择：
+  在 2.0 sigma 入场：捕捉 ~95% 的偏离
+  在 1.5 sigma 入场：交易笔数更多，单笔盈亏（P&L）更低
+  在 0.5 sigma 出场：只捕捉到部分均值回归
+  在 0.0 sigma 出场：完整均值回归（持有期更长）
 ```
 
-### Bollinger Band Strategy
+### 布林带策略
 
 ```
-Upper band: MA(N) + k * std(N)
-Lower band: MA(N) - k * std(N)
-Middle:     MA(N)
+上轨：MA(N) + k * std(N)
+下轨：MA(N) - k * std(N)
+中轨：MA(N)
 
-Classic parameters: N=20, k=2
+经典参数：N=20, k=2
 
-Mean-reversion rules:
-  Buy when price touches lower band
-  Sell when price touches upper band
-  Exit at middle band
+均值回归规则：
+  价格触及下轨时买入
+  价格触及上轨时卖出
+  在中轨出场
 
-Bandwidth = (Upper - Lower) / Middle
-  Narrow bandwidth: low volatility, expect breakout (NOT mean reversion)
-  Wide bandwidth: high volatility, mean reversion more likely
+带宽（bandwidth） = (上轨 - 下轨) / 中轨
+  带宽收窄：低波动率，预期出现突破（breakout）（并非均值回归）
+  带宽扩宽：高波动率，均值回归的可能性更高
 
-%B = (Price - Lower) / (Upper - Lower)
-  %B < 0: Below lower band (oversold)
-  %B > 1: Above upper band (overbought)
+%B = (价格 - 下轨) / (上轨 - 下轨)
+  %B < 0：低于下轨，即超卖（oversold）
+  %B > 1：高于上轨，即超买（overbought）
 ```
 
-### Entry and Exit Rule Design
+### 入场与出场规则设计
 
 ```
-Entry signals (pick one or combine):
-  1. Z-score exceeds threshold (2.0 standard deviations)
-  2. Price touches Bollinger band
-  3. RSI < 30 (oversold) or RSI > 70 (overbought)
-  4. OU model probability of reversion exceeds threshold
+入场信号（择一使用，或组合使用）：
+  1. z 分数超过阈值（2.0 个标准差）
+  2. 价格触及布林带
+  3. 相对强弱指数（RSI）< 30（超卖）或 RSI > 70（超买）
+  4. OU 模型给出的均值回归概率超过阈值
 
-Exit signals:
-  1. Z-score returns to target (0 or 0.5)
-  2. Price returns to moving average
-  3. Time-based exit (close after N days regardless)
-  4. Profit target hit (fixed % or ATR-based)
+出场信号：
+  1. z 分数回到目标值（0 或 0.5）
+  2. 价格回到移动平均
+  3. 基于时间的出场（不论盈亏，N 天后平仓）
+  4. 达到盈利目标（固定 %，或基于平均真实波幅（ATR））
 
-Stop-loss rules (critical for mean reversion):
-  1. Z-score exceeds extreme level (4.0+) — regime change likely
-  2. Fixed dollar loss per trade
-  3. Spread half-life appears to be increasing (relationship weakening)
-  4. Cointegration test fails on recent data
+止损规则（对均值回归至关重要）：
+  1. z 分数超过极端水平（4.0+）——很可能发生状态切换（regime change）
+  2. 每笔交易的固定金额亏损
+  3. 价差半衰期似乎在变长（关系正在减弱）
+  4. 协整检验在近期数据上未通过
 
-Time-based exit rationale:
-  If the spread has not reverted within 2-3 half-lives, the
-  mean-reversion assumption may be invalid. Exit and reassess.
+基于时间出场的理由：
+  若价差在 2-3 个半衰期内仍未回归，
+  均值回归假设就可能不成立。此时应出场并重新评估。
 ```
 
-### Risk Management for Mean Reversion
+### 均值回归的风险管理
 
-Mean-reversion strategies have specific risk characteristics:
-
-```
-Key risks:
-1. Convergence failure: The spread diverges instead of reverting
-   - Structural break in the relationship
-   - Regime change (cointegration breaks down)
-   - Fundamental change in one of the assets
-
-2. Adding to losers: Mean reversion naturally pyramids into losing positions
-   - Cap maximum position size
-   - Use time stops (exit if no reversion in 2-3 half-lives)
-   - Hard stop-loss at extreme Z-scores
-
-3. Negative skew: Many small wins, occasional large losses
-   - Kelly criterion or fractional Kelly for sizing
-   - Diversify across many mean-reverting instruments
-   - Limit concentration in any single spread
-
-4. Liquidity risk: Wide spreads during stress precisely when you need to exit
-   - Trade liquid instruments only
-   - Size positions relative to ADV
-   - Maintain portfolio-level stop-loss
-
-Position sizing:
-  Size per trade = risk_budget / (entry_z - stop_z) / sigma
-  Or: fractional Kelly: f* = (p*b - q) / b * fraction
-  Where p = win rate, q = loss rate, b = avg win / avg loss
-```
-
-## Templates / Examples
-
-### Mean Reversion Strategy Report
+均值回归策略有其特定的风险特征：
 
 ```
-Strategy: Z-Score Mean Reversion on ETF Spread
-Spread: XLE - 0.85 * SPY (energy sector relative value)
-Period: 2015-01-01 to 2024-12-31
+主要风险：
+1. 收敛失败（convergence failure）：价差非但没有回归，反而继续发散
+   - 关系出现结构突变（structural break）
+   - 状态切换（协整关系破裂）
+   - 其中某一资产发生基本面变化
 
---- Spread Properties ---
-ADF Statistic:      -3.42 (p = 0.01) [Stationary]
-Hurst Exponent:     0.38 [Mean-reverting]
-Half-Life:          12 days
-OU Parameters:      theta=0.058, mu=2.15, sigma=1.82
+2. 向亏损加仓（adding to losers）：均值回归会自然而然地对亏损头寸做金字塔式加仓（pyramiding）
+   - 设置最大仓位上限
+   - 使用时间止损（time stop）（若 2-3 个半衰期内未回归则出场）
+   - 在极端 z 分数处设置硬止损（hard stop-loss）
 
---- Trading Rules ---
-Entry:              |Z| > 2.0
-Exit:               |Z| < 0.5
-Stop:               |Z| > 4.0 or 36 days (3x half-life)
-Position Sizing:    Risk 1% of capital per trade
+3. 负偏度（negative skew）：大量小额盈利，偶发大额亏损
+   - 用凯利准则（Kelly criterion）或分数凯利（fractional Kelly）确定仓位
+   - 在众多均值回归品种上分散配置
+   - 限制任一单一价差的集中度
 
---- Performance ---
-Number of Trades:    84 (round trips)
-Win Rate:            72%
-Average Win:         1.8%
-Average Loss:        -2.5%
-Profit Factor:       2.1
-Sharpe Ratio:        1.35
-Max Drawdown:        -8.2%
-Average Holding:     9 days
-Annual Turnover:     380%
+4. 流动性风险（liquidity risk）：压力时期买卖价差大幅走阔，而那恰恰是你需要出场的时候
+   - 只交易高流动性品种
+   - 仓位规模相对于日均成交量（average daily volume, ADV）来确定
+   - 保留组合层面的止损
 
---- Risk Metrics ---
-Skewness of P&L:    -0.6 (negative skew, as expected)
-Kurtosis:           4.2 (fat tails)
-Worst Trade:        -5.8%
-Max Consecutive Losses: 4
+仓位规模：
+  单笔规模 = risk_budget / (entry_z - stop_z) / sigma
+  或：分数凯利：f* = (p*b - q) / b * fraction
+  其中 p = 胜率（win rate），q = 亏损率（loss rate），b = 平均盈利（average win）/ 平均亏损（average loss）
 ```
 
-### Mean Reversion Screening Template
+## 模板 / 示例
+
+### 均值回归策略报告
 
 ```
-Instrument          | ADF p-val | Hurst | Half-Life | Verdict
-ETF spread A-B      | 0.01      | 0.38  | 12 days   | TRADE
-ETF spread C-D      | 0.08      | 0.45  | 28 days   | MARGINAL
-Single stock X      | 0.45      | 0.52  | N/A       | REJECT (random walk)
-FX cross EUR/GBP    | 0.03      | 0.42  | 18 days   | TRADE
-Implied-realized vol| 0.001     | 0.32  | 8 days    | TRADE
-Commodity spread    | 0.12      | 0.48  | 45 days   | REJECT (too slow)
+策略：交易所交易基金（ETF）价差上的 z 分数均值回归
+价差：XLE - 0.85 * SPY（能源板块相对价值（relative value））
+期间：2015-01-01 至 2024-12-31
+
+--- 价差属性 ---
+ADF 统计量：       -3.42 (p = 0.01) [平稳]
+赫斯特指数：       0.38 [均值回归]
+半衰期：           12 天
+OU 参数：          theta=0.058, mu=2.15, sigma=1.82
+
+--- 交易规则 ---
+入场：             |Z| > 2.0
+出场：             |Z| < 0.5
+止损：             |Z| > 4.0 或 36 天（3 倍半衰期）
+仓位规模：         每笔交易承担资本 1% 的风险
+
+--- 绩效 ---
+交易次数：         84 (往返交易（round trip）)
+胜率：             72%
+平均盈利：         1.8%
+平均亏损：         -2.5%
+盈利因子（profit factor）： 2.1
+夏普比率（Sharpe ratio）：  1.35
+最大回撤（maximum drawdown）： -8.2%
+平均持有期：       9 天
+年换手率（annual turnover）： 380%
+
+--- 风险指标 ---
+盈亏偏度：         -0.6 (负偏，符合预期)
+峰度（kurtosis）： 4.2 (肥尾（fat tails）)
+最差交易：         -5.8%
+最大连续亏损次数： 4
 ```
 
-### Parameter Sensitivity Analysis
+### 均值回归筛选模板
 
 ```
-Entry Z | Exit Z | Stop Z | Win Rate | Sharpe | Trades/Year
+品种                 | ADF p 值（p-value） | 赫斯特 | 半衰期  | 结论
+ETF 价差 A-B         | 0.01                | 0.38   | 12 天   | 交易（TRADE）
+ETF 价差 C-D         | 0.08                | 0.45   | 28 天   | 边缘（MARGINAL）
+个股 X               | 0.45                | 0.52   | N/A     | 拒绝（REJECT）（随机游走）
+外汇交叉盘（FX cross） EUR/GBP | 0.03       | 0.42   | 18 天   | 交易
+隐含-已实现波动率    | 0.001               | 0.32   | 8 天    | 交易
+商品价差             | 0.12                | 0.48   | 45 天   | 拒绝（过慢）
+```
+
+### 参数敏感性分析
+
+```
+入场 Z | 出场 Z | 止损 Z | 胜率 | 夏普 | 每年交易次数
 1.5     | 0.0    | 3.5    | 65%      | 0.95   | 18
 1.5     | 0.5    | 3.5    | 68%      | 1.05   | 18
 2.0     | 0.0    | 4.0    | 70%      | 1.20   | 10
@@ -277,20 +277,20 @@ Entry Z | Exit Z | Stop Z | Win Rate | Sharpe | Trades/Year
 2.5     | 0.0    | 4.5    | 75%      | 1.10   | 5
 2.5     | 0.5    | 4.5    | 78%      | 1.15   | 5
 
-Sweet spot: Entry 2.0, Exit 0.5 — balances trade frequency with quality
+适宜区间：入场 2.0、出场 0.5——在交易频率与质量之间取得平衡
 ```
 
-## Quality Gate
+## 质量关口（quality gate）
 
-Before deploying a mean-reversion strategy:
+部署均值回归策略之前：
 
-- [ ] Statistical evidence of mean reversion (ADF rejects unit root, Hurst < 0.5)
-- [ ] Half-life is practical for intended trading frequency (5-30 days for daily)
-- [ ] OU model parameters are stable over different estimation windows
-- [ ] Entry/exit thresholds tested for robustness (small parameter changes do not destroy performance)
-- [ ] Stop-loss rules in place (Z-score extreme, time-based, dollar-based)
-- [ ] Risk of convergence failure acknowledged and sized accordingly
-- [ ] Negative skew of returns understood — position sizing accounts for tail risk
-- [ ] Transaction costs deducted (mean reversion can be high turnover)
-- [ ] Relationship retested periodically (cointegration can break)
-- [ ] Portfolio diversification across multiple mean-reverting instruments
+- [ ] 具备均值回归的统计证据（ADF 拒绝单位根，赫斯特指数 < 0.5）
+- [ ] 半衰期对拟定交易频率切实可行（日频为 5-30 天）
+- [ ] OU 模型参数在不同估计窗口上保持稳定
+- [ ] 入场与出场阈值已做过稳健性（robustness）检验（参数的小幅改变不会摧毁绩效）
+- [ ] 止损规则已经到位（极端 z 分数、基于时间、基于金额）
+- [ ] 已承认收敛失败的风险，并据此确定规模
+- [ ] 已理解收益的负偏——仓位规模计入尾部风险（tail risk）
+- [ ] 已扣除交易成本（transaction cost）（均值回归可能带来高换手）
+- [ ] 定期重新检验该关系（协整可能破裂）
+- [ ] 在多个均值回归品种上做组合分散

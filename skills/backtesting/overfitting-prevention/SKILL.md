@@ -1,346 +1,346 @@
-# Overfitting Prevention
+# 过拟合防范（Overfitting Prevention）
 
-## When to Activate
-- Evaluating whether a backtest result reflects genuine alpha or data mining artifacts
-- Applying statistical tests to adjust for multiple hypothesis testing
-- Implementing cross-validation methods designed for financial time series
-- Assessing the minimum backtest length and statistical significance of strategy performance
-- Distinguishing between robust strategies and curve-fitted illusions
+## 何时启用
+- 评估某一回测（backtest）结果反映的是真实阿尔法（alpha），还是数据挖掘（data mining）假象
+- 应用统计检验，以便对多重假设检验（multiple hypothesis testing）进行调整
+- 实施专为金融时间序列（financial time series）设计的交叉验证（cross-validation）方法
+- 评估策略绩效的最短回测长度（minimum backtest length）及其统计显著性（statistical significance）
+- 区分稳健的策略与由曲线拟合（curve-fitting）造成的幻觉
 
-## Core Concepts
+## 核心概念
 
-### What Is Overfitting in Trading?
+### 交易中的过拟合是什么？
 
-**Definition:** A strategy is overfit when it captures noise (random patterns) in historical data rather than signal (persistent patterns), resulting in poor live performance despite excellent backtest results.
+**定义：** 当某一策略捕捉的是历史数据中的噪声（noise，即随机形态），而不是信号（signal，即持续存在的形态）时，该策略即发生过拟合，其结果是回测结果优异，但实盘（live）表现不佳。
 
-**Symptoms of Overfitting:**
+**过拟合的症状：**
 ```
-1. Exceptional backtest performance (Sharpe > 2.5 for daily strategies is suspicious)
-2. Many tuned parameters relative to data points
-3. Performance degrades sharply out-of-sample
-4. Strategy only works on one specific asset or time period
-5. Small parameter changes cause large performance changes
-6. Strategy requires frequent re-optimization to maintain performance
-7. Complex, unintuitive logic with no economic rationale
-8. Backtest includes survivorship bias, lookahead bias, or unrealistic fills
-```
-
-**Overfitting Probability:**
-```
-With N independent strategy configurations tested:
-P(at least one appears significant at p=0.05) = 1 - (0.95)^N
-
-N=1:   5% false positive rate
-N=10:  40% false positive rate
-N=20:  64% false positive rate
-N=50:  92% false positive rate
-N=100: 99.4% false positive rate
-
-Implication: If you test 100 parameter combinations, you are almost
-guaranteed to find one that "works" even on random data.
-This is why multiple testing adjustment is essential.
+1. 回测表现异常出色（日频策略的夏普比率（Sharpe）> 2.5 即属可疑）
+2. 相对于数据点的数量，被调优的参数（parameters）过多
+3. 样本外（out-of-sample）表现急剧恶化
+4. 策略只在某一个特定资产或某一个时间段上有效
+5. 参数的微小变动会造成绩效的大幅变化
+6. 策略需要频繁再优化（re-optimization）才能维持绩效
+7. 逻辑复杂、有悖直觉，且没有经济逻辑（economic rationale）
+8. 回测包含幸存者偏差（survivorship bias）、前视偏差（lookahead bias），或不现实的成交（fills）
 ```
 
-### Deflated Sharpe Ratio (Bailey & Lopez de Prado)
-
-**Problem:** Standard Sharpe ratio does not account for the number of strategies tested (selection bias) or the statistical properties of returns (skewness, kurtosis).
-
-**Deflated Sharpe Ratio (DSR):**
+**过拟合概率：**
 ```
-DSR adjusts the Sharpe ratio for:
-1. Number of trials (strategies tested)
-2. Data length (more data = more reliable)
-3. Skewness (negative skew inflates Sharpe)
-4. Kurtosis (fat tails inflate Sharpe)
+当检验了 N 个相互独立的策略配置时：
+P(至少一个在 p=0.05 下表现显著) = 1 - (0.95)^N
+
+N=1:   5% 假阳性率（false positive rate）
+N=10:  40% 假阳性率
+N=20:  64% 假阳性率
+N=50:  92% 假阳性率
+N=100: 99.4% 假阳性率
+
+含义：如果你检验了 100 组参数组合，你几乎
+必然能找到一个即便在随机数据上也会“有效”的组合。
+这就是为什么多重检验（multiple testing）调整必不可少。
+```
+
+### 紧缩夏普比率（Deflated Sharpe Ratio）（Bailey 与 Lopez de Prado）
+
+**问题：** 标准夏普比率没有计入被检验策略的数量，也就是选择偏差（selection bias），也没有计入收益率的统计性质，即偏度（skewness）与峰度（kurtosis）。
+
+**紧缩夏普比率（DSR）：**
+```
+DSR 针对以下因素对夏普比率进行调整：
+1. 试验次数（trials，即被检验的策略数量）
+2. 数据长度（数据越多 = 越可靠）
+3. 偏度（负偏会抬高夏普比率）
+4. 峰度（肥尾（fat tails）会抬高夏普比率）
 
 DSR = Prob(SR > SR_benchmark | trials, skew, kurtosis, T)
 
-Using the haircut formula:
+使用折减（haircut）公式：
 SR_required = SR_observed * sqrt(1 - gamma * skewness / (6 * T) + (kurtosis - 3) / (24 * T))
 
-Where gamma depends on the number of trials and significance level
+其中 gamma 取决于试验次数与显著性水平（significance level）
 
-Practical interpretation:
-- If you tested 50 strategies and the best has Sharpe = 1.5:
-  DSR might show this is only significant at p=0.15 (not significant)
-- If you tested 3 strategies and the best has Sharpe = 1.2:
-  DSR might show this is significant at p=0.02 (significant)
-- Rule of thumb: record ALL strategies tested, not just the ones that worked
+实务解读：
+- 若你检验了 50 个策略，且最优者的夏普比率 = 1.5：
+  DSR 可能显示它仅在 p=0.15 下显著（并不显著）
+- 若你检验了 3 个策略，且最优者的夏普比率 = 1.2：
+  DSR 可能显示它在 p=0.02 下显著（显著）
+- 经验法则：记录全部被检验过的策略，而不仅仅是那些有效的策略
 ```
 
-**Minimum Required Sharpe:**
+**最低所需夏普比率：**
 ```
-Given N trials and desired significance p=0.05:
+给定 N 次试验以及目标显著性 p=0.05：
 SR_min ≈ sqrt(2 * ln(N)) * (1/sqrt(T)) + E[max(SR)] under null
 
-Approximate minimum Sharpe for significance (T=252 daily obs per year, 5 years):
+达到显著性所需的近似最低夏普比率（T=252 个日度观测/年，共 5 年）：
 N=1:    SR_min ≈ 0.40
 N=10:   SR_min ≈ 0.70
 N=50:   SR_min ≈ 0.95
 N=100:  SR_min ≈ 1.10
 N=1000: SR_min ≈ 1.40
 
-This means: if you tested 100 strategies, only those with Sharpe > 1.10
-should be considered potentially significant.
+这意味着：如果你检验了 100 个策略，只有夏普比率 > 1.10 的那些
+才应被视为可能具有显著性。
 ```
 
-### Combinatorial Purged Cross-Validation (CPCV)
+### 组合净化交叉验证（Combinatorial Purged Cross-Validation, CPCV）
 
-**Problem with Standard k-Fold CV:**
-- Financial returns are autocorrelated — standard CV leaks information between folds
-- Training on data adjacent to test data creates lookahead bias
-- Standard CV overestimates performance
+**标准 k 折交叉验证（k-Fold CV）的问题：**
+- 金融收益率存在自相关（autocorrelated）——标准交叉验证会在各折（folds）之间泄漏信息
+- 在与测试集（test set）相邻的数据上训练（training），会造成前视偏差
+- 标准交叉验证会高估绩效
 
-**CPCV (Lopez de Prado):**
+**CPCV（Lopez de Prado）：**
 ```
-Key innovations:
-1. Purging: remove observations from training set that are near the test set boundary
-   - Purge window = max holding period of the strategy
-   - Prevents lookahead: if strategy holds for 5 days, purge 5 days around test boundaries
+关键创新：
+1. 净化（purging）：从训练集（training set）中移除靠近测试集边界的观测
+   - 净化窗口 = 策略的最长持有期（holding period）
+   - 防止前视：若策略持有 5 天，则在测试边界周围净化 5 天
 
-2. Embargo: additional buffer after purging
-   - Prevents serial correlation from leaking information
-   - Embargo period = 1-2x the autocorrelation decay period
+2. 禁运（embargo）：净化之后再增加的一段缓冲
+   - 防止序列相关（serial correlation）把信息泄漏出去
+   - 禁运期 = 自相关衰减期（autocorrelation decay period）的 1-2 倍
 
-3. Combinatorial: instead of sequential folds, use all possible combinations
-   - N groups, select k for testing, use remaining for training
-   - C(N,k) combinations provides many more test paths
-   - Each path is a valid walk-forward simulation
+3. 组合（combinatorial）：不再使用按顺序排列的折，而使用全部可能的组合
+   - 共 N 组，选出其中 k 组用于测试，其余各组用于训练
+   - C(N,k) 个组合提供多得多的测试路径
+   - 每一条路径都是一次有效的滚动前进（walk-forward）模拟
 
-Implementation:
-- Split data into N groups (e.g., N=10)
-- For each combination of k test groups (e.g., k=2):
-  - Remove test groups from training data
-  - Purge observations near test group boundaries
-  - Apply embargo period
-  - Train on remaining data
-  - Evaluate on test groups
-- Average performance across all C(N,k) paths
-```
-
-**CPCV vs Standard Walk-Forward:**
-```
-Walk-forward: produces 1 OOS path (single sequence of OOS results)
-CPCV: produces C(N,k) OOS paths (many sequences)
-
-Advantages of CPCV:
-- More statistically robust (larger sample of test paths)
-- Can estimate distribution of performance, not just mean
-- Probability of loss (% of paths with negative return) is directly observable
-- Less dependent on specific IS/OOS split choice
-
-Example: N=10, k=2 -> C(10,2) = 45 test paths
-If 40/45 paths are profitable: strong evidence of genuine edge
-If 25/45 paths are profitable: strategy likely fragile or overfit
+实施：
+- 将数据分成 N 组（例如 N=10）
+- 对于 k 个测试组的每一种组合（例如 k=2）：
+  - 从训练数据中移除这些测试组
+  - 净化靠近测试组边界的观测
+  - 施加禁运期
+  - 在剩余数据上训练
+  - 在测试组上评估
+- 对全部 C(N,k) 条路径的绩效取平均
 ```
 
-### White's Reality Check and Hansen's SPA Test
-
-**White's Reality Check (2000):**
+**CPCV 与标准滚动前进的对比：**
 ```
-Purpose: Test if the BEST strategy among many is significantly better
-than a benchmark, accounting for data snooping.
+滚动前进：产生 1 条样本外（OOS）路径（单条 OOS 结果序列）
+CPCV：产生 C(N,k) 条 OOS 路径（许多条序列）
 
-Method:
-1. Define null hypothesis: best strategy is no better than benchmark
-2. Bootstrap the data (resample returns with replacement)
-3. For each bootstrap sample, find the best strategy's performance
-4. Build distribution of "best strategy performance under null"
-5. Compare actual best strategy to this distribution
-6. p-value = fraction of bootstrap samples where best >= actual
+CPCV 的优点：
+- 在统计上更稳健（测试路径的样本更大）
+- 可以估计绩效的分布，而不只是均值
+- 亏损概率（收益为负的路径所占百分比）可以直接观察到
+- 对某一次特定的样本内（in-sample, IS）/样本外切分选择依赖更低
 
-If p < 0.05: best strategy is significantly better than benchmark
-even after accounting for having searched many strategies
+示例：N=10，k=2 -> C(10,2) = 45 条测试路径
+若 40/45 条路径盈利：这是存在真实优势（edge）的有力证据
+若 25/45 条路径盈利：策略很可能脆弱，或者已经过拟合
 ```
 
-**Hansen's Superior Predictive Ability (SPA) Test (2005):**
+### 怀特现实检验（White's Reality Check）与汉森 SPA 检验（Hansen's SPA Test）
+
+**怀特现实检验（2000）：**
 ```
-Improvement over White's Reality Check:
-- Less conservative (more power to detect true outperformance)
-- Uses studentized statistics (accounts for variance of each strategy)
-- Better handles strategies with different volatilities
+目的：检验众多策略之中的那个最优策略，是否显著优于
+某一基准（benchmark），并把数据窥探（data snooping）计入在内。
 
-Implementation:
-1. Compute loss differential for each strategy vs benchmark
-2. Studentize by strategy-specific standard error
-3. Bootstrap using stationary bootstrap (preserves time series structure)
-4. Test statistic: max studentized loss differential
-5. p-value from bootstrap distribution
+方法：
+1. 定义原假设（null hypothesis）：最优策略并不优于基准
+2. 对数据做自助抽样（bootstrap，对收益率进行有放回重抽样）
+3. 对每一个自助样本，找出最优策略的绩效
+4. 构建“原假设下最优策略绩效”的分布
+5. 将实际的最优策略与这一分布进行比较
+6. p 值（p-value）= 自助样本中最优值 >= 实际值的比例
 
-Practical note: both tests require many bootstrap samples (1000+)
-and are computationally intensive for large strategy universes.
-```
-
-### Minimum Backtest Length (MBL)
-
-**Concept:** How much data do you need for a Sharpe ratio estimate to be statistically meaningful?
-
-```
-MBL (in years) for a given Sharpe ratio and significance level:
-
-Formula: MBL = (z_alpha / SR)^2 + 1 (approximate, in years)
-
-Where z_alpha = 1.96 for 95% confidence
-
-SR=0.5:  MBL ≈ 16.4 years
-SR=1.0:  MBL ≈ 4.8 years
-SR=1.5:  MBL ≈ 2.7 years
-SR=2.0:  MBL ≈ 2.0 years
-SR=3.0:  MBL ≈ 1.4 years
-
-Implication: A strategy with Sharpe 0.5 needs 16+ years of data
-to be statistically distinguishable from zero. Strategies tested
-on 2-3 years of data can only reliably detect Sharpe > 1.5.
-
-For daily strategies: multiply by 252 to get minimum observations
-For monthly strategies: multiply by 12
+若 p < 0.05：即便已经把“曾经搜索过许多策略”这一事实计入，
+最优策略仍然显著优于基准
 ```
 
-### Degrees of Freedom Penalty
+**汉森优越预测能力（Superior Predictive Ability, SPA）检验（2005）：**
+```
+相对怀特现实检验的改进：
+- 保守程度更低（检测真实超额表现（outperformance）的检验功效（power）更高）
+- 使用学生化（studentized）统计量（计入每个策略各自的方差（variance））
+- 能更好地处理波动率（volatility）各不相同的策略
 
-**Concept:** Each additional parameter or rule in a strategy consumes a degree of freedom, reducing the reliability of the backtest.
+实施：
+1. 计算每个策略相对基准的损失差（loss differential）
+2. 按该策略自身的标准误（standard error）进行学生化
+3. 使用平稳自助法（stationary bootstrap）进行自助抽样（保留时间序列结构）
+4. 检验统计量（test statistic）：最大的学生化损失差
+5. p 值来自自助分布
+
+实务说明：两种检验都需要大量自助样本（1000+），
+并且对大规模策略池（strategy universe）而言计算量很大。
+```
+
+### 最短回测长度（MBL）
+
+**概念：** 要使一个夏普比率估计在统计上有意义，你需要多少数据？
 
 ```
-Adjusted Sharpe ≈ SR * sqrt(1 - k/N)
+在给定夏普比率与显著性水平时的 MBL（以年为单位）：
 
-Where k = number of free parameters, N = number of independent observations
+公式：MBL = (z_alpha / SR)^2 + 1（近似，以年为单位）
 
-Example:
-- Strategy with 5 parameters, 1000 daily observations
+其中 z_alpha = 1.96，对应 95% 置信度（confidence）
+
+SR=0.5:  MBL ≈ 16.4 年
+SR=1.0:  MBL ≈ 4.8 年
+SR=1.5:  MBL ≈ 2.7 年
+SR=2.0:  MBL ≈ 2.0 年
+SR=3.0:  MBL ≈ 1.4 年
+
+含义：夏普比率为 0.5 的策略需要 16 年以上的数据，
+才能在统计上与零区分开来。在 2-3 年数据上接受检验的策略，
+只能可靠地识别出夏普比率 > 1.5 的情形。
+
+日频策略：乘以 252，得到最少观测数
+月频策略：乘以 12
+```
+
+### 自由度惩罚（Degrees of Freedom Penalty）
+
+**概念：** 策略中每增加一个参数或一条规则，都会消耗一个自由度（degree of freedom），从而降低该回测的可靠性。
+
+```
+调整后夏普比率 ≈ SR * sqrt(1 - k/N)
+
+其中 k = 自由参数（free parameters）的个数，N = 独立观测（independent observations）的个数
+
+示例：
+- 含 5 个参数的策略，1000 个日度观测
 - SR = 1.5
-- Adjusted SR = 1.5 * sqrt(1 - 5/1000) = 1.5 * 0.9975 = 1.496
-  (minimal penalty — sufficient data)
+- 调整后 SR = 1.5 * sqrt(1 - 5/1000) = 1.5 * 0.9975 = 1.496
+  （惩罚极小——数据充足）
 
-- Strategy with 20 parameters, 200 daily observations
+- 含 20 个参数的策略，200 个日度观测
 - SR = 2.0
-- Adjusted SR = 2.0 * sqrt(1 - 20/200) = 2.0 * 0.949 = 1.90
-  (noticeable penalty — not enough data for this many parameters)
+- 调整后 SR = 2.0 * sqrt(1 - 20/200) = 2.0 * 0.949 = 1.90
+  （惩罚明显——相对于这么多参数，数据并不充足）
 
-Rule of thumb: observations per parameter should be > 50
-(ideally >100) for reliable estimation
+经验法则：每个参数对应的观测数应当 > 50
+（理想情况下 >100），估计才算可靠
 ```
 
-## Methodology
+## 方法论
 
-### Overfitting Detection Checklist
-1. **Count all trials** — every parameter combination, strategy variant, and data exploration step
-2. **Calculate DSR** — adjust the best Sharpe ratio for number of trials and return distribution
-3. **Run CPCV** — evaluate the distribution of OOS paths, not just the best path
-4. **Check parameter stability** — do parameters change drastically in walk-forward windows?
-5. **Assess economic rationale** — does the strategy exploit a known, persistent inefficiency?
-6. **Test on alternative data** — different time periods, assets, or frequencies
-7. **Simplify** — can you reduce parameters and maintain most of the performance?
+### 过拟合检测清单
+1. **清点全部试验** — 每一个参数组合、每一个策略变体（strategy variant），以及每一步数据探索
+2. **计算 DSR** — 按照试验次数与收益分布，对最优夏普比率进行调整
+3. **运行 CPCV** — 评估各条 OOS 路径所构成的分布，而不只是那条最优路径
+4. **检查参数稳定性** — 参数在各个滚动前进窗口中是否发生剧烈变化？
+5. **评估经济逻辑** — 该策略利用的是不是一种已知且持续存在的无效性（inefficiency）？
+6. **在其他数据上检验** — 不同的时间段、不同的资产，或不同的频率
+7. **简化** — 你能否减少参数，同时仍然保留大部分绩效？
 
-### Strategy Acceptance Criteria
+### 策略接受标准
 ```
-Tier 1 (Deploy with full allocation):
-- DSR significant at p < 0.05 after accounting for all trials
-- CPCV: >80% of paths profitable
-- Walk-forward WFE > 0.6
-- Economic rationale is clear and documented
-- Works on at least 2 independent datasets/assets
+第一档（Tier 1，以全额配置（full allocation）部署）：
+- 在计入全部试验之后，DSR 在 p < 0.05 下显著
+- CPCV：>80% 的路径盈利
+- 滚动前进效率（walk-forward efficiency, WFE）> 0.6
+- 经济逻辑清晰，并且已经写成文档
+- 至少在 2 个相互独立的数据集/资产上有效
 
-Tier 2 (Deploy with reduced allocation, monitor closely):
-- DSR significant at p < 0.10
-- CPCV: >65% of paths profitable
-- Walk-forward WFE > 0.4
-- Economic rationale exists but is less clear
+第二档（Tier 2，以降低后的配置部署，并密切监控）：
+- DSR 在 p < 0.10 下显著
+- CPCV：>65% 的路径盈利
+- 滚动前进 WFE > 0.4
+- 经济逻辑存在，但不够清晰
 
-Tier 3 (Paper trade only, continue research):
-- DSR significant at p < 0.20
-- CPCV: >50% of paths profitable
-- Walk-forward WFE < 0.4
-- Possible economic rationale but unproven
+第三档（Tier 3，仅做模拟交易（paper trade），并继续研究）：
+- DSR 在 p < 0.20 下显著
+- CPCV：>50% 的路径盈利
+- 滚动前进 WFE < 0.4
+- 可能存在经济逻辑，但尚未得到证实
 
-Reject:
-- DSR not significant at p < 0.20
-- CPCV: <50% of paths profitable
-- No economic rationale
-```
-
-## Examples
-
-### Example 1: Multiple Testing Adjustment
-```
-Research process:
-- Tested 5 lookback periods
-- Tested 4 entry thresholds
-- Tested 3 exit methods
-- Tested 2 position sizing rules
-- Total configurations: 5 * 4 * 3 * 2 = 120
-
-Best configuration:
-- Sharpe ratio: 1.85 (5 years daily data)
-- Looks great in isolation
-
-DSR analysis:
-- N = 120 trials
-- SR_min at p=0.05: approximately 1.25
-- Best SR (1.85) > SR_min (1.25): passes DSR threshold
-- But: with negative skew (-0.8) and excess kurtosis (4.2):
-  DSR adjusts down further to SR_required ≈ 1.45
-- 1.85 > 1.45: still passes (strategy is likely genuine)
-
-If best SR were 1.35 instead of 1.85:
-- 1.35 > 1.25 but 1.35 < 1.45 (fails after skew/kurtosis adjustment)
-- Would not pass DSR — likely a data mining artifact
+拒绝：
+- DSR 在 p < 0.20 下并不显著
+- CPCV：<50% 的路径盈利
+- 没有经济逻辑
 ```
 
-### Example 2: CPCV Analysis
+## 示例
+
+### 示例 1：多重检验调整
 ```
-Strategy: Mean reversion on ETF basket (10 ETFs)
-Data: 8 years daily (2016-2024)
-CPCV: N=8 groups, k=2 -> C(8,2) = 28 paths
-Purge window: 5 days (max holding period)
-Embargo: 2 days
+研究过程：
+- 检验了 5 个回看期（lookback periods）
+- 检验了 4 个入场阈值（entry thresholds）
+- 检验了 3 种出场方法（exit methods）
+- 检验了 2 条仓位规模规则（position sizing rules）
+- 配置总数：5 * 4 * 3 * 2 = 120
 
-Results across 28 paths:
-- Paths with positive return: 24/28 (86%)
-- Paths with Sharpe > 0.5: 20/28 (71%)
-- Paths with Sharpe > 1.0: 12/28 (43%)
-- Average Sharpe across paths: 0.82
-- Std of Sharpe across paths: 0.55
-- Worst path Sharpe: -0.35
-- Best path Sharpe: 1.95
+最优配置：
+- 夏普比率：1.85（5 年日度数据）
+- 孤立地看非常出色
 
-Assessment: 86% profitable paths with average Sharpe 0.82
-is strong evidence. The worst path (-0.35) shows the strategy
-can underperform for extended periods but losses are limited.
-Strategy meets Tier 1 acceptance criteria.
-```
+DSR 分析：
+- N = 120 次试验
+- p=0.05 下的 SR_min：约为 1.25
+- 最优 SR（1.85）> SR_min（1.25）：通过 DSR 阈值
+- 但是：在负偏度（-0.8）与超额峰度（excess kurtosis）（4.2）之下：
+  DSR 进一步向下调整至 SR_required ≈ 1.45
+- 1.85 > 1.45：仍然通过（该策略很可能是真实的）
 
-### Example 3: Simplification Test
-```
-Original strategy: 8 parameters, Sharpe = 2.1
-Simplified versions:
-- Remove 2 parameters (fix at defaults): Sharpe = 1.85 (12% drop)
-- Remove 4 parameters: Sharpe = 1.55 (26% drop)
-- Remove 6 parameters (2 remaining): Sharpe = 1.20 (43% drop)
-
-Analysis:
-- Core edge is captured by 4 parameters (Sharpe 1.55)
-- Additional 4 parameters add 0.55 Sharpe — much of this is likely overfitting
-- With 4 parameters, DSR is more lenient (fewer trials per parameter)
-- 4-parameter version has better parameter stability in walk-forward
-
-Decision: deploy the 4-parameter version (Sharpe 1.55)
-instead of the 8-parameter version (Sharpe 2.1).
-Expected live Sharpe: 1.0-1.2 (after realistic degradation)
-vs 8-parameter expected live Sharpe: 0.8-1.0 (more degradation from overfitting)
+若最优 SR 是 1.35 而不是 1.85：
+- 1.35 > 1.25，但 1.35 < 1.45（经过偏度/峰度调整之后未能通过）
+- 将无法通过 DSR——很可能是一处数据挖掘假象
 ```
 
-## Quality Gate
+### 示例 2：CPCV 分析
+```
+策略：交易所交易基金（ETF）篮子上的均值回归（mean reversion）（10 只 ETF）
+数据：8 年日度（2016-2024）
+CPCV：N=8 组，k=2 -> C(8,2) = 28 条路径
+净化窗口：5 天（最长持有期）
+禁运：2 天
 
-Before accepting a strategy as not overfit, verify:
+28 条路径上的结果：
+- 收益为正的路径：24/28（86%）
+- 夏普比率 > 0.5 的路径：20/28（71%）
+- 夏普比率 > 1.0 的路径：12/28（43%）
+- 各路径的平均夏普比率：0.82
+- 各路径夏普比率的标准差（standard deviation）：0.55
+- 最差路径的夏普比率：-0.35
+- 最优路径的夏普比率：1.95
 
-- [ ] Total number of configurations tested is documented honestly (including those tried and discarded)
-- [ ] Deflated Sharpe Ratio is significant at p < 0.05 after accounting for all trials
-- [ ] CPCV analysis shows >80% of paths profitable (with proper purging and embargo)
-- [ ] Walk-forward efficiency ratio > 0.6 across multiple windows
-- [ ] Minimum backtest length is satisfied for the observed Sharpe ratio
-- [ ] Parameter count is justified by data quantity (observations/parameters > 50)
-- [ ] Strategy has a plausible economic rationale — not just a statistical artifact
-- [ ] Simplification tested — performance survives removal of non-essential parameters
-- [ ] Results validated on at least one independent dataset or time period
-- [ ] Return distribution is examined — negative skew and fat tails are accounted for in significance testing
-- [ ] No obvious biases: survivorship bias, lookahead bias, unrealistic execution assumptions
+评估：有 86% 的路径盈利，且平均夏普比率为 0.82，
+这是有力证据。最差路径（-0.35）表明该策略
+可能在较长时期内跑输，但亏损有限。
+该策略满足第一档接受标准。
+```
+
+### 示例 3：简化检验
+```
+原始策略：8 个参数，夏普比率 = 2.1
+简化后的版本：
+- 去掉 2 个参数（固定为默认值）：夏普比率 = 1.85（下降 12%）
+- 去掉 4 个参数：夏普比率 = 1.55（下降 26%）
+- 去掉 6 个参数（剩余 2 个）：夏普比率 = 1.20（下降 43%）
+
+分析：
+- 核心优势由 4 个参数所捕捉（夏普比率 1.55）
+- 额外的 4 个参数带来 0.55 的夏普比率——其中很大一部分很可能是过拟合
+- 在 4 个参数之下，DSR 更为宽松（分摊到每个参数上的试验更少）
+- 4 参数版本在滚动前进中具有更好的参数稳定性
+
+决策：部署这个 4 参数版本（夏普比率 1.55），
+而不是那个 8 参数版本（夏普比率 2.1）。
+预期实盘夏普比率：1.0-1.2（在计入现实的绩效衰减（degradation）之后）
+对比 8 参数版本的预期实盘夏普比率：0.8-1.0（因过拟合而出现更多衰减）
+```
+
+## 质量门（Quality Gate）
+
+在把某一策略接受为并未过拟合之前，请核实：
+
+- [ ] 被检验过的配置总数已被如实记录（包括那些尝试过随后又放弃的配置）
+- [ ] 在计入全部试验之后，紧缩夏普比率在 p < 0.05 下显著
+- [ ] CPCV 分析显示 >80% 的路径盈利（并且正确实施了净化与禁运）
+- [ ] 在多个窗口上，滚动前进效率比 > 0.6
+- [ ] 对于所观测到的夏普比率，最短回测长度条件得到满足
+- [ ] 参数个数有数据量作为依据（观测数/参数 > 50）
+- [ ] 策略具有说得通的经济逻辑——而不只是一处统计假象（statistical artifact）
+- [ ] 已经做过简化检验——去掉非必要参数之后，绩效仍然成立
+- [ ] 结果已经在至少一个独立的数据集或时间段上得到验证
+- [ ] 已经检查过收益分布——负偏度与肥尾已在显著性检验中被计入
+- [ ] 不存在明显的偏差：幸存者偏差、前视偏差、不现实的执行假设（execution assumptions）

@@ -1,149 +1,149 @@
-# Binomial Option Pricing
+# 二叉树（binomial tree）期权定价
 
-> CRR model, multi-step trees, American options, early exercise boundary, calibration, and convergence to BSM.
+> CRR 模型、多步树（multi-step tree）、美式期权（American option）、提前行权边界（early exercise boundary）、校准（calibration），以及向 BSM 的收敛（convergence）。
 
-## When to Activate
+## 何时启用
 
-- User pricing American options where closed-form solutions do not exist
-- Teaching or explaining option pricing intuition through discrete models
-- Pricing options with discrete dividends or complex exercise features
-- Calibrating tree parameters to match market prices
-- Understanding early exercise boundaries for American puts and calls on dividend-paying stocks
-- Validating other pricing methods (Monte Carlo, finite differences) against tree results
+- 用户为不存在闭式解（closed-form solution）的美式期权定价
+- 借助离散模型（discrete model）讲授或解释期权定价的直觉
+- 为带有离散股息（discrete dividend）或复杂行权特征（complex exercise feature）的期权定价
+- 校准树参数（tree parameter），使之与市场价格（market price）相符
+- 理解付息股票（dividend-paying stock）上美式看跌期权（American put）与美式看涨期权（American call）的提前行权边界
+- 用树的结果校验其他定价方法（蒙特卡洛（Monte Carlo）、有限差分（finite difference））
 
-## Core Concepts
+## 核心概念
 
-### Binomial Model Intuition
+### 二叉树模型的直觉
 
-At each time step, the stock price can move to one of two states:
-- Up state: S_u = S * u (up factor)
-- Down state: S_d = S * d (down factor)
-- Risk-neutral probability of up move: p = (exp(r*dt) - d) / (u - d)
-- Option value at each node: discounted expected value under risk-neutral probabilities
-- At expiry: option value = intrinsic value (max(S-K, 0) for call, max(K-S, 0) for put)
-- Work backward from expiry to today, computing option value at each node
+在每个时间步（time step），股价（stock price）可以移动到两种状态之一：
+- 上涨状态（up state）：S_u = S * u（上涨因子（up factor））
+- 下跌状态（down state）：S_d = S * d（下跌因子（down factor））
+- 上涨变动（up move）的风险中性概率（risk-neutral probability）：p = (exp(r*dt) - d) / (u - d)
+- 每个节点（node）上的期权价值（option value）：风险中性概率下的折现期望值（discounted expected value）
+- 在到期（expiry）时：期权价值 = 内在价值（intrinsic value）（看涨期权（call）为 max(S-K, 0)，看跌期权（put）为 max(K-S, 0)）
+- 从到期日倒推至今日，逐一计算每个节点的期权价值
 
-### Cox-Ross-Rubinstein (CRR) Parameterization
+### Cox-Ross-Rubinstein（CRR）参数化（parameterization）
 
-The standard parameterization ensuring the tree converges to GBM:
+保证该树收敛到几何布朗运动（geometric Brownian motion, GBM）的标准参数化：
 - u = exp(sigma * sqrt(dt))
 - d = 1/u = exp(-sigma * sqrt(dt))
 - p = (exp(r*dt) - d) / (u - d)
-- dt = T/N where N = number of time steps
+- dt = T/N，其中 N = 时间步数
 
-Properties:
-- u * d = 1 (recombining tree — the tree reconnects, keeping the number of nodes manageable)
-- After N steps: 2^N paths but only N+1 distinct terminal prices (due to recombination)
-- Terminal stock prices: S * u^j * d^(N-j) for j = 0, 1, ..., N
-- Risk-neutral probability of reaching node (j ups out of N steps): C(N,j) * p^j * (1-p)^(N-j)
+性质：
+- u * d = 1（重组树（recombining tree）——树会重新汇合，从而使节点数量保持在可控范围内）
+- 经过 N 步之后：路径（path）数为 2^N，但由于重组（recombination），互异的终端价格（terminal price）只有 N+1 个
+- 终端股价：当 j = 0, 1, ..., N 时，为 S * u^j * d^(N-j)
+- 到达该节点（N 步中有 j 次上涨）的风险中性概率：C(N,j) * p^j * (1-p)^(N-j)
 
-### Alternative Parameterizations
+### 替代参数化
 
-**Jarrow-Rudd (Equal Probability)**
+**Jarrow-Rudd（等概率（equal probability））**
 - p = 0.5
 - u = exp((r - sigma^2/2)*dt + sigma*sqrt(dt))
 - d = exp((r - sigma^2/2)*dt - sigma*sqrt(dt))
-- Better for some convergence properties but less commonly used
+- 某些收敛性质更好，但使用较少
 
-**Tian (Moment-Matching)**
-- Matches the first three moments of the log-normal distribution
+**Tian（矩匹配（moment-matching））**
+- 匹配对数正态分布（log-normal distribution）的前三阶矩（first three moments）
 - u = 0.5 * exp(r*dt) * M2 * (M2 + 1 + sqrt(M2^2 + 2*M2 - 3))
 - d = 0.5 * exp(r*dt) * M2 * (M2 + 1 - sqrt(M2^2 + 2*M2 - 3))
 - M2 = exp(sigma^2 * dt)
-- Faster convergence than CRR for some option types
+- 对某些类型的期权，收敛速度快于 CRR
 
 **Leisen-Reimer**
-- Designed to minimize oscillation in convergence
-- Uses the Peizer-Pratt inversion for d1 and d2 from BSM
-- Very smooth convergence even with moderate N (50-100 steps)
+- 旨在尽量减小收敛过程中的振荡（oscillation）
+- 对来自 BSM 的 d1 与 d2 使用 Peizer-Pratt 反演（Peizer-Pratt inversion）
+- 即便 N 仅为中等步数（50-100 步），收敛也非常平滑
 
-## Methodology
+## 方法论
 
-### European Option Pricing on a Binomial Tree
+### 二叉树上的欧式期权（European option）定价
 
-1. **Build the stock tree**: compute stock price at each node (i, j) where i = time step, j = up moves
-   - S(i, j) = S_0 * u^j * d^(i-j) for j = 0, 1, ..., i
-2. **Compute terminal payoffs**: at step N, payoff(N, j) = max(S(N,j) - K, 0) for calls
-3. **Backward induction**: for i = N-1, N-2, ..., 0:
+1. **构建股价树（stock tree）**：计算每个节点 (i, j) 的股价，其中 i = 时间步，j = 上涨次数
+   - S(i, j) = S_0 * u^j * d^(i-j)，其中 j = 0, 1, ..., i
+2. **计算终端收益（terminal payoff）**：在第 N 步，看涨期权的 payoff(N, j) = max(S(N,j) - K, 0)
+3. **倒向归纳（backward induction）**：对于 i = N-1, N-2, ..., 0：
    - V(i, j) = exp(-r*dt) * [p * V(i+1, j+1) + (1-p) * V(i+1, j)]
-4. **Option price**: V(0, 0) at the root node
+4. **期权价格（option price）**：根节点（root node）处的 V(0, 0)
 
-### American Option Pricing
+### 美式期权定价
 
-The key addition: at each node, compare holding value to exercise value.
+关键的补充是：在每个节点，比较持有价值（holding value）与行权价值（exercise value）。
 
-1. Build stock tree (same as European)
-2. Terminal payoffs (same as European)
-3. Backward induction with early exercise check:
-   - Continuation value: C(i, j) = exp(-r*dt) * [p * V(i+1, j+1) + (1-p) * V(i+1, j)]
-   - Exercise value: E(i, j) = max(K - S(i,j), 0) for put; max(S(i,j) - K, 0) for call
+1. 构建股价树（与欧式相同）
+2. 终端收益（与欧式相同）
+3. 带有提前行权检验的倒向归纳：
+   - 继续持有价值（continuation value）：C(i, j) = exp(-r*dt) * [p * V(i+1, j+1) + (1-p) * V(i+1, j)]
+   - 行权价值：E(i, j) = 看跌期权取 max(K - S(i,j), 0)；看涨期权取 max(S(i,j) - K, 0)
    - V(i, j) = max(C(i, j), E(i, j))
-4. If E(i, j) > C(i, j), early exercise is optimal at that node
-5. The set of nodes where early exercise is optimal defines the early exercise boundary
+4. 若 E(i, j) > C(i, j)，则在该节点提前行权是最优的
+5. 提前行权为最优的节点集合定义了提前行权边界
 
-### Early Exercise Boundary
+### 提前行权边界
 
-**American Put**
-- Always optimal to exercise sufficiently deep ITM (where time value is negative)
-- Critical stock price S*(t): exercise if S < S*(t)
-- S*(t) decreases as t -> T (boundary converges to K at expiry)
-- For r > 0: S*(T) = K (exercise ATM puts at expiry)
-- The boundary is smooth and monotonically increasing toward K
+**美式看跌期权**
+- 当期权处于足够深的实值（in the money, ITM）、时间价值（time value）为负时，行权总是最优的
+- 临界股价（critical stock price）S*(t)：若 S < S*(t) 则行权
+- 随着 t -> T，S*(t) 下降（边界在到期时收敛到 K）
+- 当 r > 0 时：S*(T) = K（到期时对平值（at the money, ATM）看跌期权行权）
+- 该边界平滑，并朝 K 单调上升
 
-**American Call on Dividend-Paying Stock**
-- Early exercise may be optimal just before ex-dividend dates
-- Exercise if the dividend exceeds the time value of the option
-- Rule of thumb: exercise is optimal if dividend > K * (1 - exp(-r*dt_remaining))
-- For continuous dividend yield q: early exercise boundary exists for all t if q > 0
+**付息股票上的美式看涨期权**
+- 提前行权可能恰好在除息日（ex-dividend date）之前是最优的
+- 若股息超过期权的时间价值，则行权
+- 经验法则：若股息 > K * (1 - exp(-r*dt_remaining))，则行权是最优的
+- 对于连续股息率（continuous dividend yield）q：若 q > 0，则对所有 t 都存在提前行权边界
 
-**American Call on Non-Dividend Stock**
-- Never optimal to exercise early (no boundary exists)
-- American call = European call (no early exercise premium)
-- Proof: call value >= S - K*exp(-rT) > S - K (intrinsic value) when r > 0
+**无股息股票上的美式看涨期权**
+- 提前行权永远不是最优的（不存在该边界）
+- 美式看涨期权 = 欧式看涨期权（不存在提前行权溢价（early exercise premium））
+- 证明：当 r > 0 时，看涨期权价值 >= S - K*exp(-rT) > S - K（内在价值）
 
-### Discrete Dividends on Trees
+### 树上的离散股息
 
-**Method 1: Reduce stock price at ex-dividend node**
-- At the ex-dividend step, subtract the known dividend D from all stock prices
-- Problem: tree no longer recombines after the dividend (branches split)
-- Fix: use the "Black approximation" — reduce S_0 by PV of dividends, build tree on adjusted S
+**方法 1：在除息节点下调股价**
+- 在除息这一步，从所有股价中减去已知股息 D
+- 问题：支付股息之后，树不再重组（分支发生分裂）
+- 修正：使用 Black 近似（Black approximation）——将 S_0 减去股息的现值（present value, PV），并在调整后的 S 上构建树
 
-**Method 2: Dividend yield approach**
-- Model dividend as a proportional reduction: S -> S * (1 - delta) at ex-date
-- Tree remains recombining
-- Less accurate for stocks with fixed dollar dividends
+**方法 2：股息率方法（dividend yield approach）**
+- 将股息建模为按比例下调（proportional reduction）：在除息日 S -> S * (1 - delta)
+- 树仍然保持重组
+- 对于支付固定金额股息（fixed dollar dividend）的股票，准确度较低
 
-**Method 3: Interpolation method**
-- Build recombining tree, at dividend date interpolate between nodes after dividend adjustment
-- More accurate but computationally more complex
+**方法 3：插值法（interpolation method）**
+- 构建重组树，在股息日于完成股息调整后的节点之间进行插值
+- 更准确，但计算上更为复杂
 
-### Convergence to BSM
+### 向 BSM 的收敛
 
-- As N -> infinity, CRR binomial price converges to BSM price for European options
-- Rate of convergence: O(1/N) — error decreases proportionally with number of steps
-- Oscillation: CRR oscillates around the true value (even/odd N give systematically different prices)
-- Practical: N = 200-500 steps gives accuracy within 1 cent for most options
-- Richardson extrapolation: average prices from N and N+1 steps to cancel oscillation
-- Leisen-Reimer: smooth convergence with N = 50-100
+- 当 N -> infinity 时，CRR 二叉树价格对欧式期权收敛到 BSM 价格
+- 收敛速率（rate of convergence）：O(1/N)——误差（error）随步数成比例下降
+- 振荡：CRR 在真实值附近振荡（偶数 N 与奇数 N 会系统性地给出不同的价格）
+- 实务中：对大多数期权，N = 200-500 步可使精度落在 1 美分以内
+- Richardson 外推（Richardson extrapolation）：将 N 步与 N+1 步的价格取平均，以抵消振荡
+- Leisen-Reimer：在 N = 50-100 时即可平滑收敛
 
-## Examples
+## 示例
 
-### 3-Step CRR Tree for European Call
+### 欧式看涨期权的三步 CRR 树
 ```
-Parameters: S=100, K=100, r=5%, sigma=30%, T=0.75 (3 quarters)
+参数：S=100, K=100, r=5%, sigma=30%, T=0.75（3 个季度）
 dt = 0.25, u = exp(0.30*sqrt(0.25)) = 1.1618, d = 1/u = 0.8607
 p = (exp(0.05*0.25) - 0.8607) / (1.1618 - 0.8607) = 0.5073
 
-Stock tree:
+股价树：
   t=0:     100.00
   t=0.25:  116.18 / 86.07
   t=0.50:  135.00 / 100.00 / 74.08
   t=0.75:  156.83 / 116.18 / 86.07 / 63.76
 
-Call payoffs at T:
+T 时刻的看涨收益：
   156.83-100=56.83, 116.18-100=16.18, max(86.07-100,0)=0, max(63.76-100,0)=0
 
-Backward induction:
+倒向归纳：
   t=0.50: (0.5073*56.83 + 0.4927*16.18)*exp(-0.0125) = 36.74
           (0.5073*16.18 + 0.4927*0)*exp(-0.0125) = 8.11
           (0.5073*0 + 0.4927*0)*exp(-0.0125) = 0
@@ -151,52 +151,52 @@ Backward induction:
           (0.5073*8.11 + 0.4927*0)*exp(-0.0125) = 4.06
   t=0:    (0.5073*22.35 + 0.4927*4.06)*exp(-0.0125) = 13.18
 
-Tree price: $13.18
-BSM price: $13.15 (close even with just 3 steps)
+树价格：$13.18
+BSM 价格：$13.15（即便只有 3 步也已经很接近）
 ```
 
-### American Put Early Exercise
+### 美式看跌期权的提前行权
 ```
-Same parameters but pricing a put (K=100):
+参数相同，但定价的是看跌期权（K=100）：
 
-Put payoffs at T: 0, 0, max(100-86.07,0)=13.93, max(100-63.76,0)=36.24
+T 时刻的看跌收益：0, 0, max(100-86.07,0)=13.93, max(100-63.76,0)=36.24
 
-Backward induction with early exercise check:
-  t=0.50 (S=74.08):
-    Continuation: (0.5073*13.93 + 0.4927*36.24)*exp(-0.0125) = 24.60
-    Exercise: 100-74.08 = 25.92
-    Value = max(24.60, 25.92) = 25.92 ***EARLY EXERCISE***
+带有提前行权检验的倒向归纳：
+  t=0.50（S=74.08）：
+    继续持有价值：(0.5073*13.93 + 0.4927*36.24)*exp(-0.0125) = 24.60
+    行权价值：100-74.08 = 25.92
+    价值 = max(24.60, 25.92) = 25.92 ***提前行权***
 
-  t=0.50 (S=100): Continuation=6.99, Exercise=0, Value=6.99
-  t=0.50 (S=135): Continuation=0, Exercise=0, Value=0
+  t=0.50（S=100）：继续持有价值=6.99，行权价值=0，价值=6.99
+  t=0.50（S=135）：继续持有价值=0，行权价值=0，价值=0
 
-American put premium over European: $0.35 (from early exercise value)
-```
-
-### Convergence Analysis
-```
-European call (S=100, K=100, r=5%, sigma=30%, T=1):
-BSM exact = $14.23
-
-N=10:   $14.35 (error = +$0.12)
-N=50:   $14.25 (error = +$0.02)
-N=100:  $14.24 (error = +$0.01)
-N=200:  $14.23 (error < $0.005)
-N=500:  $14.23 (error < $0.002)
-
-Richardson extrapolation (N=100, N=101): $14.231 (error < $0.001)
-Leisen-Reimer (N=51): $14.231 (error < $0.001)
+美式看跌期权相对欧式的溢价：$0.35（来自提前行权价值）
 ```
 
-## Quality Gate
+### 收敛分析
+```
+欧式看涨期权（S=100, K=100, r=5%, sigma=30%, T=1）：
+BSM 精确值 = $14.23
 
-- CRR parameters must satisfy: 0 < p < 1 (verify risk-neutral probability is valid)
-- Tree must recombine: verify u*d = 1 within numerical precision
-- American option price must be >= European option price (verify early exercise premium is non-negative)
-- American call on non-dividend stock must equal European call (verify no early exercise)
-- Convergence must be verified: increase N until price changes by less than $0.01 between successive N
-- Use at least N=200 steps for production pricing; N=500+ for precise benchmark values
-- Early exercise boundary must be smooth and monotonic (irregular boundary suggests implementation error)
-- Discrete dividend handling must correctly adjust stock prices at ex-dividend nodes
-- Validate against BSM for European options: tree price must converge to BSM within 0.1%
-- Richardson extrapolation or Leisen-Reimer should be used when computational time is limited
+N=10:   $14.35（误差 = +$0.12）
+N=50:   $14.25（误差 = +$0.02）
+N=100:  $14.24（误差 = +$0.01）
+N=200:  $14.23（误差 < $0.005）
+N=500:  $14.23（误差 < $0.002）
+
+Richardson 外推（N=100, N=101）：$14.231（误差 < $0.001）
+Leisen-Reimer（N=51）：$14.231（误差 < $0.001）
+```
+
+## 质量关卡
+
+- CRR 参数必须满足：0 < p < 1（验证风险中性概率有效）
+- 树必须重组：在数值精度（numerical precision）之内验证 u*d = 1
+- 美式期权价格必须 >= 欧式期权价格（验证提前行权溢价为非负）
+- 无股息股票上的美式看涨期权必须等于欧式看涨期权（验证不发生提前行权）
+- 必须验证收敛：增大 N，直到相邻的 N 之间价格变化小于 $0.01
+- 生产环境定价（production pricing）至少使用 N=200 步；精确基准值（benchmark value）使用 N=500 及以上
+- 提前行权边界必须平滑且单调（不规则的边界表明实现有误（implementation error））
+- 离散股息的处理必须在除息节点正确调整股价
+- 针对欧式期权，用 BSM 进行校验：树价格必须收敛到 BSM，相差在 0.1% 以内
+- 当计算时间有限时，应使用 Richardson 外推或 Leisen-Reimer

@@ -1,311 +1,311 @@
-# Walk-Forward Optimization
+# 滚动前进优化（Walk-Forward Optimization）
 
-## When to Activate
-- Validating trading strategy parameters using robust out-of-sample testing
-- Designing in-sample/out-of-sample split methodologies for backtests
-- Evaluating parameter stability across different time periods
-- Preventing overfitting through structured walk-forward analysis
-- Comparing anchored vs rolling window approaches for strategy calibration
+## 何时启用
+- 使用稳健的样本外（out-of-sample）检验来验证交易策略参数
+- 为回测（backtest）设计样本内（in-sample）/样本外划分方法
+- 评估参数在不同时间段上的稳定性
+- 通过结构化的滚动前进分析防止过拟合（overfitting）
+- 比较锚定窗口（anchored window）与滚动窗口（rolling window）两种方法，用于策略校准
 
-## Core Concepts
+## 核心概念
 
-### In-Sample vs Out-of-Sample
+### 样本内与样本外
 
-**In-Sample (IS):**
-- Data period used to fit, train, or optimize strategy parameters
-- Performance on IS data is biased upward (strategy is designed to fit this data)
-- IS results should never be used to evaluate strategy quality
-- IS period must be long enough to capture multiple market regimes
+**样本内（IS）：**
+- 用于拟合、训练或优化策略参数的数据区间
+- 样本内数据上的绩效存在向上偏差（策略是为拟合这段数据而设计的）
+- 样本内结果绝不可用于评价策略质量
+- 样本内区间必须足够长，以覆盖多个市场状态（market regime）
 
-**Out-of-Sample (OOS):**
-- Data period NOT used during parameter selection
-- Performance on OOS data is the only valid estimate of future performance
-- OOS degradation: OOS performance is typically 30-60% worse than IS performance
-- If OOS performance is similar to IS: strategy may be robust (or OOS was leaked)
+**样本外（OOS）：**
+- 参数选择过程中**未使用**的数据区间
+- 样本外数据上的绩效是对未来绩效的唯一有效估计
+- 样本外衰减（OOS degradation）：样本外绩效通常比样本内绩效差 30-60%
+- 若样本外绩效与样本内相近：策略可能是稳健的（或样本外信息已经泄漏）
 
-**Common Mistake — Data Snooping:**
+**常见错误——数据窥探（Data Snooping）：**
 ```
-Danger: Testing multiple strategies on the same OOS period
-Each test "uses up" the OOS data. After 20 strategies tested on the same OOS:
-- You are effectively optimizing on OOS data
-- True OOS is only the FIRST strategy tested on that data
-- Solution: reserve a final holdout sample, or use walk-forward methodology
+危险：在同一段样本外区间上测试多个策略
+每一次检验都会“消耗掉”这段样本外数据。在同一段样本外上测试 20 个策略之后：
+- 你实际上是在样本外数据上做优化
+- 真正的样本外只属于在该数据上测试的**第一个**策略
+- 解决办法：预留一段最终留出样本（holdout sample），或使用滚动前进方法
 
-Rule of thumb: once you look at OOS results and go back to modify
-the strategy, that OOS period is no longer truly out-of-sample.
+经验法则：一旦查看了样本外结果并回头修改
+策略，该样本外区间就不再是真正的样本外。
 ```
 
-### Walk-Forward Analysis (WFA)
+### 滚动前进分析（Walk-Forward Analysis, WFA）
 
-**Concept:** Divide data into multiple IS/OOS windows, optimize on each IS window, test on the immediately following OOS window, then advance the window and repeat.
+**概念：** 将数据划分为多个样本内/样本外窗口，在每个样本内窗口上优化，在紧随其后的样本外窗口上测试，然后推进窗口并重复。
 
-**Anchored Walk-Forward:**
+**锚定滚动前进（Anchored Walk-Forward）：**
 ```
-Window 1: IS [Jan 2015 - Dec 2019] -> OOS [Jan 2020 - Jun 2020]
-Window 2: IS [Jan 2015 - Jun 2020] -> OOS [Jul 2020 - Dec 2020]
-Window 3: IS [Jan 2015 - Dec 2020] -> OOS [Jan 2021 - Jun 2021]
+窗口 1：样本内 [2015年1月 - 2019年12月] -> 样本外 [2020年1月 - 2020年6月]
+窗口 2：样本内 [2015年1月 - 2020年6月] -> 样本外 [2020年7月 - 2020年12月]
+窗口 3：样本内 [2015年1月 - 2020年12月] -> 样本外 [2021年1月 - 2021年6月]
 ...
 
-Properties:
-- IS window grows over time (always starts from beginning)
-- More data for optimization in later windows
-- Incorporates all historical data
-- Best when: strategy parameters are expected to be stable over long periods
-- Drawback: old data may be irrelevant if market structure has changed
+特点：
+- 样本内窗口随时间增长（始终从起点开始）
+- 较晚的窗口有更多数据可用于优化
+- 纳入全部历史数据
+- 最适用的情形：预期策略参数在长时期内保持稳定
+- 缺点：若市场结构已经改变，旧数据可能不再相关
 ```
 
-**Rolling Walk-Forward:**
+**滚动窗口式前进（Rolling Walk-Forward）：**
 ```
-Window 1: IS [Jan 2015 - Dec 2019] -> OOS [Jan 2020 - Jun 2020]
-Window 2: IS [Jul 2015 - Jun 2020] -> OOS [Jul 2020 - Dec 2020]
-Window 3: IS [Jan 2016 - Dec 2020] -> OOS [Jan 2021 - Jun 2021]
+窗口 1：样本内 [2015年1月 - 2019年12月] -> 样本外 [2020年1月 - 2020年6月]
+窗口 2：样本内 [2015年7月 - 2020年6月] -> 样本外 [2020年7月 - 2020年12月]
+窗口 3：样本内 [2016年1月 - 2020年12月] -> 样本外 [2021年1月 - 2021年6月]
 ...
 
-Properties:
-- IS window is fixed length, slides forward
-- Adapts to changing market conditions (drops oldest data)
-- Best when: market microstructure or regime changes make old data less relevant
-- Drawback: fixed IS window may be too short for stable estimation
+特点：
+- 样本内窗口长度固定，并向前滑动
+- 适应变化中的市场环境（丢弃最旧的数据）
+- 最适用的情形：市场微观结构（market microstructure）或状态变化使旧数据的相关性下降
+- 缺点：固定长度的样本内窗口可能过短，难以得到稳定估计
 ```
 
-**Expanding Walk-Forward with Decay:**
+**带衰减的扩展滚动前进（Expanding Walk-Forward with Decay）：**
 ```
-Hybrid approach: anchored start but apply exponential decay weights to older data
-Recent data gets higher weight in optimization
-Captures both long history and regime adaptation
-More complex to implement but often superior in practice
+混合方法：起点采用锚定，但对较旧的数据施加指数衰减权重（exponential decay weight）
+近期数据在优化中获得更高权重
+同时保留长历史与对市场状态的适应
+实现更为复杂，但实践中往往更优
 ```
 
-### Walk-Forward Efficiency Ratio (WFE)
+### 滚动前进效率比（Walk-Forward Efficiency Ratio, WFE）
 
-**Definition:**
+**定义：**
 ```
 WFE = OOS performance / IS performance
 
-Interpretation:
-WFE > 0.80: Excellent — strategy is robust, minimal overfitting
-WFE 0.50-0.80: Acceptable — some degradation but strategy has edge
-WFE 0.20-0.50: Concerning — significant overfitting, strategy may not survive live trading
-WFE < 0.20: Poor — strategy is likely overfit; IS performance is an illusion
+解读：
+WFE > 0.80：优秀——策略稳健，过拟合极轻
+WFE 0.50-0.80：可接受——存在一定衰减，但策略仍有优势（edge）
+WFE 0.20-0.50：需警惕——过拟合显著，策略可能无法在实盘交易（live trading）中存活
+WFE < 0.20：差——策略很可能已经过拟合；样本内绩效只是假象
 
-Measured using Sharpe ratio, profit factor, or total return
-Calculate WFE for each walk-forward window and assess distribution
+使用夏普比率（Sharpe ratio）、盈利因子（profit factor）或总收益（total return）来衡量
+为每个滚动前进窗口计算 WFE，并评估其分布
 ```
 
-**WFE Across Windows:**
+**各窗口的 WFE：**
 ```
-Window 1 WFE: 0.72
-Window 2 WFE: 0.65
-Window 3 WFE: 0.88
-Window 4 WFE: 0.41
-Window 5 WFE: 0.75
-Window 6 WFE: 0.58
+窗口 1 WFE：0.72
+窗口 2 WFE：0.65
+窗口 3 WFE：0.88
+窗口 4 WFE：0.41
+窗口 5 WFE：0.75
+窗口 6 WFE：0.58
 
-Mean WFE: 0.67 (acceptable)
-Min WFE: 0.41 (Window 4 is concerning — what was different about that period?)
-Std WFE: 0.16 (moderate variability)
+平均 WFE：0.67（可接受）
+最小 WFE：0.41（窗口 4 需警惕——该区间有何不同？）
+WFE 标准差：0.16（变异程度中等）
 
-Investigation: Window 4 covers 2022 H1 — regime change (rate hikes, inflation)
-Strategy may need regime-specific adaptation
+排查：窗口 4 覆盖 2022 年上半年——状态切换（加息、通胀）
+策略可能需要针对特定状态做适应
 ```
 
-### Parameter Stability Analysis
+### 参数稳定性分析
 
-**Concept:** Parameters that change wildly between IS windows are likely overfit. Robust parameters are stable.
+**概念：** 在各样本内窗口之间剧烈变动的参数很可能已经过拟合。稳健的参数是稳定的。
 
-**Analysis Method:**
+**分析方法：**
 ```
-For each walk-forward window, record optimal parameters:
+对每个滚动前进窗口，记录最优参数：
 
-Window 1: fast_MA=10, slow_MA=50, stop=2.0%
-Window 2: fast_MA=12, slow_MA=48, stop=2.2%
-Window 3: fast_MA=11, slow_MA=52, stop=1.8%
-Window 4: fast_MA=8,  slow_MA=55, stop=2.5%
-Window 5: fast_MA=10, slow_MA=50, stop=2.0%
+窗口 1：fast_MA=10, slow_MA=50, stop=2.0%
+窗口 2：fast_MA=12, slow_MA=48, stop=2.2%
+窗口 3：fast_MA=11, slow_MA=52, stop=1.8%
+窗口 4：fast_MA=8,  slow_MA=55, stop=2.5%
+窗口 5：fast_MA=10, slow_MA=50, stop=2.0%
 
-fast_MA: mean=10.2, std=1.5, CV=0.15 -> Stable (good)
-slow_MA: mean=51.0, std=2.6, CV=0.05 -> Very stable (good)
-stop: mean=2.1%, std=0.26, CV=0.12 -> Stable (good)
+fast_MA：均值（mean）=10.2，标准差（std）=1.5，变异系数（CV）=0.15 -> 稳定（良好）
+slow_MA：均值=51.0，标准差=2.6，变异系数=0.05 -> 非常稳定（良好）
+stop：均值=2.1%，标准差=0.26，变异系数=0.12 -> 稳定（良好）
 
-Compare with unstable example:
-Window 1: lookback=5, threshold=0.8
-Window 2: lookback=20, threshold=1.5
-Window 3: lookback=8, threshold=0.3
+对照不稳定的示例：
+窗口 1：lookback=5, threshold=0.8
+窗口 2：lookback=20, threshold=1.5
+窗口 3：lookback=8, threshold=0.3
 ...
-lookback: CV=0.65 -> Unstable (bad, likely overfit)
+lookback：变异系数=0.65 -> 不稳定（差，很可能已过拟合）
 ```
 
-**Sensitivity Surface Analysis:**
+**敏感性曲面分析（Sensitivity Surface Analysis）：**
 ```
-For each parameter:
-1. Fix all other parameters at optimal values
-2. Vary the target parameter across its range
-3. Plot performance vs parameter value
-4. Robust parameters have flat, broad performance plateaus
-5. Overfit parameters have sharp spikes (narrow optimal point)
+对每个参数：
+1. 将其余所有参数固定在最优值
+2. 在目标参数的取值范围内变动该参数
+3. 绘制绩效相对参数值的图
+4. 稳健参数具有平坦、宽阔的绩效平台（plateau）
+5. 过拟合参数具有尖锐尖峰（狭窄的最优点）
 
-If performance degrades >30% with ±20% parameter change:
-the strategy is fragile and likely overfit to that parameter value
-```
-
-### Multi-Period Validation
-
-**Regime-Based Splitting:**
-```
-Instead of chronological splits only, validate across market regimes:
-- Bull market periods (rising trend, low vol)
-- Bear market periods (falling trend, high vol)
-- Sideways/choppy periods (no trend, variable vol)
-- Crisis periods (high vol, correlations spike)
-- Low volatility periods (calm, grinding)
-
-Strategy should show positive (or at least non-negative) performance
-in each regime. Strong IS Sharpe driven by one regime only = fragile.
+若参数变动 ±20% 时绩效下降超过 30%：
+策略是脆弱的，并且很可能过拟合于该参数值
 ```
 
-**Cross-Asset Validation:**
+### 多区间验证
+
+**基于市场状态的划分（Regime-Based Splitting）：**
 ```
-If strategy concept is general (e.g., momentum, mean reversion):
-1. Optimize on Asset A
-2. Test on Assets B, C, D with same or similar parameters
-3. Cross-asset performance validates the underlying alpha source
-4. If it only works on one asset: likely overfit to that asset's idiosyncrasies
-```
+除按时间顺序划分之外，还应跨市场状态进行验证：
+- 牛市区间（上升趋势，低波动）
+- 熊市区间（下降趋势，高波动）
+- 横盘/震荡区间（无趋势，波动不稳定）
+- 危机区间（高波动，相关性（correlation）骤升）
+- 低波动率（volatility）区间（平静、缓慢磨行）
 
-## Methodology
-
-### Walk-Forward Implementation Steps
-1. **Define IS/OOS split ratio** — typically 70/30 or 80/20 (IS/OOS)
-2. **Choose anchored vs rolling** — based on whether old data is informative
-3. **Set window sizes** — IS: 2-5 years, OOS: 3-12 months (depends on strategy frequency)
-4. **Define optimization objective** — Sharpe ratio is standard, but consider Sortino, MAR, or profit factor
-5. **Run optimization** on first IS window
-6. **Record optimal parameters** and apply to OOS window
-7. **Record OOS performance** — this is the true estimate
-8. **Advance the window** and repeat
-9. **Concatenate OOS results** — the chain of OOS results is the walk-forward performance
-10. **Calculate WFE** for each window and overall
-
-### Window Size Selection
-```
-Rule of thumb:
-- IS window: should contain at least 100 trades (for statistical significance)
-- OOS window: should contain at least 30 trades
-- IS/OOS ratio: 3:1 to 5:1 is common
-
-Too short IS: insufficient data for optimization, noisy parameter estimates
-Too long IS: includes stale data, may not reflect current conditions
-Too short OOS: insufficient data to evaluate, high variance in WFE
-Too long OOS: fewer walk-forward windows, less validation breadth
-
-For daily strategies:
-- IS: 3-5 years, OOS: 6-12 months, step: 6 months
-For intraday strategies:
-- IS: 6-12 months, OOS: 1-3 months, step: 1 month
+策略应在每一种状态中都表现出正的绩效（或至少非负）。
+仅由单一状态驱动的高样本内夏普 = 脆弱。
 ```
 
-### Optimization Best Practices
+**跨资产验证（Cross-Asset Validation）：**
 ```
-1. Minimize parameter count: each parameter adds a degree of freedom for overfitting
-   Rule: max (data_points / 10) parameters, ideally fewer
-2. Use robust objectives: Sharpe > total return (Sharpe penalizes risk)
-3. Constrain parameter ranges: use economically meaningful bounds
-4. Prefer parameter plateaus over peaks: a parameter value on a plateau
-   is more likely to work out-of-sample
-5. Average nearby solutions: instead of picking the single best parameter set,
-   average the top 10% of parameter combinations (ensemble approach)
-6. Validate parameter interactions: check for spurious interactions between parameters
+若策略思想是通用的（例如动量（momentum）、均值回归（mean reversion））：
+1. 在资产 A 上优化
+2. 用相同或相近的参数在资产 B、C、D 上测试
+3. 跨资产绩效用于验证底层的阿尔法（alpha）来源
+4. 若只在单一资产上有效：很可能过拟合于该资产的特异性（idiosyncrasy）
 ```
 
-## Examples
+## 方法论
 
-### Example 1: Moving Average Crossover WFA
+### 滚动前进实施步骤
+1. **确定样本内/样本外划分比例**——通常为 70/30 或 80/20（样本内/样本外）
+2. **选择锚定式或滚动窗口式**——取决于旧数据是否仍有信息含量
+3. **设定窗口长度**——样本内：2-5 年，样本外：3-12 个月（取决于策略频率）
+4. **定义优化目标**——夏普比率是标准选择，也可考虑索提诺比率（Sortino）、收益回撤比（MAR）或盈利因子
+5. **运行优化**，对象为第一个样本内窗口
+6. **记录最优参数**，并应用到样本外窗口
+7. **记录样本外绩效**——这才是真实估计
+8. **推进窗口**并重复
+9. **拼接样本外结果**——样本外结果链就是滚动前进绩效
+10. **计算 WFE**，包括每个窗口以及整体
+
+### 窗口长度选择
 ```
-Strategy: Buy when fast MA crosses above slow MA, sell on reverse
-Parameters to optimize: fast_period (5-30), slow_period (30-100)
-Asset: S&P 500 futures, daily data 2010-2024
+经验法则：
+- 样本内窗口：应至少包含 100 笔交易（以保证统计显著性（statistical significance））
+- 样本外窗口：应至少包含 30 笔交易
+- 样本内/样本外比例：常见为 3:1 至 5:1
 
-Walk-forward design:
-- IS window: 4 years (rolling)
-- OOS window: 6 months
-- Step: 6 months
-- Total windows: 20
+样本内过短：可供优化的数据不足，参数估计噪声大
+样本内过长：包含陈旧数据，可能无法反映当前状况
+样本外过短：可供评估的数据不足，WFE 的方差高
+样本外过长：滚动前进窗口更少，验证的广度更窄
 
-Results summary:
-- IS average Sharpe: 1.35
-- OOS average Sharpe: 0.72
-- WFE: 0.53 (acceptable but not great)
-- OOS Sharpe std: 0.45 (high variability)
-- Optimal fast_period: ranges from 8 to 22 (moderate stability)
-- Optimal slow_period: ranges from 40 to 65 (moderate stability)
-
-Assessment: Strategy has some edge but degrades significantly OOS.
-Parameter instability suggests adapting to noise rather than signal.
-Consider simpler parameterization or regime filters.
-```
-
-### Example 2: Mean Reversion with Stable Parameters
-```
-Strategy: Buy when z-score < -2, sell when z-score > +2
-Parameters: lookback period, z-score threshold
-Asset: Pairs trade (Coca-Cola vs PepsiCo)
-
-Walk-forward design:
-- IS window: 3 years (rolling)
-- OOS window: 6 months
-- 16 windows total
-
-Results:
-- IS average Sharpe: 0.95
-- OOS average Sharpe: 0.78
-- WFE: 0.82 (excellent)
-- Optimal lookback: 55-65 days across all windows (very stable, CV=0.08)
-- Optimal z-score: 1.8-2.2 across all windows (stable, CV=0.10)
-
-Assessment: High WFE and stable parameters suggest a robust strategy.
-Parameter plateau is broad (performance within 10% for lookback 40-80).
-Strategy is likely capturing genuine mean reversion in the pair relationship.
-Deploy with current optimal parameters, monitor for structural breaks.
+对于日频策略：
+- 样本内：3-5 年，样本外：6-12 个月，步长（step）：6 个月
+对于日内策略：
+- 样本内：6-12 个月，样本外：1-3 个月，步长：1 个月
 ```
 
-### Example 3: Regime-Aware Walk-Forward
+### 优化最佳实践
 ```
-Strategy: Momentum on commodity futures basket
-Problem: Standard WFA shows WFE of 0.45 — concerning
-
-Investigation: Plot WFE by OOS window
-- Bull regime windows: WFE = 0.75 (good)
-- Bear regime windows: WFE = 0.55 (acceptable)
-- Sideways regime windows: WFE = 0.15 (terrible)
-
-Diagnosis: Strategy loses money in sideways markets (momentum fails in chop)
-
-Solution: Add regime filter
-- VIX < 15 and trend strength (ADX) < 20: reduce position size by 50%
-- VIX > 30 and ADX > 30: full position size
-
-Revised WFA with regime filter:
-- IS average Sharpe: 1.05 (lower than unfiltered, expected)
-- OOS average Sharpe: 0.82 (higher than unfiltered)
-- WFE: 0.78 (significant improvement)
-- Filter reduces drawdowns in sideways periods by 60%
-
-Note: regime filter adds complexity — verify it is not itself overfit
-by testing filter parameters for stability across windows
+1. 尽量减少参数个数：每个参数都会增加一个可供过拟合的自由度（degree of freedom）
+   规则：参数个数最多为 (data_points / 10)，理想情况下更少
+2. 使用稳健的目标：夏普比率 > 总收益（夏普比率会对风险加以惩罚）
+3. 约束参数范围：使用具有经济意义的边界
+4. 优先选择参数平台而非峰值：位于平台上的参数值
+   更可能在样本外仍然有效
+5. 对邻近解取平均：不要只选取单一最优参数组，
+   而对排名前 10% 的参数组合取平均（集成方法（ensemble approach））
+6. 验证参数交互：检查参数之间是否存在虚假交互（spurious interaction）
 ```
 
-## Quality Gate
+## 示例
 
-Before accepting walk-forward results, verify:
+### 示例 1：移动平均交叉（Moving Average Crossover）的滚动前进分析
+```
+策略：快移动平均上穿慢移动平均时买入，反向交叉时卖出
+待优化参数：fast_period（5-30）、slow_period（30-100）
+资产：标普 500 期货（S&P 500 futures），2010-2024 年日频数据
 
-- [ ] IS and OOS periods are strictly separated — no data leakage (lookahead bias, survivorship bias)
-- [ ] WFE is calculated for each window — look at distribution, not just average
-- [ ] Parameter stability is analyzed — parameters should not change drastically between windows
-- [ ] Sufficient trades in each OOS window for statistical validity (minimum 30)
-- [ ] Transaction costs, slippage, and market impact are included in all IS and OOS calculations
-- [ ] Optimization objective is risk-adjusted (Sharpe, Sortino) not total return
-- [ ] Number of parameters is justified relative to the amount of IS data
-- [ ] Parameter sensitivity surface shows broad plateau, not narrow spike
-- [ ] Multiple WFA configurations tested — is result robust to different IS/OOS ratios?
-- [ ] OOS results are compared against a naive benchmark (buy-and-hold, random entry)
-- [ ] Concatenated OOS equity curve is examined for structural breaks or degradation over time
+滚动前进设计：
+- 样本内窗口：4 年（滚动窗口）
+- 样本外窗口：6 个月
+- 步长：6 个月
+- 窗口总数：20
+
+结果摘要：
+- 样本内平均夏普：1.35
+- 样本外平均夏普：0.72
+- WFE：0.53（可接受，但并不出色）
+- 样本外夏普标准差：0.45（变异很高）
+- 最优 fast_period：范围从 8 到 22（稳定性中等）
+- 最优 slow_period：范围从 40 到 65（稳定性中等）
+
+评估：策略具备一定优势，但样本外衰减显著。
+参数不稳定，表明它在适应噪声（noise）而非信号（signal）。
+可考虑更简单的参数化，或加入状态过滤器（regime filter）。
+```
+
+### 示例 2：参数稳定的均值回归
+```
+策略：当 z 分数（z-score）< -2 时买入，当 z-score > +2 时卖出
+参数：回看期（lookback period）、z 分数阈值
+资产：配对交易（pairs trade）（可口可乐（Coca-Cola）对百事可乐（PepsiCo））
+
+滚动前进设计：
+- 样本内窗口：3 年（滚动窗口）
+- 样本外窗口：6 个月
+- 共计 16 个窗口
+
+结果：
+- 样本内平均夏普：0.95
+- 样本外平均夏普：0.78
+- WFE：0.82（优秀）
+- 最优 lookback：所有窗口均为 55-65 天（非常稳定，变异系数=0.08）
+- 最优 z-score：所有窗口均为 1.8-2.2（稳定，变异系数=0.10）
+
+评估：高 WFE 与稳定参数表明这是一个稳健策略。
+参数平台很宽（lookback 在 40-80 时，绩效相差在 10% 以内）。
+策略很可能捕捉到该配对关系中真实的均值回归。
+以当前最优参数部署，并监控结构突变（structural break）。
+```
+
+### 示例 3：状态感知的滚动前进（Regime-Aware Walk-Forward）
+```
+策略：商品期货篮子上的动量
+问题：标准滚动前进分析显示 WFE 为 0.45——需警惕
+
+排查：按样本外窗口绘制 WFE
+- 牛市状态窗口：WFE = 0.75（良好）
+- 熊市状态窗口：WFE = 0.55（可接受）
+- 横盘状态窗口：WFE = 0.15（很差）
+
+诊断：策略在横盘市场中亏损（动量在震荡中失效）
+
+解决方案：加入状态过滤器
+- VIX < 15 且趋势强度（ADX）< 20：将仓位规模（position size）降低 50%
+- VIX > 30 且 ADX > 30：使用满仓位规模
+
+加入状态过滤器后的修订滚动前进分析：
+- 样本内平均夏普：1.05（低于未过滤版本，符合预期）
+- 样本外平均夏普：0.82（高于未过滤版本）
+- WFE：0.78（改善显著）
+- 过滤器使横盘区间的回撤（drawdown）降低 60%
+
+注意：状态过滤器会增加复杂度——应验证它本身没有过拟合，
+做法是检验过滤器参数在各窗口之间的稳定性
+```
+
+## 质量关卡
+
+在接受滚动前进结果之前，核验以下各项：
+
+- [ ] 样本内区间与样本外区间严格分离——无数据泄漏（data leakage）（前瞻偏差（lookahead bias）、幸存者偏差（survivorship bias））
+- [ ] 已为每个窗口计算 WFE——查看分布，而不只看平均值
+- [ ] 已分析参数稳定性——参数不应在各窗口之间剧烈变化
+- [ ] 每个样本外窗口都有足够的交易笔数，以保证统计有效性（最少 30 笔）
+- [ ] 所有样本内与样本外计算都计入了交易成本（transaction cost）、滑点（slippage）与市场冲击（market impact）
+- [ ] 优化目标是风险调整后的（夏普比率、索提诺比率），而不是总收益
+- [ ] 参数个数相对于样本内数据量是有依据的
+- [ ] 参数敏感性曲面呈现宽阔的平台，而不是狭窄的尖峰
+- [ ] 已测试多种滚动前进分析配置——结果对不同的样本内/样本外比例是否稳健？
+- [ ] 样本外结果已与朴素基准（naive benchmark）比较（买入并持有（buy-and-hold）、随机入场（random entry））
+- [ ] 已检查拼接后的样本外权益曲线（equity curve），查看是否存在结构突变或随时间的衰减

@@ -1,203 +1,203 @@
-# Drawdown Analysis and Management
+# 回撤（drawdown）分析与管理
 
-> Max drawdown, recovery analysis, conditional drawdown at risk, stop-loss design, de-leveraging rules, and drawdown-based position sizing.
+> 最大回撤（maximum drawdown）、恢复分析（recovery analysis）、条件回撤在险（conditional drawdown at risk）、止损（stop-loss）设计、去杠杆（de-leveraging）规则，以及基于回撤的仓位规模（drawdown-based position sizing）。
 
-## When to Activate
+## 何时启用
 
-- User analyzing drawdown characteristics of a strategy or portfolio
-- Designing stop-loss or de-leveraging rules
-- Evaluating whether a drawdown is within expected bounds or signals strategy failure
-- Position sizing based on maximum acceptable drawdown
-- Comparing strategies using drawdown-adjusted performance metrics
-- Setting risk limits expressed as drawdown thresholds
+- 用户正在分析某策略或某投资组合的回撤特征
+- 正在设计止损规则或去杠杆规则
+- 正在评估某次回撤是落在预期界限之内，还是表明策略失败
+- 基于可接受的最大回撤来确定仓位规模
+- 使用经回撤调整的绩效指标（drawdown-adjusted performance metrics）比较策略
+- 将风险限额（risk limit）设定为以回撤阈值表达的形式
 
-## Core Concepts
+## 核心概念
 
-### Drawdown Definitions
+### 回撤的定义
 
-**Drawdown at time t**
+**时点 t 的回撤**
 - DD(t) = (Peak(t) - Value(t)) / Peak(t)
-- Peak(t) = max(Value(s) for s <= t) — running high-water mark
-- Always non-negative; zero when portfolio is at a new high
+- Peak(t) = max(Value(s) for s <= t) —— 滚动高水位（high-water mark）
+- 始终为非负；当投资组合创出新高时，回撤为零
 
-**Maximum Drawdown (MDD)**
-- MDD = max(DD(t)) over the observation period
-- The single worst peak-to-trough decline
-- Most commonly cited drawdown statistic
-- Depends heavily on observation period length — longer periods yield larger MDD
+**最大回撤（MDD）**
+- MDD = max(DD(t))，最大值取自整个观察期（observation period）
+- 单次最严重的峰谷下跌（peak-to-trough）
+- 最常被引用的回撤统计量
+- 高度依赖于观察期的长度——观察期越长，MDD 越大
 
-**Drawdown Duration**
-- Time from peak to trough (decline phase)
-- Time from trough to recovery of previous peak (recovery phase)
-- Total underwater period = decline + recovery
-- Some drawdowns never fully recover within the observation window
+**回撤持续期（drawdown duration）**
+- 从峰值到谷值的时间（下跌阶段（decline phase））
+- 从谷值恢复至前一峰值的时间（恢复阶段（recovery phase））
+- 总水下期（underwater period）= 下跌阶段 + 恢复阶段
+- 有些回撤在观察窗口（observation window）内始终未能完全恢复
 
-**Average Drawdown**
-- Mean of all drawdown episodes exceeding a threshold
-- More stable than MDD as a risk measure
-- Conditional Drawdown at Risk (CDaR): expected drawdown conditional on exceeding a quantile — analogous to ES for drawdowns
+**平均回撤（average drawdown）**
+- 所有超过某一阈值的回撤区间的均值
+- 作为风险度量，比 MDD 更为稳定
+- 条件回撤在险（CDaR）：在回撤超过某一分位数（quantile）的条件下的期望回撤——对应于回撤情形下的预期短缺（expected shortfall, ES）
 
-### Distribution of Maximum Drawdown
+### 最大回撤的分布
 
-For a random walk with drift mu and volatility sigma:
-- Expected MDD scales with sqrt(T) and sigma
-- For a GBM process, approximate: E[MDD] proportional to sigma * sqrt(T) for long periods
-- Even strategies with positive expected return will experience significant drawdowns
-- MDD is a single extreme statistic — high variance across realizations
-- A strategy with 10% annual return and 15% vol has approximately 50% probability of a >20% drawdown over 10 years
+对于漂移（drift）为 mu、波动率（volatility）为 sigma 的随机游走（random walk）：
+- 期望 MDD 随 sqrt(T) 与 sigma 缩放
+- 对于几何布朗运动（geometric Brownian motion, GBM）过程，近似关系为：在较长时期内，E[MDD] 与 sigma * sqrt(T) 成比例
+- 即便期望收益为正的策略，也会经历显著的回撤
+- MDD 是单一极值统计量——不同实现（realization）之间的方差很高
+- 年化收益为 10%、波动率为 15% 的策略，在 10 年内出现超过 20% 回撤的概率约为 50%
 
-### Drawdown-Adjusted Performance Metrics
+### 经回撤调整的绩效指标
 
-**Calmar Ratio**: Annual return / Max drawdown — higher is better, but MDD is a single point
-**Sterling Ratio**: Annual return / (Average of N largest drawdowns + 10%) — more robust than Calmar
-**Burke Ratio**: Annual return / sqrt(sum of squared drawdowns) — penalizes multiple deep drawdowns
-**Ulcer Index**: sqrt(mean of squared drawdowns) — continuous measure of drawdown pain
-**Pain Index**: mean of all drawdowns — captures both depth and duration of underwater periods
+**卡玛比率（Calmar Ratio）**：年化收益 / 最大回撤——越高越好，但 MDD 只是一个单点
+**斯特林比率（Sterling Ratio）**：年化收益 /（N 个最大回撤的平均值 + 10%）——比卡玛比率更稳健
+**伯克比率（Burke Ratio）**：年化收益 / 各次回撤平方和的平方根——对多次深度回撤加以惩罚
+**溃疡指数（Ulcer Index）**：回撤平方之均值的平方根——对回撤痛苦程度的连续度量
+**痛苦指数（Pain Index）**：全部回撤的均值——同时刻画水下期的深度与持续时间
 
-## Methodology
+## 方法
 
-### Stop-Loss Design
+### 止损设计
 
-**Fixed Percentage Stop-Loss**
-- Exit when position declines X% from entry (e.g., 2% per trade, 10% portfolio level)
-- Simple and transparent
-- Risk: whipsaw — stopped out just before recovery
-- Size the stop relative to the strategy's expected volatility and holding period
+**固定百分比止损（fixed percentage stop-loss）**
+- 当头寸相对入场价下跌 X% 时退出（例如单笔交易 2%，组合层面 10%）
+- 简单，而且透明
+- 风险：拉锯（whipsaw）——恰好在恢复之前被止损出局
+- 止损宽度应相对于该策略的预期波动率与持有期（holding period）来设定
 
-**Trailing Stop-Loss**
-- Stop moves up with price but never down
-- Trail by fixed percentage (e.g., 10% from peak) or ATR multiple (e.g., 3x ATR)
-- Lets winners run while limiting drawdown
-- ATR-based stops adapt to current volatility regime
+**追踪止损（trailing stop-loss）**
+- 止损随价格上移，但从不下移
+- 以固定百分比追踪（例如距峰值 10%），或以平均真实波幅（average true range, ATR）的倍数追踪（例如 3 倍 ATR）
+- 在限制回撤的同时，让盈利头寸继续持有
+- 基于 ATR 的止损会适应当前的波动率状态（volatility regime）
 
-**Volatility-Adjusted Stop**
-- Stop distance = k * current_volatility (e.g., k * 20-day realized vol)
-- Wider stops in high-vol environments, tighter in low-vol
-- Reduces whipsaw in volatile markets while maintaining discipline in calm markets
+**波动率调整止损（volatility-adjusted stop）**
+- 止损距离 = k * current_volatility（例如 k * 20 日已实现波动率（realized volatility））
+- 高波动环境中止损更宽，低波动环境中止损更紧
+- 在波动剧烈的市场中减少拉锯，同时在平静市场中保持纪律
 
-**Time-Based Stop**
-- Exit if position has not reached profit target within N days
-- Addresses opportunity cost of capital in stagnant positions
-- Combine with price-based stop for multi-dimensional exit logic
+**时间止损（time-based stop）**
+- 若头寸在 N 日内尚未达到盈利目标，则退出
+- 用于应对停滞头寸所占用的资金机会成本（opportunity cost of capital）
+- 与基于价格的止损结合使用，形成多维度的退出逻辑
 
-### De-Leveraging Rules
+### 去杠杆规则
 
-Systematic rules for reducing exposure during drawdowns:
+回撤期间用于降低敞口（exposure）的系统性规则：
 
-**Linear De-Leveraging**
-- Reduce exposure proportionally to drawdown depth
-- Target leverage = base_leverage * (1 - DD / max_allowed_DD)
-- At max allowed drawdown, leverage = 0 (fully de-risked)
-- Example: base leverage 1.5x, max DD 20% — at 10% DD, leverage = 1.5 * (1 - 0.5) = 0.75x
+**线性去杠杆（linear de-leveraging）**
+- 按回撤深度成比例地降低敞口
+- 目标杠杆 = base_leverage * (1 - DD / max_allowed_DD)
+- 达到所允许的最大回撤时，杠杆 = 0（完全去风险（fully de-risked））
+- 示例：基础杠杆 1.5 倍，最大回撤 20%——当回撤为 10% 时，杠杆 = 1.5 * (1 - 0.5) = 0.75 倍
 
-**Stepped De-Leveraging**
-- Define discrete threshold levels:
-  - DD < 5%: maintain full exposure
-  - 5% < DD < 10%: reduce to 75% exposure
-  - 10% < DD < 15%: reduce to 50% exposure
-  - DD > 15%: reduce to 25% or exit entirely
-- Less sensitive to noise than continuous de-leveraging
-- Clear and easy to implement and communicate
+**阶梯式去杠杆（stepped de-leveraging）**
+- 定义离散的阈值档位：
+  - DD < 5%：维持全部敞口
+  - 5% < DD < 10%：降至 75% 敞口
+  - 10% < DD < 15%：降至 50% 敞口
+  - DD > 15%：降至 25% 敞口，或全部退出
+- 对噪声（noise）的敏感程度低于连续去杠杆
+- 规则清晰，易于实施，也易于沟通
 
-**Volatility-Conditional De-Leveraging**
-- Target constant volatility: leverage = target_vol / current_vol
-- When realized vol spikes (usually correlated with drawdowns), leverage automatically decreases
-- Vol targeting naturally reduces exposure in crisis and increases in calm
-- Documented improvement: vol-managed portfolios have lower MDD and higher Sharpe
+**波动率条件去杠杆（volatility-conditional de-leveraging）**
+- 以恒定波动率为目标：杠杆 = target_vol / current_vol
+- 当已实现波动率飙升（通常与回撤相关）时，杠杆自动下降
+- 波动率目标（volatility targeting）会在危机中自然降低敞口，并在平静时期提高敞口
+- 已有文献记载的改进：波动率管理组合（vol-managed portfolios）的 MDD 更低，夏普比率（Sharpe ratio）更高
 
-### Drawdown-Based Position Sizing
+### 基于回撤的仓位规模
 
-**Sizing from Maximum Acceptable Drawdown**
-- Given max acceptable DD, strategy vol, and leverage:
-- Position size = max_DD / (expected_MDD_per_unit_vol * strategy_vol)
-- Example: max acceptable DD = 15%, strategy vol = 20%, expected MDD ratio = 2.5
-  - Position size = 15% / (2.5 * 20%) = 30% of capital
+**由可接受的最大回撤确定仓位**
+- 给定可接受的最大回撤、策略波动率以及杠杆：
+- 仓位规模 = max_DD / (expected_MDD_per_unit_vol * strategy_vol)
+- 示例：可接受的最大回撤 = 15%，策略波动率 = 20%，期望 MDD 比率 = 2.5
+  - 仓位规模 = 15% / (2.5 * 20%) = 资本的 30%
 
-**Kelly-Drawdown Tradeoff**
-- Full Kelly criterion maximizes growth but has severe drawdowns (expected MDD approximately 50-60%)
-- Fractional Kelly (typically 0.25-0.5 of full Kelly) dramatically reduces expected MDD
-- f = 0.5 Kelly approximately halves expected MDD while reducing growth rate by only 25%
-- Optimal fraction depends on the investor's drawdown tolerance
+**凯利–回撤权衡（Kelly-drawdown tradeoff）**
+- 全凯利准则（Kelly criterion）可以最大化增长，但会带来严重回撤（期望 MDD 约为 50%–60%）
+- 分数凯利（fractional Kelly，通常取全凯利的 0.25–0.5）会大幅降低期望 MDD
+- f = 0.5 Kelly 大约将期望 MDD 减半，同时增长率只降低 25%
+- 最优分数取决于投资者的回撤容忍度（drawdown tolerance）
 
-### Recovery Analysis
+### 恢复分析
 
-- Recovery time = f(drawdown depth, return rate, volatility)
-- For a strategy with annual return r and drawdown D: approximate recovery time = -ln(1-D) / r
-- A 50% drawdown requires 100% gain to recover — arithmetic of losses is brutal
-- With 10% annual return, recovery from 30% DD takes approximately 3.6 years; from 50% DD, approximately 7 years
-- Compounding during recovery helps but does not eliminate the asymmetry
+- 恢复时间 = f(回撤深度, 收益率, 波动率)
+- 对于年化收益为 r、回撤为 D 的策略：近似恢复时间 = -ln(1-D) / r
+- 50% 的回撤需要 100% 的涨幅才能恢复——亏损的算术是残酷的
+- 在年化收益为 10% 时，从 30% 的回撤中恢复大约需要 3.6 年；从 50% 的回撤中恢复大约需要 7 年
+- 恢复期间的复利（compounding）有所帮助，但并不能消除这种不对称
 
-## Examples
+## 示例
 
-### Maximum Drawdown Analysis
+### 最大回撤分析
 ```
-Strategy equity curve peak: $1,000,000 (March 2020)
-Strategy equity curve trough: $720,000 (March 23, 2020)
-Recovery to new peak: $1,050,000 (August 2020)
+策略权益曲线（equity curve）峰值：$1,000,000（2020 年 3 月）
+策略权益曲线谷值：$720,000（2020 年 3 月 23 日）
+恢复至新峰值：$1,050,000（2020 年 8 月）
 
-Maximum drawdown: (1,000,000 - 720,000) / 1,000,000 = 28%
-Decline duration: 15 trading days
-Recovery duration: 105 trading days
-Total underwater period: 120 trading days
+最大回撤：(1,000,000 - 720,000) / 1,000,000 = 28%
+下跌持续期：15 个交易日
+恢复持续期：105 个交易日
+总水下期：120 个交易日
 
-Calmar ratio (annualized return 15%): 15% / 28% = 0.54
-```
-
-### Vol-Targeting De-Leverage
-```
-Strategy target vol: 10% annualized
-Current realized vol (20-day): 25% annualized (crisis)
-
-Leverage adjustment: 10% / 25% = 0.40
-Original allocation: $5M -> Reduced to: $5M * 0.40 = $2M
-
-When vol normalizes to 12%:
-Leverage adjustment: 10% / 12% = 0.83
-Allocation: $5M * 0.83 = $4.15M (gradually re-risking)
-
-Result: portfolio volatility stays approximately constant at 10% target.
-Historical backtest shows MDD reduced from 35% to 18% with vol targeting.
+卡玛比率（年化收益 15%）：15% / 28% = 0.54
 ```
 
-### Conditional Drawdown at Risk
+### 波动率目标下的去杠杆
 ```
-Drawdown distribution from 10,000 Monte Carlo paths (252-day horizon):
-  Median MDD: 8.5%
-  75th percentile MDD: 12.3%
-  95th percentile MDD: 19.8%
-  99th percentile MDD: 27.1%
-  CDaR(95%): average of worst 5% of MDD outcomes = 23.4%
+策略目标波动率：年化 10%
+当前已实现波动率（20 日）：年化 25%（危机）
 
-Use CDaR(95%) = 23.4% as the risk budget.
-If maximum acceptable loss is $2M on a $10M portfolio (20%):
-  Position is slightly oversized — reduce to $10M * (20/23.4) = $8.55M.
-```
+杠杆调整：10% / 25% = 0.40
+原始配置：$5M -> 降至：$5M * 0.40 = $2M
 
-### Stepped De-Leveraging in Practice
-```
-Portfolio: $50M, base leverage 2x, gross exposure $100M.
+当波动率回归至 12% 时：
+杠杆调整：10% / 12% = 0.83
+配置：$5M * 0.83 = $4.15M（逐步重新承担风险（re-risking））
 
-Drawdown trajectory and responses:
-  Day 1-20:  DD = 3%    -> Full exposure ($100M gross)
-  Day 21:    DD = 6%    -> Reduce to 75% ($75M gross), sell $25M
-  Day 35:    DD = 11%   -> Reduce to 50% ($50M gross), sell $25M
-  Day 42:    DD = 8%    -> Hold at 50% (do not re-lever until new high or DD < 5%)
-  Day 60:    DD = 2%    -> Restore to 75% ($75M gross)
-  Day 80:    DD = 0%    -> Restore to 100% ($100M gross)
-
-Rules: only re-lever when drawdown decreases below the previous threshold.
-Prevents whipsaw from rapid threshold crossing.
+结果：组合波动率大约恒定维持在 10% 的目标水平。
+历史回测显示，采用波动率目标之后，MDD 从 35% 降至 18%。
 ```
 
-## Quality Gate
+### 条件回撤在险
+```
+来自 10,000 条蒙特卡洛（Monte Carlo）路径的回撤分布（期限为 252 日）：
+  MDD 中位数：8.5%
+  MDD 第 75 百分位：12.3%
+  MDD 第 95 百分位：19.8%
+  MDD 第 99 百分位：27.1%
+  CDaR(95%)：最差 5% 的 MDD 结果的平均值 = 23.4%
 
-- Maximum drawdown must be computed on daily (not monthly) frequency to capture intra-month extremes
-- Drawdown analysis must cover at least 3 full market cycles or 10+ years of data
-- Stop-loss levels must be backtested for whipsaw frequency and net impact on returns
-- De-leveraging rules must include re-leveraging logic to avoid permanent risk reduction
-- Vol-targeting must use appropriate volatility estimator (realized vol, EWMA, or GARCH) — not just sample vol
-- Drawdown metrics must be reported alongside return metrics in all strategy evaluations
-- Monte Carlo simulation of drawdown distribution should complement historical analysis
-- Recovery time analysis must accompany any drawdown report
-- Position sizing must be consistent with stated maximum drawdown tolerance
-- Drawdown triggers must be clearly documented and communicated to all stakeholders before they occur
+将 CDaR(95%) = 23.4% 用作风险预算（risk budget）。
+若 $10M 组合的最大可接受亏损为 $2M（20%）：
+  仓位略微过大——降至 $10M * (20/23.4) = $8.55M。
+```
+
+### 实践中的阶梯式去杠杆
+```
+组合：$50M，基础杠杆 2 倍，总敞口（gross exposure）$100M。
+
+回撤轨迹与相应操作：
+  第 1-20 日： DD = 3%    -> 全部敞口（总敞口 $100M）
+  第 21 日：   DD = 6%    -> 降至 75%（总敞口 $75M），卖出 $25M
+  第 35 日：   DD = 11%   -> 降至 50%（总敞口 $50M），卖出 $25M
+  第 42 日：   DD = 8%    -> 维持在 50%（在创出新高或 DD < 5% 之前不要重新加杠杆（re-lever））
+  第 60 日：   DD = 2%    -> 恢复至 75%（总敞口 $75M）
+  第 80 日：   DD = 0%    -> 恢复至 100%（总敞口 $100M）
+
+规则：仅当回撤下降到前一个阈值以下时，才重新加杠杆。
+以此防止阈值被快速来回穿越而造成拉锯。
+```
+
+## 质量关口
+
+- 最大回撤必须按日频（而非月频）计算，以便捕捉月内极值
+- 回撤分析必须覆盖至少 3 个完整的市场周期（market cycle），或 10 年以上的数据
+- 止损水平必须经过回测，以检验拉锯发生的频率，以及其对收益的净影响
+- 去杠杆规则必须包含重新加杠杆的逻辑，以避免风险被永久性地降低
+- 波动率目标必须使用适当的波动率估计量（已实现波动率、指数加权移动平均（exponentially weighted moving average, EWMA）或广义自回归条件异方差（GARCH）），而不能只用样本波动率（sample volatility）
+- 在所有策略评估中，回撤指标都必须与收益指标一并报告
+- 回撤分布的蒙特卡洛模拟应当作为历史分析的补充
+- 任何一份回撤报告都必须附带恢复时间分析
+- 仓位规模必须与所声明的最大回撤容忍度保持一致
+- 回撤触发条件必须在其发生之前清晰记录，并传达给全部利益相关方（stakeholders）
