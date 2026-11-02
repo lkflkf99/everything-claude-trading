@@ -1,10 +1,10 @@
 ---
 name: momentum-strategies
-description: Designs time-series and cross-sectional momentum: lookback, rebalance, volatility scaling, and crash risk. Use when the user wants a momentum or breakout strategy.
+description: 设计时间序列动量和横截面动量：回看窗口、再平衡、波动率缩放和崩盘风险。用户想做动量或突破策略时使用。
 ---
 
-# Momentum Strategies
+# 动量策略
 
-Read `skills/strategies/momentum-strategies/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/strategies/momentum-strategies/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, yields, TVL, or backtest results. Say when a figure was not verified. Do not place live orders.
+不要编造价格、收益率、TVL 或回测结果。无法核实的数字要明确说明。不要下达实盘订单。

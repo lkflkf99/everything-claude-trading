@@ -1,10 +1,10 @@
 ---
 name: cross-chain-arbitrage
-description: Evaluates CEX-DEX and cross-chain price gaps, including gas, latency, bridge, and flash-loan risk. Use when the user asks about crypto arbitrage, bridge arb, or triangular arb.
+description: 评估中心化交易所与去中心化交易所之间，以及跨链的价差，包括 gas、延迟、跨链桥和闪电贷风险。用户询问加密套利、跨链套利或三角套利时使用。
 ---
 
-# Cross Chain Arbitrage
+# 跨链套利
 
-Read `skills/crypto/cross-chain-arbitrage/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/crypto/cross-chain-arbitrage/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, yields, TVL, or backtest results. Say when a figure was not verified. Do not place live orders.
+不要编造价格、收益率、TVL 或回测结果。无法核实的数字要明确说明。不要下达实盘订单。

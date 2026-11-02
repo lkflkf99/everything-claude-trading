@@ -1,10 +1,10 @@
 ---
 name: strategy-evaluation
-description: Evaluates a strategy before deployment: costs, capacity, parameter stability, and a go or no-go. Use when the user asks if a strategy is ready to trade.
+description: 在部署前评估策略：成本、容量、参数稳定性和是否放行。用户询问策略是否可以交易时使用。
 ---
 
-# Strategy Evaluation
+# 策略评估
 
-Read `skills/backtesting/strategy-evaluation/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/backtesting/strategy-evaluation/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, yields, TVL, or backtest results. Say when a figure was not verified. Do not place live orders.
+不要编造价格、收益率、TVL 或回测结果。无法核实的数字要明确说明。不要下达实盘订单。

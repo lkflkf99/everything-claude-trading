@@ -1,10 +1,10 @@
 ---
 name: position-sizing
-description: Sizes positions with fractional Kelly, volatility targeting, and risk budgeting. Use when the user asks how many units to trade, position size, or risk per trade.
+description: 用分数凯利、波动率目标和风险预算确定仓位。用户询问交易多少单位、仓位大小或单笔风险时使用。
 ---
 
-# Position Sizing
+# 仓位管理
 
-Read `skills/risk/position-sizing/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/risk/position-sizing/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, yields, TVL, or backtest results. Say when a figure was not verified. Do not place live orders.
+不要编造价格、收益率、TVL 或回测结果。无法核实的数字要明确说明。不要下达实盘订单。

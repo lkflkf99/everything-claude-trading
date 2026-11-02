@@ -1,10 +1,10 @@
 ---
 name: black-scholes
-description: Prices European options, implied volatility, and Black-Scholes Greeks, including dividends and put-call parity. Use when the user asks to price an option, compute implied vol, or interpret delta, gamma, vega, or theta.
+description: 为欧式期权定价，计算隐含波动率和 Black-Scholes 希腊值，包含股息与看涨看跌平价。用户要求给期权定价、计算隐含波动率，或解释 delta、gamma、vega、theta 时使用。
 ---
 
-# Black Scholes
+# Black-Scholes
 
-Read `skills/derivatives/black-scholes/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/derivatives/black-scholes/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, implied vols, or backtest results. Say when a figure was not verified. Do not place live orders. For American single-stock options, use a tree that allows early exercise instead of a European Black-Scholes price.
+不要编造价格、隐含波动率或回测结果。无法核实的数字要明确说明。不要下达实盘订单。美式个股期权要用允许提前行权的树模型，不要把欧式 Black-Scholes 价格当作市价。

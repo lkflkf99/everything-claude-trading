@@ -1,10 +1,10 @@
 ---
 name: yield-farming
-description: Separates real DeFi yield from emission-subsidized yield and includes impermanent loss. Use when the user asks about yield farming, APY, APR, liquidity provision, or LP entry and exit.
+description: 把真实 DeFi 收益和排放补贴收益分开，并计入无常损失。用户询问流动性挖矿、APY、APR、提供流动性，或 LP 的进入与退出时使用。
 ---
 
-# Yield Farming
+# 流动性挖矿
 
-Read `skills/crypto/yield-farming/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/crypto/yield-farming/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, yields, TVL, or backtest results. Say when a figure was not verified. Do not place live orders.
+不要编造价格、收益率、TVL 或回测结果。无法核实的数字要明确说明。不要下达实盘订单。

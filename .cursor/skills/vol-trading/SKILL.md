@@ -1,10 +1,10 @@
 ---
 name: vol-trading
-description: Compares realized and implied volatility and designs vol trades such as earnings vol, dispersion, and variance. Use when the user wants to trade volatility, the vol risk premium, or a VIX-related view.
+description: 比较已实现波动率与隐含波动率，并设计波动率交易，例如财报波动率、离散度和方差。用户想交易波动率、波动率风险溢价，或与 VIX 相关的观点时使用。
 ---
 
-# Vol Trading
+# 波动率交易
 
-Read `skills/derivatives/vol-trading/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/derivatives/vol-trading/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, implied vols, or backtest results. Say when a figure was not verified. Do not place live orders. For American single-stock options, use a tree that allows early exercise instead of a European Black-Scholes price.
+不要编造价格、隐含波动率或回测结果。无法核实的数字要明确说明。不要下达实盘订单。美式个股期权要用允许提前行权的树模型，不要把欧式 Black-Scholes 价格当作市价。

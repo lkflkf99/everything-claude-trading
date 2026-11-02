@@ -1,10 +1,10 @@
 ---
 name: overfitting-prevention
-description: Checks whether a backtest is genuine or curve-fit, including multiple-testing adjustments. Use when the user shows a backtest, Sharpe, or asks if a strategy is overfit.
+description: 检查回测是真实的还是曲线拟合的，包括多重检验调整。用户展示回测、夏普比率，或询问策略是否过拟合时使用。
 ---
 
-# Overfitting Prevention
+# 防止过拟合
 
-Read `skills/backtesting/overfitting-prevention/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/backtesting/overfitting-prevention/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, yields, TVL, or backtest results. Say when a figure was not verified. Do not place live orders.
+不要编造价格、收益率、TVL 或回测结果。无法核实的数字要明确说明。不要下达实盘订单。

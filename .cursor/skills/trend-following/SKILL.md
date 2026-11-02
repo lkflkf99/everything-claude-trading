@@ -1,10 +1,10 @@
 ---
 name: trend-following
-description: Designs trend-following systems: moving-average crossovers, channel breakouts, and ATR sizing. Use when the user wants a trend-following or CTA-style strategy.
+description: 设计趋势跟踪系统：均线交叉、通道突破和 ATR 仓位。用户想做趋势跟踪或 CTA 风格策略时使用。
 ---
 
-# Trend Following
+# 趋势跟踪
 
-Read `skills/strategies/trend-following/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/strategies/trend-following/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, yields, TVL, or backtest results. Say when a figure was not verified. Do not place live orders.
+不要编造价格、收益率、TVL 或回测结果。无法核实的数字要明确说明。不要下达实盘订单。

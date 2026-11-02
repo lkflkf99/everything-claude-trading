@@ -1,10 +1,10 @@
 ---
 name: mev-strategies
-description: Explains MEV risk and mitigation: sandwiches, frontrunning, private mempools, and proposer-builder separation. Use when the user asks about MEV, sandwich attacks, Flashbots, or protecting a DEX trade.
+description: 说明 MEV 风险与缓解：三明治攻击、抢跑、私有内存池和提议者-构建者分离。用户询问 MEV、三明治攻击、Flashbots，或如何保护一笔 DEX 交易时使用。
 ---
 
-# Mev Strategies
+# MEV 策略
 
-Read `skills/crypto/mev-strategies/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/crypto/mev-strategies/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, yields, TVL, or backtest results. Say when a figure was not verified. Do not place live orders.
+不要编造价格、收益率、TVL 或回测结果。无法核实的数字要明确说明。不要下达实盘订单。

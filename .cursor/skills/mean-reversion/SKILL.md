@@ -1,10 +1,10 @@
 ---
 name: mean-reversion
-description: Designs mean-reversion and spread trades: z-scores, half-life, and pairs. Use when the user wants a mean-reversion, pairs, or Bollinger strategy.
+description: 设计均值回归和价差交易：z 分数、半衰期和配对交易。用户想做均值回归、配对或布林带策略时使用。
 ---
 
-# Mean Reversion
+# 均值回归
 
-Read `skills/strategies/mean-reversion/SKILL.md` and follow that methodology before answering.
+回答前先阅读 `skills/strategies/mean-reversion/SKILL.md`，并遵循其中的方法。
 
-Do not invent prices, yields, TVL, or backtest results. Say when a figure was not verified. Do not place live orders.
+不要编造价格、收益率、TVL 或回测结果。无法核实的数字要明确说明。不要下达实盘订单。

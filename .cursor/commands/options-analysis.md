@@ -1,26 +1,26 @@
 ---
-description: Price and structure a US equity or index options trade
+description: 为美股或指数期权交易定价并设计结构
 ---
 
-Analyze the US stock or index option in the user's message. Follow `.cursor/rules/trading-workflow.mdc`.
+分析用户消息中的美股或指数期权。遵循 `.cursor/rules/trading-workflow.mdc`。
 
-Use only prices, strikes, expiries, and implied vols the user supplied. If the chain is missing, say what is missing and stop before a priced recommendation. Do not invent quotes. American single-stock options need a tree that allows early exercise. Do not present a European Black-Scholes price as the market price.
+只使用用户提供的价格、行权价、到期日和隐含波动率。若期权链缺失，说明缺什么，并在给出定价建议之前停止。不要编造报价。美式个股期权需要允许提前行权的树模型。不要把欧式 Black-Scholes 价格当成市场价格。
 
-Delegate with the Task tool, one step at a time. Set `subagent_type` to the name below. Each subagent starts fresh, so include the user's request and every prior finding. Wait for each result before the next step. If a named subagent is unavailable, read `.cursor/agents/<name>.md` and do that step here.
+用 Task 工具一次委派一步。将 `subagent_type` 设为下面的名称。每个子代理都从空白上下文开始，因此要带上用户请求和此前的全部发现。等当前结果出来后再进行下一步。若某个具名子代理不可用，阅读 `.cursor/agents/<name>.md`，并在这里完成该步骤。
 
-1. `derivatives-analyst` — price the structure and compute delta, gamma, vega, and theta from the quotes given. Read `black-scholes`, `binomial-trees`, and `vol-surfaces` as they apply.
-2. `volatility-trader` — only when the user asks about skew, term structure, implied versus realized vol, or an event such as earnings. Read `vol-trading` and `vol-surfaces`.
-3. `options-strategist` — choose the structure for the user's view and max loss: vertical, condor, calendar, hedge, or a single option. Read `hedging-strategies` when the user wants a hedge.
-4. `risk-manager` — max loss, gap risk, margin, and the Greeks. Read `greeks-management` and `drawdown-management`. This step may reject the trade. Stop if it does.
-5. `execution-specialist` — the spread and how to get filled. Include this when the user asks how to trade it.
-6. `quant-researcher`, then `algo-strategist`, then `backtesting-engineer` — only when the user wants a repeating rule rather than one trade. Do not claim a backtest ran unless code in this workspace actually ran it.
-7. `regulatory-compliance` — only if the user asks to deploy or trade live. Stop if it fails.
+1. `derivatives-analyst` — 为结构定价，并根据给出的报价计算 delta、gamma、vega 和 theta。按适用情况阅读 `black-scholes`、`binomial-trees` 和 `vol-surfaces`。
+2. `volatility-trader` — 仅当用户询问偏斜、期限结构、隐含波动率相对已实现波动率，或财报等事件。阅读 `vol-trading` 和 `vol-surfaces`。
+3. `options-strategist` — 按用户的观点和最大亏损选择结构：垂直价差、铁鹰（condor）、日历价差、对冲，或单腿期权。用户需要对冲时阅读 `hedging-strategies`。
+4. `risk-manager` — 最大亏损、跳空风险、保证金和希腊值（Greeks）。阅读 `greeks-management` 和 `drawdown-management`。这一步可以否决交易。若被否决，停止。
+5. `execution-specialist` — 价差以及如何成交。用户询问如何交易时包含这一步。
+6. `quant-researcher`，然后 `algo-strategist`，然后 `backtesting-engineer` — 仅当用户要的是一条重复执行的规则，而不是单笔交易。除非本工作区的代码真的跑过回测，否则不要声称回测已经运行。
+7. `regulatory-compliance` — 仅当用户要求部署或实盘交易。未通过则停止。
 
-Then answer with:
+然后回答：
 
-- The structure, strikes, and expiry
-- Price and Greeks, each labeled as computed from the user's quotes or not verified
-- Max loss and the risk-manager verdict
-- What is still missing from the chain
+- 结构、行权价和到期日
+- 价格和希腊值，每一项都标明是根据用户报价算出的，还是未核实
+- 最大亏损，以及 risk-manager 的结论
+- 期权链仍缺少什么
 
-Do not place live orders.
+不要下达实盘订单。
