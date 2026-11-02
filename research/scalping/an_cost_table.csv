@@ -1,0 +1,8 @@
+scenario,per_side_bp,round_trip_bp,notes
+vip0_taker_per_side,5.0,10.0,verified VIP0 taker 0.050% each side; round trip is the realistic hurdle
+readme_taker_per_side_4bp,4.0,8.0,embedded code default taker_fee=0.0004; optimistic vs verified 5 bp
+maker_maker,2.0,4.0,"VIP0 maker 0.020% each side; this is a fee, not a rebate"
+readme_80_20_blend,2.4000000000000004,4.800000000000001,"0.8*2bp + 0.2*4bp per side, times two sides. Code then multiplies by leverage 5 in equity space"
+readme_blend_plus_1bp_slip_per_side,3.4000000000000004,6.800000000000001,code total_friction uses (avg_fee+slippage)*leverage once per side change
+vip0_80_20_blend,2.6000000000000005,5.200000000000001,same 80/20 mix with the verified 5 bp taker
+maker_entry_taker_stop_vip0,,7.0,2 bp maker entry + 5 bp taker stop. A stop-market cannot be a maker fill
