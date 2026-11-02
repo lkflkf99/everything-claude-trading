@@ -1,0 +1,77 @@
+{
+  "basis": "OOS 2022-2026 (1764d) net of costs+funding; 60d block bootstrap x2000",
+  "TG1x": {
+    "point": {
+      "cagr": 0.219,
+      "sharpe": 0.757,
+      "mdd_realized": -0.325,
+      "ann_vol": 0.334
+    },
+    "bootstrap": {
+      "sharpe_ci95": [
+        -0.161,
+        1.586
+      ],
+      "sharpe_median": 0.755,
+      "cagr_ci95": [
+        -0.098,
+        0.68
+      ],
+      "cagr_median": 0.214,
+      "mdd_ci95_worst_best": [
+        -0.688,
+        -0.237
+      ],
+      "mdd_median": -0.405,
+      "p_sharpe_le_0": 0.058
+    }
+  },
+  "VT_TG": {
+    "point": {
+      "cagr": 0.208,
+      "sharpe": 0.672,
+      "mdd_realized": -0.335,
+      "ann_vol": 0.398
+    },
+    "bootstrap": {
+      "sharpe_ci95": [
+        -0.307,
+        1.588
+      ],
+      "sharpe_median": 0.664,
+      "cagr_ci95": [
+        -0.175,
+        0.789
+      ],
+      "cagr_median": 0.201,
+      "mdd_ci95_worst_best": [
+        -0.796,
+        -0.299
+      ],
+      "mdd_median": -0.507,
+      "p_sharpe_le_0": 0.083
+    }
+  },
+  "regime_conditioning": {
+    "note": "Gate edge = crash insurance. In windows WITH a >50pct BTC bear (2022), gate adds ~60pp/yr; in bull windows (2023-24) it COSTS ~30-100pp/yr of upside; in chop (2025-26) roughly neutral-to-slightly-positive.",
+    "per_year_cagr_TG1x": "see qr_composite_perf.csv"
+  },
+  "multiple_testing_ledger": {
+    "variants_evaluated_this_study": [
+      "funding deciles x2 horizons",
+      "fund_z regression x2 horizons x3 periods",
+      "tilt regression",
+      "4 strategies x 5 windows",
+      "vt grid 40/50/60",
+      "4 gate variants",
+      "taker imb regression + OOS R2"
+    ],
+    "selection_statement": "Primary gate (SMA200) chosen a priori; alternates reported, not selected. No parameter was optimized on returns. Nevertheless the gate's incremental value is only ~p=0.14-0.25 vs no-gate: treat the effect as economically-motivated insurance, not a high-t alpha.",
+    "prior_pipeline_failures": [
+      "4h breakout (anti-predictive)",
+      "5 trend families OOS collapse",
+      "fade-extremes IS fail"
+    ],
+    "relation_to_prior_trend_failures": "Prior #2 used trend as RETURN signal at 4h/daily. Here trend is a 0/1 RISK GATE on unconditional long drift; it never predicts up-moves, it only refuses to hold below the 200d. Different mechanism; still, evidence base is ~2 bears (2022 full avoidance, 2025-26 partial)."
+  }
+}

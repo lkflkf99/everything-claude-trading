@@ -1,0 +1,211 @@
+{
+  "gate_on_days": 1356,
+  "frac_gate_on_rv10_le_50": 0.5737,
+  "frac_gate_on_rv10_le_60": 0.7124,
+  "frac_gate_on_rv10_le_70": 0.8127,
+  "dodge_table": [
+    {
+      "ep": 1,
+      "entry_day": "2020-07-19",
+      "kills_L": [
+        5.0,
+        10.0
+      ],
+      "rv10_at_entry": 0.16,
+      "rv10_le_60_at_entry": true,
+      "enters_leveraged_under_rv60": true,
+      "first_rv10_gt60_decision": NaN,
+      "worst_time": "2020-07-19 10:15:00"
+    },
+    {
+      "ep": 2,
+      "entry_day": "2021-02-05",
+      "kills_L": [],
+      "rv10_at_entry": 0.929,
+      "rv10_le_60_at_entry": false,
+      "enters_leveraged_under_rv60": false,
+      "first_rv10_gt60_decision": "2021-02-04",
+      "worst_time": "2021-02-05 01:55:00"
+    },
+    {
+      "ep": 3,
+      "entry_day": "2021-02-23",
+      "kills_L": [
+        10.0
+      ],
+      "rv10_at_entry": 0.781,
+      "rv10_le_60_at_entry": false,
+      "enters_leveraged_under_rv60": false,
+      "first_rv10_gt60_decision": "2021-02-22",
+      "worst_time": "2021-02-23 11:45:00"
+    },
+    {
+      "ep": 4,
+      "entry_day": "2021-03-10",
+      "kills_L": [
+        10.0
+      ],
+      "rv10_at_entry": 0.786,
+      "rv10_le_60_at_entry": false,
+      "enters_leveraged_under_rv60": false,
+      "first_rv10_gt60_decision": "2021-03-09",
+      "worst_time": "2021-04-25 21:45:00"
+    },
+    {
+      "ep": 5,
+      "entry_day": "2021-05-11",
+      "kills_L": [
+        10.0
+      ],
+      "rv10_at_entry": 0.774,
+      "rv10_le_60_at_entry": false,
+      "enters_leveraged_under_rv60": false,
+      "first_rv10_gt60_decision": "2021-05-10",
+      "worst_time": "2021-05-13 00:00:00"
+    },
+    {
+      "ep": 6,
+      "entry_day": "2021-08-10",
+      "kills_L": [
+        10.0
+      ],
+      "rv10_at_entry": 0.688,
+      "rv10_le_60_at_entry": false,
+      "enters_leveraged_under_rv60": false,
+      "first_rv10_gt60_decision": "2021-08-09",
+      "worst_time": "2021-09-07 15:05:00"
+    },
+    {
+      "ep": 7,
+      "entry_day": "2021-09-15",
+      "kills_L": [
+        10.0
+      ],
+      "rv10_at_entry": 0.861,
+      "rv10_le_60_at_entry": false,
+      "enters_leveraged_under_rv60": false,
+      "first_rv10_gt60_decision": "2021-09-14",
+      "worst_time": "2021-09-20 12:35:00"
+    },
+    {
+      "ep": 8,
+      "entry_day": "2021-10-02",
+      "kills_L": [
+        10.0
+      ],
+      "rv10_at_entry": 0.875,
+      "rv10_le_60_at_entry": false,
+      "enters_leveraged_under_rv60": false,
+      "first_rv10_gt60_decision": "2021-10-01",
+      "worst_time": "2021-12-04 05:25:00"
+    },
+    {
+      "ep": 9,
+      "entry_day": "2023-01-14",
+      "kills_L": [],
+      "rv10_at_entry": 0.398,
+      "rv10_le_60_at_entry": true,
+      "enters_leveraged_under_rv60": true,
+      "first_rv10_gt60_decision": "2023-01-21",
+      "worst_time": "2023-03-10 11:20:00"
+    },
+    {
+      "ep": 10,
+      "entry_day": "2023-03-24",
+      "kills_L": [
+        10.0
+      ],
+      "rv10_at_entry": 0.713,
+      "rv10_le_60_at_entry": false,
+      "enters_leveraged_under_rv60": false,
+      "first_rv10_gt60_decision": "2023-03-23",
+      "worst_time": "2023-06-15 11:15:00"
+    },
+    {
+      "ep": 11,
+      "entry_day": "2023-10-20",
+      "kills_L": [
+        10.0
+      ],
+      "rv10_at_entry": 0.353,
+      "rv10_le_60_at_entry": true,
+      "enters_leveraged_under_rv60": true,
+      "first_rv10_gt60_decision": NaN,
+      "worst_time": "2023-10-20 01:10:00"
+    },
+    {
+      "ep": 12,
+      "entry_day": "2024-03-31",
+      "kills_L": [
+        10.0
+      ],
+      "rv10_at_entry": 0.514,
+      "rv10_le_60_at_entry": true,
+      "enters_leveraged_under_rv60": true,
+      "first_rv10_gt60_decision": "2024-04-02",
+      "worst_time": "2024-05-01 08:20:00"
+    },
+    {
+      "ep": 13,
+      "entry_day": "2024-07-15",
+      "kills_L": [],
+      "rv10_at_entry": 0.418,
+      "rv10_le_60_at_entry": true,
+      "enters_leveraged_under_rv60": true,
+      "first_rv10_gt60_decision": NaN,
+      "worst_time": "2024-08-04 17:40:00"
+    },
+    {
+      "ep": 14,
+      "entry_day": "2024-09-27",
+      "kills_L": [],
+      "rv10_at_entry": 0.321,
+      "rv10_le_60_at_entry": true,
+      "enters_leveraged_under_rv60": true,
+      "first_rv10_gt60_decision": NaN,
+      "worst_time": "2024-10-01 20:40:00"
+    },
+    {
+      "ep": 15,
+      "entry_day": "2024-10-15",
+      "kills_L": [],
+      "rv10_at_entry": 0.431,
+      "rv10_le_60_at_entry": true,
+      "enters_leveraged_under_rv60": true,
+      "first_rv10_gt60_decision": NaN,
+      "worst_time": "2024-10-15 15:05:00"
+    },
+    {
+      "ep": 16,
+      "entry_day": "2025-03-20",
+      "kills_L": [],
+      "rv10_at_entry": 0.6,
+      "rv10_le_60_at_entry": false,
+      "enters_leveraged_under_rv60": false,
+      "first_rv10_gt60_decision": "2025-03-19",
+      "worst_time": "2025-03-29 17:15:00"
+    },
+    {
+      "ep": 17,
+      "entry_day": "2025-04-23",
+      "kills_L": [
+        10.0
+      ],
+      "rv10_at_entry": 0.461,
+      "rv10_le_60_at_entry": true,
+      "enters_leveraged_under_rv60": true,
+      "first_rv10_gt60_decision": NaN,
+      "worst_time": "2025-04-24 08:45:00"
+    },
+    {
+      "ep": 18,
+      "entry_day": "2026-08-21",
+      "kills_L": [],
+      "rv10_at_entry": 0.526,
+      "rv10_le_60_at_entry": true,
+      "enters_leveraged_under_rv60": true,
+      "first_rv10_gt60_decision": NaN,
+      "worst_time": "2026-08-21 00:05:00"
+    }
+  ]
+}

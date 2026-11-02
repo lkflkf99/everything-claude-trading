@@ -1,0 +1,196 @@
+{
+  "design": {
+    "window": "FULL_2020H2_2026",
+    "n_days": 2295,
+    "block_len": 60,
+    "n_boot": 2000,
+    "seed": 12345,
+    "base": "const_1.5",
+    "family_size": 9
+  },
+  "question": "does ANY conditional rule beat constant 1.5x on MDD after correcting for the 9-variant post-hoc scan?",
+  "E_max_improvement_pp_under_null": 1.2487377487631115,
+  "best_variant": "L1.5_rv50_dd20",
+  "best_variant_dmdd_obs_pp": 9.765648430280038,
+  "best_variant_p_romanowolf": 0.01,
+  "best_variant_p_bonferroni": 0.7515000000000001,
+  "p_max_stat_le_0_uncentred": 0.0165,
+  "pre_registered_arm": {
+    "variant": "strategist_1.5_rv60",
+    "spec": "STRATEGY_SPEC_v1.md section 8, frozen 2026-11-02, before ladder results",
+    "verdict_basis": "uncorrected paired p vs const_1.5 from qr_01 (singleton test): FULL dMDD +4.69pp p=0.0770; OOS dMDD +2.63pp p=0.1040"
+  },
+  "variants": [
+    {
+      "variant": "L1.5_rv50",
+      "realized_mdd_pct": -49.76848840383178,
+      "realized_cagr_pct": 38.19224331010291,
+      "realized_sharpe": 0.8921696617632734,
+      "dmdd_obs_pp": 9.764185585603757,
+      "dcagr_obs_pp": -6.678455475995593,
+      "dmdd_boot_median_pp": 6.33874127032727,
+      "dmdd_boot_ci95_pp": [
+        -2.12150641823029,
+        16.20045569100049
+      ],
+      "p_naive": 0.084,
+      "dcagr_boot_median_pp": -7.164661275931461,
+      "p_bonferroni_9": 0.756,
+      "p_romanowolf_adj": 0.01,
+      "p_holm_9": 0.6839999999999999,
+      "pre_registered": false
+    },
+    {
+      "variant": "L1.5_rv50_dd15",
+      "realized_mdd_pct": -49.905668230938595,
+      "realized_cagr_pct": 35.09153881514146,
+      "realized_sharpe": 0.8545784202272504,
+      "dmdd_obs_pp": 9.627005758496942,
+      "dcagr_obs_pp": -9.779159970957041,
+      "dmdd_boot_median_pp": 5.542386700450547,
+      "dmdd_boot_ci95_pp": [
+        -3.4232072332673287,
+        14.704712307338951
+      ],
+      "p_naive": 0.131,
+      "dcagr_boot_median_pp": -10.431618120679865,
+      "p_bonferroni_9": 1.0,
+      "p_romanowolf_adj": 0.01,
+      "p_holm_9": 0.6839999999999999,
+      "pre_registered": false
+    },
+    {
+      "variant": "L1.5_rv50_dd20",
+      "realized_mdd_pct": -49.7670255591555,
+      "realized_cagr_pct": 38.02169327077443,
+      "realized_sharpe": 0.892240093310189,
+      "dmdd_obs_pp": 9.765648430280038,
+      "dcagr_obs_pp": -6.84900551532408,
+      "dmdd_boot_median_pp": 6.453908573605665,
+      "dmdd_boot_ci95_pp": [
+        -2.115724015014866,
+        15.647115381593773
+      ],
+      "p_naive": 0.0835,
+      "dcagr_boot_median_pp": -7.397196809078832,
+      "p_bonferroni_9": 0.7515000000000001,
+      "p_romanowolf_adj": 0.01,
+      "p_holm_9": 0.6839999999999999,
+      "pre_registered": false
+    },
+    {
+      "variant": "strategist_1.5_rv60",
+      "realized_mdd_pct": -54.69729239812122,
+      "realized_cagr_pct": 38.46015353938721,
+      "realized_sharpe": 0.8768753614889805,
+      "dmdd_obs_pp": 4.835381591314314,
+      "dcagr_obs_pp": -6.410545246711297,
+      "dmdd_boot_median_pp": 4.690854808805062,
+      "dmdd_boot_ci95_pp": [
+        -1.7242832037025722,
+        10.917531534899394
+      ],
+      "p_naive": 0.077,
+      "dcagr_boot_median_pp": -6.294976219365756,
+      "p_bonferroni_9": 0.693,
+      "p_romanowolf_adj": 0.118,
+      "p_holm_9": 0.6839999999999999,
+      "pre_registered": true
+    },
+    {
+      "variant": "L1.5_rv60_dd15",
+      "realized_mdd_pct": -55.55570529450714,
+      "realized_cagr_pct": 33.90293422206037,
+      "realized_sharpe": 0.820472843108892,
+      "dmdd_obs_pp": 3.9769686949283956,
+      "dcagr_obs_pp": -10.967764564038141,
+      "dmdd_boot_median_pp": 3.4280081636860418,
+      "dmdd_boot_ci95_pp": [
+        -3.3689706025486474,
+        9.65555147280457
+      ],
+      "p_naive": 0.16,
+      "dcagr_boot_median_pp": -11.179223969708119,
+      "p_bonferroni_9": 1.0,
+      "p_romanowolf_adj": 0.17,
+      "p_holm_9": 0.6839999999999999,
+      "pre_registered": false
+    },
+    {
+      "variant": "L1.5_rv60_dd20",
+      "realized_mdd_pct": -54.1396587230221,
+      "realized_cagr_pct": 38.39744262508458,
+      "realized_sharpe": 0.8780942508170556,
+      "dmdd_obs_pp": 5.393015266413437,
+      "dcagr_obs_pp": -6.473256161013929,
+      "dmdd_boot_median_pp": 4.797193717435771,
+      "dmdd_boot_ci95_pp": [
+        -1.7163618645759333,
+        10.77731176989423
+      ],
+      "p_naive": 0.076,
+      "dcagr_boot_median_pp": -6.440379488956427,
+      "p_bonferroni_9": 0.6839999999999999,
+      "p_romanowolf_adj": 0.086,
+      "p_holm_9": 0.6839999999999999,
+      "pre_registered": false
+    },
+    {
+      "variant": "L1.5_rv70",
+      "realized_mdd_pct": -54.36718595819276,
+      "realized_cagr_pct": 41.273688933249076,
+      "realized_sharpe": 0.894692117324829,
+      "dmdd_obs_pp": 5.165488031242771,
+      "dcagr_obs_pp": -3.597009852849431,
+      "dmdd_boot_median_pp": 3.3049222582400892,
+      "dmdd_boot_ci95_pp": [
+        -2.317017267689354,
+        8.631286652847026
+      ],
+      "p_naive": 0.103,
+      "dcagr_boot_median_pp": -3.2360027705698236,
+      "p_bonferroni_9": 0.9269999999999999,
+      "p_romanowolf_adj": 0.0975,
+      "p_holm_9": 0.6839999999999999,
+      "pre_registered": false
+    },
+    {
+      "variant": "L1.5_rv70_dd15",
+      "realized_mdd_pct": -56.56260767915181,
+      "realized_cagr_pct": 36.136199490925925,
+      "realized_sharpe": 0.8355215386780551,
+      "dmdd_obs_pp": 2.9700663102837255,
+      "dcagr_obs_pp": -8.734499295172583,
+      "dmdd_boot_median_pp": 1.6133980404488601,
+      "dmdd_boot_ci95_pp": [
+        -4.810291753703909,
+        7.323766957617741
+      ],
+      "p_naive": 0.275,
+      "dcagr_boot_median_pp": -8.335601938792847,
+      "p_bonferroni_9": 1.0,
+      "p_romanowolf_adj": 0.267,
+      "p_holm_9": 0.6839999999999999,
+      "pre_registered": false
+    },
+    {
+      "variant": "L1.5_rv70_dd20",
+      "realized_mdd_pct": -55.23855142578036,
+      "realized_cagr_pct": 40.872381021004436,
+      "realized_sharpe": 0.8925983222093217,
+      "dmdd_obs_pp": 4.294122563655178,
+      "dcagr_obs_pp": -3.9983177650940727,
+      "dmdd_boot_median_pp": 2.981215035250684,
+      "dmdd_boot_ci95_pp": [
+        -2.55320418736949,
+        8.459289347688106
+      ],
+      "p_naive": 0.125,
+      "dcagr_boot_median_pp": -3.669884113150257,
+      "p_bonferroni_9": 1.0,
+      "p_romanowolf_adj": 0.148,
+      "p_holm_9": 0.6839999999999999,
+      "pre_registered": false
+    }
+  ]
+}

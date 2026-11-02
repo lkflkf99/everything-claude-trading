@@ -1,0 +1,147 @@
+{
+  "spotcheck_1_A1_stamp_curve": {
+    "recomputed": {
+      "FULL": {
+        "n": 2296,
+        "cagr": 0.33777829984000673,
+        "mdd": -0.4249925640755894,
+        "sharpe": 0.9195067705212919
+      },
+      "OOS": {
+        "n": 1765,
+        "cagr": 0.20534203581288457,
+        "mdd": -0.3531087166440129,
+        "sharpe": 0.7226989276776788
+      }
+    },
+    "artifact": {
+      "FULL": {
+        "cagr": 0.3377782998400076,
+        "sharpe": 0.9195067705212917,
+        "ann_vol": 0.4051106598880473,
+        "mdd": -0.42499256407558894,
+        "total_x": 6.232495378763439,
+        "n": 2295
+      },
+      "OOS": {
+        "cagr": 0.2053420358128848,
+        "sharpe": 0.7226989276776786,
+        "ann_vol": 0.33573146820882843,
+        "mdd": -0.3531087166440142,
+        "total_x": 2.4660171517700316,
+        "n": 1764
+      }
+    },
+    "delta_cagr_bp": {
+      "FULL": -8.881784197001252e-12,
+      "OOS": -2.220446049250313e-12
+    },
+    "delta_mdd_pp": {
+      "FULL": -4.440892098500626e-14,
+      "OOS": 1.3322676295501878e-13
+    },
+    "pass": true
+  },
+  "spotcheck_2_episode2021": {
+    "A0_baseline": {
+      "trough_date": "2021-12-17",
+      "recomputed_trough_pct": -56.46,
+      "artifact_pct": -56.46,
+      "pass": true
+    },
+    "A1_VB": {
+      "trough_date": "2021-12-17",
+      "recomputed_trough_pct": -38.75,
+      "artifact_pct": -38.75,
+      "pass": true
+    },
+    "A1_worst_held_days_recomputed": {
+      "2021-05-12": -12.68,
+      "2021-09-07": -11.09,
+      "2020-09-03": -11.09
+    },
+    "A1_worst_artifact": {
+      "2021-05-12": -12.68
+    },
+    "pass_worst_day": true
+  },
+  "spotcheck_3_trade_log": {
+    "n_trades_recomputed": 40,
+    "n_trades_artifact": 40,
+    "fees_recomputed_usdt": 748.11481325,
+    "fees_artifact_usdt": 748.1148132500002,
+    "pass": true
+  },
+  "funding_term_check": {
+    "reconstruction": "ret_A1_VB == w*ret_btc - w*fund_sum - 5bp*turn (max diff 9.8e-11)",
+    "oos_actual_inmarket_funding_ann_pct": 9.34,
+    "artifact_oos_funding_drag_ann_pct": 4.8047,
+    "ref_2021_inmarket_ann_pct_QR": 29.5
+  },
+  "stress_A_funding_25pct": {
+    "oos_base": {
+      "cagr": 20.44,
+      "mdd": -34.81,
+      "sharpe": 0.726
+    },
+    "oos_stressed_25pct_inmarket": {
+      "cagr": 11.12,
+      "mdd": -38.21,
+      "sharpe": 0.483
+    },
+    "note": "parity accounting, OOS 2022-26 price path held fixed; 2021 actual in-market funding was ~29.5%/yr, so 25%/yr is a mild-2021 repeat"
+  },
+  "stress_B_whipsaw_2021_chop": {
+    "A1_ret_2021_08_10_to_12_30_pct": -19.23,
+    "A0_ret_same_window_pct": -19.23,
+    "A1_mdd_in_window_pct": -32.99,
+    "n_flips_A1": 0,
+    "note": "rv10 69-89% < 100% threshold -> breaker silent; gate hysteresis eats the chop. Bounded by gate only."
+  },
+  "mdd_envelope_bootstrap": {
+    "A1_FULL": {
+      "median_pct": -47.4,
+      "ci95_worst_pct": -74.6,
+      "ci95_best_pct": -29.6
+    },
+    "A1_OOS": {
+      "median_pct": -38.3,
+      "ci95_worst_pct": -64.2,
+      "ci95_best_pct": -23.0
+    },
+    "realized_stamp_FULL_pct": -42.5,
+    "realized_stamp_OOS_pct": -35.3,
+    "reading": "~2.5% of FULL resamples have MDD worse than -74.6%; median -47.4% sits at the user's tolerance ceiling"
+  },
+  "kelly_reference": {
+    "oos_arith_mean_ann": 0.2401,
+    "oos_vol_ann": 0.3306,
+    "full_kelly_x": 2.2,
+    "note": "full Kelly > 1x => 1x leverage cap is below Kelly; sizing constraint is mandate MDD, not Kelly"
+  },
+  "combined_book": {
+    "dir_3pct_carry_10pct": {
+      "ret_on_NAV_pct": 0.92,
+      "vol_on_NAV_pct": 1.01,
+      "simultaneous_stress_dd_on_NAV_pct": -1.49,
+      "dir_sleeve_alone_stress_on_NAV_pct": -1.42
+    },
+    "dir_5pct_carry_10pct": {
+      "ret_on_NAV_pct": 1.27,
+      "vol_on_NAV_pct": 1.68,
+      "simultaneous_stress_dd_on_NAV_pct": -2.44,
+      "dir_sleeve_alone_stress_on_NAV_pct": -2.37
+    },
+    "dir_10pct_carry_10pct": {
+      "ret_on_NAV_pct": 2.15,
+      "vol_on_NAV_pct": 3.36,
+      "simultaneous_stress_dd_on_NAV_pct": -4.81,
+      "dir_sleeve_alone_stress_on_NAV_pct": -4.74
+    },
+    "notes": [
+      "carry is delta-neutral => return correlation to directional sleeve ~0 by construction; PnL regime-correlated (both earn in bulls).",
+      "funding legs are natural counterparties: sleeve pays funding in bulls (2021: -24.8%/yr in-market) that the carry book harvests; net cross-book funding leak partially internalizes.",
+      "venue concentration: both books on Binance BTC perp -> exchange/counterparty risk is additive, not diversified; separate sub-accounts per spec S1."
+    ]
+  }
+}

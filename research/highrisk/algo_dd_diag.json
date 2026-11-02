@@ -1,0 +1,436 @@
+{
+  "equity_peak_2021_date": "2021-03-13",
+  "mdd_full_pct": -56.5,
+  "mdd_oos_pct": -33.5,
+  "n_dd_episodes_ge10pct": 7,
+  "rv10_percentiles": {
+    "all_days": {
+      "p50": 47.0,
+      "p75": 67.0,
+      "p90": 86.0,
+      "p95": 103.0,
+      "p99": 130.0,
+      "frac_gt_100": 0.059
+    },
+    "held_days": {
+      "p50": 46.0,
+      "p75": 63.0,
+      "p90": 80.0,
+      "p95": 93.0,
+      "p99": 122.0,
+      "frac_gt_100": 0.033
+    },
+    "gate_on_days": {
+      "p50": 46.0,
+      "p75": 62.0,
+      "p90": 80.0,
+      "p95": 93.0,
+      "p99": 122.0,
+      "frac_gt_100": 0.032
+    }
+  },
+  "key_dates_2021": {
+    "2021-04-14": {
+      "close": 63019.0,
+      "rv10_pct": 55.0,
+      "gate": 1,
+      "breaker_m_next_day": 1,
+      "strat_dd_pct": -2.2
+    },
+    "2021-04-18": {
+      "close": 56140.0,
+      "rv10_pct": 65.0,
+      "gate": 1,
+      "breaker_m_next_day": 1,
+      "strat_dd_pct": -13.7
+    },
+    "2021-05-04": {
+      "close": 53263.0,
+      "rv10_pct": 95.0,
+      "gate": 1,
+      "breaker_m_next_day": 1,
+      "strat_dd_pct": -18.9
+    },
+    "2021-05-12": {
+      "close": 49596.0,
+      "rv10_pct": 108.0,
+      "gate": 1,
+      "breaker_m_next_day": 1,
+      "strat_dd_pct": -25.4
+    },
+    "2021-05-19": {
+      "close": 36689.0,
+      "rv10_pct": 105.0,
+      "gate": 0,
+      "breaker_m_next_day": 0,
+      "strat_dd_pct": -45.1
+    },
+    "2021-05-20": {
+      "close": 40500.0,
+      "rv10_pct": 138.0,
+      "gate": 0,
+      "breaker_m_next_day": 0,
+      "strat_dd_pct": -45.1
+    },
+    "2021-08-09": {
+      "close": 46260.0,
+      "rv10_pct": 69.0,
+      "gate": 1,
+      "breaker_m_next_day": 1,
+      "strat_dd_pct": -45.1
+    },
+    "2021-09-07": {
+      "close": 46864.0,
+      "rv10_pct": 82.0,
+      "gate": 1,
+      "breaker_m_next_day": 1,
+      "strat_dd_pct": -45.2
+    },
+    "2021-10-01": {
+      "close": 48124.0,
+      "rv10_pct": 88.0,
+      "gate": 1,
+      "breaker_m_next_day": 1,
+      "strat_dd_pct": -52.3
+    },
+    "2021-12-04": {
+      "close": 49136.0,
+      "rv10_pct": 89.0,
+      "gate": 1,
+      "breaker_m_next_day": 1,
+      "strat_dd_pct": -53.4
+    }
+  },
+  "volbreaker_X100_k5": {
+    "n_episodes": 17,
+    "days_off_total": 233,
+    "episodes_head": [
+      {
+        "trigger_date": "2020-03-12",
+        "rv10_at_trigger": 243.0,
+        "rearm_date": "2020-04-06",
+        "days_off": 25
+      },
+      {
+        "trigger_date": "2020-05-15",
+        "rv10_at_trigger": 104.0,
+        "rearm_date": "2020-05-21",
+        "days_off": 6
+      },
+      {
+        "trigger_date": "2021-01-11",
+        "rv10_at_trigger": 113.0,
+        "rearm_date": "2021-02-04",
+        "days_off": 24
+      },
+      {
+        "trigger_date": "2021-02-08",
+        "rv10_at_trigger": 125.0,
+        "rearm_date": "2021-02-22",
+        "days_off": 14
+      },
+      {
+        "trigger_date": "2021-02-23",
+        "rv10_at_trigger": 103.0,
+        "rearm_date": "2021-03-09",
+        "days_off": 14
+      },
+      {
+        "trigger_date": "2021-05-05",
+        "rv10_at_trigger": 102.0,
+        "rearm_date": "2021-05-10",
+        "days_off": 5
+      },
+      {
+        "trigger_date": "2021-05-12",
+        "rv10_at_trigger": 108.0,
+        "rearm_date": "2021-06-06",
+        "days_off": 25
+      },
+      {
+        "trigger_date": "2021-06-09",
+        "rv10_at_trigger": 106.0,
+        "rearm_date": "2021-07-05",
+        "days_off": 26
+      },
+      {
+        "trigger_date": "2022-02-28",
+        "rv10_at_trigger": 106.0,
+        "rearm_date": "2022-03-14",
+        "days_off": 14
+      },
+      {
+        "trigger_date": "2022-06-13",
+        "rv10_at_trigger": 103.0,
+        "rearm_date": "2022-06-30",
+        "days_off": 17
+      },
+      {
+        "trigger_date": "2022-09-13",
+        "rv10_at_trigger": 101.0,
+        "rearm_date": "2022-09-20",
+        "days_off": 7
+      },
+      {
+        "trigger_date": "2022-11-09",
+        "rv10_at_trigger": 105.0,
+        "rearm_date": "2022-11-23",
+        "days_off": 14
+      }
+    ]
+  },
+  "volbreaker_sensitivity": {
+    "X80": {
+      "n_episodes": 30,
+      "days_off": 472,
+      "extra_round_trips_per_yr": 2.2,
+      "extra_cost_bp_per_yr": 22.0
+    },
+    "X90": {
+      "n_episodes": 21,
+      "days_off": 313,
+      "extra_round_trips_per_yr": 1.2,
+      "extra_cost_bp_per_yr": 12.0
+    },
+    "X100": {
+      "n_episodes": 17,
+      "days_off": 233,
+      "extra_round_trips_per_yr": 1.0,
+      "extra_cost_bp_per_yr": 10.0
+    },
+    "X110": {
+      "n_episodes": 11,
+      "days_off": 140,
+      "extra_round_trips_per_yr": 0.4,
+      "extra_cost_bp_per_yr": 4.0
+    },
+    "X120": {
+      "n_episodes": 11,
+      "days_off": 109,
+      "extra_round_trips_per_yr": 0.6,
+      "extra_cost_bp_per_yr": 6.0
+    }
+  },
+  "dd_ladder_m30": {
+    "level": -0.3,
+    "breaches": [
+      {
+        "breach_date": "2021-05-16",
+        "dd_pct": -30.4,
+        "rearm_date": "2021-08-09"
+      },
+      {
+        "breach_date": "2021-08-10",
+        "dd_pct": -45.9,
+        "rearm_date": "2021-09-14"
+      },
+      {
+        "breach_date": "2021-09-15",
+        "dd_pct": -46.6,
+        "rearm_date": "2021-10-01"
+      },
+      {
+        "breach_date": "2021-10-02",
+        "dd_pct": -52.8,
+        "rearm_date": "2023-01-13"
+      },
+      {
+        "breach_date": "2023-01-14",
+        "dd_pct": -54.1,
+        "rearm_date": "2023-10-19"
+      },
+      {
+        "breach_date": "2023-10-20",
+        "dd_pct": -42.5,
+        "rearm_date": "2024-07-14"
+      },
+      {
+        "breach_date": "2024-09-30",
+        "dd_pct": -30.6,
+        "rearm_date": "2024-10-14"
+      },
+      {
+        "breach_date": "2024-10-15",
+        "dd_pct": -32.5,
+        "rearm_date": "2025-03-19"
+      }
+    ]
+  },
+  "whipsaw_breaker_coverage": [
+    {
+      "entry": "2020-07-19",
+      "exit": "2021-05-19",
+      "ret_during": 298.3,
+      "frac_days_breaker_off": 0.21
+    },
+    {
+      "entry": "2021-05-20",
+      "exit": "2021-05-21",
+      "ret_during": -8.1,
+      "frac_days_breaker_off": 1.0
+    },
+    {
+      "entry": "2021-08-09",
+      "exit": "2021-08-12",
+      "ret_during": -4.1,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2021-08-13",
+      "exit": "2021-08-17",
+      "ret_during": -6.5,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2021-08-19",
+      "exit": "2021-09-10",
+      "ret_during": -4.1,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2021-09-12",
+      "exit": "2021-09-13",
+      "ret_during": -2.3,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2021-09-14",
+      "exit": "2021-09-20",
+      "ret_during": -8.6,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2021-10-01",
+      "exit": "2021-12-13",
+      "ret_during": -3.0,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2021-12-14",
+      "exit": "2021-12-17",
+      "ret_during": -4.5,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2021-12-21",
+      "exit": "2021-12-28",
+      "ret_during": -2.8,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2023-01-13",
+      "exit": "2023-08-17",
+      "ret_during": 33.6,
+      "frac_days_breaker_off": 0.03
+    },
+    {
+      "entry": "2023-08-29",
+      "exit": "2023-08-30",
+      "ret_during": -1.5,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2023-10-16",
+      "exit": "2024-07-04",
+      "ret_during": 100.3,
+      "frac_days_breaker_off": 0.04
+    },
+    {
+      "entry": "2024-07-13",
+      "exit": "2024-08-03",
+      "ret_during": 2.6,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2024-08-23",
+      "exit": "2024-08-26",
+      "ret_during": -1.9,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2024-09-24",
+      "exit": "2024-09-25",
+      "ret_during": -1.8,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2024-09-26",
+      "exit": "2024-09-30",
+      "ret_during": -2.8,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2024-10-14",
+      "exit": "2025-03-09",
+      "ret_during": 22.1,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2025-03-12",
+      "exit": "2025-03-13",
+      "ret_during": -3.1,
+      "frac_days_breaker_off": 1.0
+    },
+    {
+      "entry": "2025-03-14",
+      "exit": "2025-03-16",
+      "ret_during": -1.7,
+      "frac_days_breaker_off": 1.0
+    },
+    {
+      "entry": "2025-03-19",
+      "exit": "2025-03-20",
+      "ret_during": -3.0,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2025-03-23",
+      "exit": "2025-03-28",
+      "ret_during": -1.9,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2025-04-22",
+      "exit": "2025-10-17",
+      "ret_during": 13.9,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2025-10-19",
+      "exit": "2025-10-22",
+      "ret_during": -1.0,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2025-10-23",
+      "exit": "2025-10-30",
+      "ret_during": -1.6,
+      "frac_days_breaker_off": 0.0
+    },
+    {
+      "entry": "2025-10-31",
+      "exit": "2025-11-03",
+      "ret_during": -2.8,
+      "frac_days_breaker_off": 0.0
+    }
+  ],
+  "funding": {
+    "n_stamps_held": 4065,
+    "mean_stamp_rate_bp": 1.544,
+    "mean_daily_sum_held_bp": 4.632,
+    "ann_inmarket_drag_pct": 16.91,
+    "frac_stamps_positive": 0.941,
+    "gate_round_trips_per_yr": 3.8,
+    "entry_stamp_signed_saving_total_bp": 13.0,
+    "entry_stamp_signed_saving_per_yr_bp": 1.9,
+    "entry_stamp_positive_share": 0.88
+  },
+  "liquidity": {
+    "median_0005_bar_usdt": 30027254.0,
+    "p5_0005_bar_usdt": 4874550.0,
+    "min_0005_bar_usdt": 456907.0,
+    "median_all_bars_usdt": 25234794.0,
+    "order_usdt": 10000.0,
+    "order_pct_of_p5_0005_bar": 0.2051
+  }
+}

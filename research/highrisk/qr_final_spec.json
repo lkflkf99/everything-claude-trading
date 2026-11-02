@@ -1,0 +1,40 @@
+{
+  "strategy_name": "TG1x-hyst2 \u2014 BTC perp 200d-SMA gated long with 2% hysteresis",
+  "instrument": "Binance USDT-margined BTCUSDT perpetual (step 0.001 BTC)",
+  "data_requirements": [
+    "daily UTC close of perp",
+    "8h funding rates (00/08/16 UTC)"
+  ],
+  "definitions": {
+    "close(t)": "daily close at 00:00 UTC (day boundary)",
+    "SMA200(t)": "mean(close[t-199..t])",
+    "upper_band(t)": "1.02 * SMA200(t)",
+    "lower_band(t)": "0.98 * SMA200(t)",
+    "state(t)": "1 if long, 0 if flat; transitions: 0->1 when close(t) > upper_band(t); 1->0 when close(t) < lower_band(t)"
+  },
+  "position_rule": "w(t+1) = state(t); execute at 00:00 UTC close of day t (day t+1 open); w in {0, 1}",
+  "costs": {
+    "taker": "0.05% per side on |delta w| (incl. drift rebalancing)",
+    "funding": "w * sum of the day's 3 funding rates; paid by long when positive"
+  },
+  "frozen_parameters": {
+    "sma_window_days": 200,
+    "hysteresis_band_pct": 2.0,
+    "rebalance": "daily 00:00 UTC",
+    "leverage": "1x (no leverage in primary)"
+  },
+  "alternative_tested_variant": {
+    "VT_TG": "w(t+1) = min(2.0, 0.50/rv30(t)) * 1[close(t) > SMA200(t)]; full-sample Sharpe 0.821 vs 0.876 primary; OOS Sharpe 0.672 vs 0.754 primary; use only if risk-manager wants explicit vol scaling/leverage ceiling"
+  },
+  "rejected_overlays": {
+    "funding_contrarian_tilt": "DEAD as price alpha: train NW t<=1.6, TEST wrong sign (7d: -0.59, 30d: -0.34), tilt regression OOS t=-0.34; mechanical carry benefit (+1.2-3.7%/yr) < churn cost + lost upside in composite (OOS CAGR 20.8% -> 15.6%)",
+    "taker_flow_overlay": "DEAD: train t=1.74 with controls -> OOS t=0.42, OOS R2 = -0.7% to -1.9%, pred corr ~0. Coefficient collapsed 82% OOS."
+  },
+  "performance_expectation": "see qr_composite_forward.json and qr_final_summary_stats.csv",
+  "known_failure_modes": [
+    "whipsaw chop around SMA200 in high-funding regimes (2021: CAGR -20% even with hysteresis, -41% without; MDD -56%)",
+    "slow exit: gate exits AFTER price already fell through the band (Apr-May 2021: rode -43% before exit)",
+    "statistical fragility: gate's incremental value vs no-gate p ~ 0.14-0.25 (bootstrap); evidence base = ~2 bears",
+    "funding regime: if funding flips persistently negative while gated ON, drag becomes benefit (2026: only 1.4-1.8%/yr drag); if 2021-like (30%/yr), in-market drag ~30%/yr at 1x"
+  ]
+}

@@ -1,0 +1,245 @@
+{
+  "worst_held_days": {
+    "A0_baseline": [
+      {
+        "date": "2021-05-19",
+        "net_ret_pct": -14.44
+      },
+      {
+        "date": "2021-01-21",
+        "net_ret_pct": -13.14
+      },
+      {
+        "date": "2021-05-12",
+        "net_ret_pct": -12.64
+      },
+      {
+        "date": "2021-09-07",
+        "net_ret_pct": -11.09
+      },
+      {
+        "date": "2020-09-03",
+        "net_ret_pct": -11.09
+      }
+    ],
+    "A1_VB": [
+      {
+        "date": "2021-05-12",
+        "net_ret_pct": -12.68
+      },
+      {
+        "date": "2021-09-07",
+        "net_ret_pct": -11.09
+      },
+      {
+        "date": "2020-09-03",
+        "net_ret_pct": -11.09
+      },
+      {
+        "date": "2021-02-23",
+        "net_ret_pct": -9.7
+      },
+      {
+        "date": "2021-09-20",
+        "net_ret_pct": -9.03
+      }
+    ],
+    "A2_TS30": [
+      {
+        "date": "2021-01-21",
+        "net_ret_pct": -13.14
+      },
+      {
+        "date": "2021-05-12",
+        "net_ret_pct": -12.64
+      },
+      {
+        "date": "2021-09-07",
+        "net_ret_pct": -11.09
+      },
+      {
+        "date": "2020-09-03",
+        "net_ret_pct": -11.09
+      },
+      {
+        "date": "2021-02-23",
+        "net_ret_pct": -9.66
+      }
+    ],
+    "A3_VB_TS": [
+      {
+        "date": "2021-05-12",
+        "net_ret_pct": -12.68
+      },
+      {
+        "date": "2021-09-07",
+        "net_ret_pct": -11.09
+      },
+      {
+        "date": "2020-09-03",
+        "net_ret_pct": -11.09
+      },
+      {
+        "date": "2021-02-23",
+        "net_ret_pct": -9.7
+      },
+      {
+        "date": "2021-09-20",
+        "net_ret_pct": -9.03
+      }
+    ]
+  },
+  "trade_stats_qr_parity_FULL": {
+    "A0_baseline": {
+      "n_trade_days_FULL": 1366,
+      "round_trips_FULL": 12,
+      "turnover_ann_FULL": 7.62,
+      "cost_drag_bp_per_yr_FULL": 38.1,
+      "flip_trades_pct": 1.6
+    },
+    "A1_VB": {
+      "n_trade_days_FULL": 1292,
+      "round_trips_FULL": 18,
+      "turnover_ann_FULL": 9.07,
+      "cost_drag_bp_per_yr_FULL": 45.3,
+      "flip_trades_pct": 2.6
+    },
+    "A2_TS30": {
+      "n_trade_days_FULL": 1345,
+      "round_trips_FULL": 12,
+      "turnover_ann_FULL": 7.55,
+      "cost_drag_bp_per_yr_FULL": 37.7,
+      "flip_trades_pct": 1.6
+    },
+    "A3_VB_TS": {
+      "n_trade_days_FULL": 1273,
+      "round_trips_FULL": 18,
+      "turnover_ann_FULL": 9.0,
+      "cost_drag_bp_per_yr_FULL": 45.0,
+      "flip_trades_pct": 2.7
+    }
+  },
+  "trade_stats_stamp_exact_A1": {
+    "n_trades_FULL_span": 40,
+    "total_fees_usdt": 748.11
+  },
+  "blocked_reconciliation": {
+    "decided_space_panel": {
+      "blocked": 80,
+      "gate_on": 1356,
+      "pct": 5.9
+    },
+    "held_space_FULL": {
+      "blocked": 80,
+      "gate_on": 1355,
+      "pct": 5.9
+    },
+    "strategist_basis_pct": 5.8
+  },
+  "funding_per_year_stamp_exact": {
+    "A0_baseline": {
+      "2020": {
+        "funding_usdt_signed": -1489.07,
+        "pct_of_soy_equity": -14.89
+      },
+      "2021": {
+        "funding_usdt_signed": -12290.63,
+        "pct_of_soy_equity": -41.77
+      },
+      "2023": {
+        "funding_usdt_signed": -2574.84,
+        "pct_of_soy_equity": -11.16
+      },
+      "2024": {
+        "funding_usdt_signed": -7033.16,
+        "pct_of_soy_equity": -15.99
+      },
+      "2025": {
+        "funding_usdt_signed": -2582.94,
+        "pct_of_soy_equity": -3.98
+      },
+      "2026": {
+        "funding_usdt_signed": -713.42,
+        "pct_of_soy_equity": -1.25
+      }
+    },
+    "A1_VB": {
+      "2020": {
+        "funding_usdt_signed": -1489.07,
+        "pct_of_soy_equity": -14.89
+      },
+      "2021": {
+        "funding_usdt_signed": -7284.69,
+        "pct_of_soy_equity": -24.76
+      },
+      "2023": {
+        "funding_usdt_signed": -2695.16,
+        "pct_of_soy_equity": -10.66
+      },
+      "2024": {
+        "funding_usdt_signed": -6888.99,
+        "pct_of_soy_equity": -14.75
+      },
+      "2025": {
+        "funding_usdt_signed": -2694.4,
+        "pct_of_soy_equity": -3.98
+      },
+      "2026": {
+        "funding_usdt_signed": -743.6,
+        "pct_of_soy_equity": -1.25
+      }
+    }
+  },
+  "deflated_sharpe": {
+    "trial_family_size_N": 30,
+    "trial_family": {
+      "BH_spot": 0.464,
+      "VT": 0.35,
+      "TG1x_plain": 0.757,
+      "VT_TG": 0.672,
+      "VT_TG150": 0.621,
+      "VT_TG250": 0.445,
+      "VT_MOM12M": 0.68,
+      "A0_TG1x_hyst2": 0.754,
+      "A1_VB_100_5": 0.726,
+      "A2_TS30": 0.754,
+      "A3_VB_TS": 0.726,
+      "VB_X80_k3": 0.615,
+      "VB_X80_k5": 0.649,
+      "VB_X80_k10": 0.667,
+      "VB_X90_k3": 0.659,
+      "VB_X90_k5": 0.693,
+      "VB_X90_k10": 0.738,
+      "VB_X100_k3": 0.718,
+      "VB_X100_k5": 0.726,
+      "VB_X100_k10": 0.787,
+      "VB_X110_k3": 0.754,
+      "VB_X110_k5": 0.754,
+      "VB_X110_k10": 0.754,
+      "VB_X120_k3": 0.754,
+      "VB_X120_k5": 0.754,
+      "VB_X120_k10": 0.754,
+      "TS_tau20": 0.834,
+      "TS_tau25": 0.754,
+      "TS_tau30": 0.754,
+      "TS_tau35": 0.754
+    },
+    "var_of_trial_sharpes": 0.0113,
+    "SR_star_ann_expected_max_under_null": 0.22,
+    "results": {
+      "A0": {
+        "sharpe_ann": 0.754,
+        "skew": 0.85,
+        "excess_kurt": 8.11,
+        "dsr": 0.8833
+      },
+      "A1": {
+        "sharpe_ann": 0.726,
+        "skew": 0.86,
+        "excess_kurt": 8.47,
+        "dsr": 0.8704
+      }
+    },
+    "note": "Bailey-Lopez de Prado DSR. Trial family = every strategy-level config tested in this pipeline (QR horse race + robustness + hysteresis + BT arms + VB/TS surfaces), N=30, positively correlated trials -> DSR is conservative on V_N but the family excludes QR's two DEAD overlay research lines (funding-contrarian, taker-flow), which would add ~2-6 more effective trials."
+  }
+}

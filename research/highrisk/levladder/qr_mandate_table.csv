@@ -1,0 +1,7 @@
+arm,realized_cagr_pct,realized_mdd_pct,realized_sharpe,realized_calmar,boot_mdd_median_pct,boot_mdd_ci95_worst_pct,p_mdd_worse_than_50pct,fits_mandate_40_50_realized,min_mdd_tolerance_pct_realized,min_mdd_tolerance_pct_boot_median
+const_1.0,33.72,-42.5,0.918,0.793,-49.35,-76.06,0.48,True,43.0,50.0
+const_1.5,44.87,-59.53,0.917,0.754,-65.2,-89.95,0.894,False,60.0,66.0
+strategist_1.5_rv60,38.46,-54.7,0.877,0.703,-60.66,-86.39,0.794,False,55.0,61.0
+const_2.0,51.7,-74.85,0.918,0.691,-78.17,-96.38,0.992,False,75.0,79.0
+const_3.0,45.07,-92.32,0.903,0.488,-93.59,-99.78,1.0,False,93.0,94.0
+L1.5_rv50_dd20 (post-hoc best of 9),38.02,-49.77,0.892,0.764,-58.37,-84.65,0.751,True,50.0,59.0

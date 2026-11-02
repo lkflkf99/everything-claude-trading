@@ -1,0 +1,36 @@
+{
+  "2020": {
+    "inmarket_funding_ann_pct": 20.04,
+    "held_stamps": 497
+  },
+  "2021": {
+    "inmarket_funding_ann_pct": 35.0,
+    "held_stamps": 607
+  },
+  "2023": {
+    "inmarket_funding_ann_pct": 9.41,
+    "held_stamps": 848
+  },
+  "2024": {
+    "inmarket_funding_ann_pct": 14.09,
+    "held_stamps": 840
+  },
+  "2025": {
+    "inmarket_funding_ann_pct": 5.35,
+    "held_stamps": 820
+  },
+  "2026": {
+    "inmarket_funding_ann_pct": 5.79,
+    "held_stamps": 215
+  },
+  "FULL": {
+    "inmarket_funding_ann_pct": 14.77,
+    "held_days": 1275,
+    "gross_held_g_ann_pct": 82.84
+  },
+  "OOS": {
+    "inmarket_funding_ann_pct": 9.34,
+    "held_days": 907,
+    "gross_held_g_ann_pct": 56.71
+  }
+}

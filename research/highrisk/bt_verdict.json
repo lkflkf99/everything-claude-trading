@@ -1,0 +1,1162 @@
+{
+  "stage": "backtesting-engineer -> risk-manager",
+  "date": "2026-11-02",
+  "a_parity": {
+    "verdict": "PASS",
+    "detail": "mandate: |dCAGR|<=1bp/yr; observed ~1e-4 bp. Daily ret diff 5e-9 = QR file %.8f quantization; gate states identical.",
+    "full_dcagr_bp": 9.092820940637125e-05,
+    "oos_dcagr_bp": -0.00012846320673887135,
+    "raw_data_rebuild": "4h->daily close and funding fund_sum rebuilt from raw files; max close diff 0.0; 5m cross-check 0.0; gate states identical"
+  },
+  "b_horse_race": {
+    "A0_baseline": {
+      "FULL_2020H2_2026": {
+        "cagr": 0.3282,
+        "sharpe": 0.8758,
+        "ann_vol": 0.4284,
+        "mdd": -0.5653,
+        "total_x": 5.9566,
+        "round_trips_per_yr": 1.9085,
+        "cost_drag_ann_pct": 0.3808,
+        "funding_drag_ann_pct": 9.981,
+        "pct_gate_on_blocked": 0.8118
+      },
+      "OOS_2022_2026": {
+        "cagr": 0.2174,
+        "sharpe": 0.7543,
+        "ann_vol": 0.3341,
+        "mdd": -0.3348,
+        "total_x": 2.5873,
+        "round_trips_per_yr": 1.6553,
+        "cost_drag_ann_pct": 0.3088,
+        "funding_drag_ann_pct": 4.9611,
+        "pct_gate_on_blocked": 0.8658
+      },
+      "OOS_2022": {
+        "cagr": 0.0,
+        "sharpe": NaN,
+        "ann_vol": 0.0,
+        "mdd": 0.0,
+        "total_x": 1.0,
+        "round_trips_per_yr": 0.0,
+        "cost_drag_ann_pct": 0.0,
+        "funding_drag_ann_pct": 0.0,
+        "pct_gate_on_blocked": 0.0
+      },
+      "OOS_2023": {
+        "cagr": 0.8221,
+        "sharpe": 1.6512,
+        "ann_vol": 0.4149,
+        "mdd": -0.1918,
+        "total_x": 1.8221,
+        "round_trips_per_yr": 2.0,
+        "cost_drag_ann_pct": 0.3815,
+        "funding_drag_ann_pct": 7.3939,
+        "pct_gate_on_blocked": 0.6897
+      },
+      "OOS_2024_2026": {
+        "cagr": 0.1318,
+        "sharpe": 0.5226,
+        "ann_vol": 0.36,
+        "mdd": -0.3348,
+        "total_x": 1.42,
+        "round_trips_per_yr": 2.118,
+        "cost_drag_ann_pct": 0.3921,
+        "funding_drag_ann_pct": 5.8536,
+        "pct_gate_on_blocked": 0.9464
+      }
+    },
+    "A1_VB": {
+      "FULL_2020H2_2026": {
+        "cagr": 0.3425,
+        "sharpe": 0.9362,
+        "ann_vol": 0.3991,
+        "mdd": -0.3885,
+        "total_x": 6.3711,
+        "round_trips_per_yr": 2.8627,
+        "cost_drag_ann_pct": 0.4534,
+        "funding_drag_ann_pct": 8.2078,
+        "pct_gate_on_blocked": 6.6421
+      },
+      "OOS_2022_2026": {
+        "cagr": 0.2043,
+        "sharpe": 0.7261,
+        "ann_vol": 0.3306,
+        "mdd": -0.3481,
+        "total_x": 2.4556,
+        "round_trips_per_yr": 2.0692,
+        "cost_drag_ann_pct": 0.3466,
+        "funding_drag_ann_pct": 4.8047,
+        "pct_gate_on_blocked": 2.5974
+      },
+      "OOS_2022": {
+        "cagr": 0.0,
+        "sharpe": NaN,
+        "ann_vol": 0.0,
+        "mdd": 0.0,
+        "total_x": 1.0,
+        "round_trips_per_yr": 0.0,
+        "cost_drag_ann_pct": 0.0,
+        "funding_drag_ann_pct": 0.0,
+        "pct_gate_on_blocked": 0.0
+      },
+      "OOS_2023": {
+        "cagr": 0.7645,
+        "sharpe": 1.5892,
+        "ann_vol": 0.4094,
+        "mdd": -0.1918,
+        "total_x": 1.7645,
+        "round_trips_per_yr": 3.0,
+        "cost_drag_ann_pct": 0.4741,
+        "funding_drag_ann_pct": 7.2804,
+        "pct_gate_on_blocked": 2.7586
+      },
+      "OOS_2024_2026": {
+        "cagr": 0.1237,
+        "sharpe": 0.5042,
+        "ann_vol": 0.3568,
+        "mdd": -0.3481,
+        "total_x": 1.3917,
+        "round_trips_per_yr": 2.471,
+        "cost_drag_ann_pct": 0.4239,
+        "funding_drag_ann_pct": 5.6268,
+        "pct_gate_on_blocked": 2.5237
+      }
+    },
+    "A2_TS30": {
+      "FULL_2020H2_2026": {
+        "cagr": 0.3695,
+        "sharpe": 0.9564,
+        "ann_vol": 0.4208,
+        "mdd": -0.4729,
+        "total_x": 7.2235,
+        "round_trips_per_yr": 1.9085,
+        "cost_drag_ann_pct": 0.3775,
+        "funding_drag_ann_pct": 9.8876,
+        "pct_gate_on_blocked": 2.214
+      },
+      "OOS_2022_2026": {
+        "cagr": 0.2174,
+        "sharpe": 0.7543,
+        "ann_vol": 0.3341,
+        "mdd": -0.3348,
+        "total_x": 2.5873,
+        "round_trips_per_yr": 1.6553,
+        "cost_drag_ann_pct": 0.3088,
+        "funding_drag_ann_pct": 4.9611,
+        "pct_gate_on_blocked": 0.8658
+      },
+      "OOS_2022": {
+        "cagr": 0.0,
+        "sharpe": NaN,
+        "ann_vol": 0.0,
+        "mdd": 0.0,
+        "total_x": 1.0,
+        "round_trips_per_yr": 0.0,
+        "cost_drag_ann_pct": 0.0,
+        "funding_drag_ann_pct": 0.0,
+        "pct_gate_on_blocked": 0.0
+      },
+      "OOS_2023": {
+        "cagr": 0.8221,
+        "sharpe": 1.6512,
+        "ann_vol": 0.4149,
+        "mdd": -0.1918,
+        "total_x": 1.8221,
+        "round_trips_per_yr": 2.0,
+        "cost_drag_ann_pct": 0.3815,
+        "funding_drag_ann_pct": 7.3939,
+        "pct_gate_on_blocked": 0.6897
+      },
+      "OOS_2024_2026": {
+        "cagr": 0.1318,
+        "sharpe": 0.5226,
+        "ann_vol": 0.36,
+        "mdd": -0.3348,
+        "total_x": 1.42,
+        "round_trips_per_yr": 2.118,
+        "cost_drag_ann_pct": 0.3921,
+        "funding_drag_ann_pct": 5.8536,
+        "pct_gate_on_blocked": 0.9464
+      }
+    },
+    "A3_VB_TS": {
+      "FULL_2020H2_2026": {
+        "cagr": 0.3469,
+        "sharpe": 0.9496,
+        "ann_vol": 0.3953,
+        "mdd": -0.3758,
+        "total_x": 6.5036,
+        "round_trips_per_yr": 2.8627,
+        "cost_drag_ann_pct": 0.45,
+        "funding_drag_ann_pct": 8.1219,
+        "pct_gate_on_blocked": 7.9705
+      },
+      "OOS_2022_2026": {
+        "cagr": 0.2043,
+        "sharpe": 0.7261,
+        "ann_vol": 0.3306,
+        "mdd": -0.3481,
+        "total_x": 2.4556,
+        "round_trips_per_yr": 2.0692,
+        "cost_drag_ann_pct": 0.3466,
+        "funding_drag_ann_pct": 4.8047,
+        "pct_gate_on_blocked": 2.5974
+      },
+      "OOS_2022": {
+        "cagr": 0.0,
+        "sharpe": NaN,
+        "ann_vol": 0.0,
+        "mdd": 0.0,
+        "total_x": 1.0,
+        "round_trips_per_yr": 0.0,
+        "cost_drag_ann_pct": 0.0,
+        "funding_drag_ann_pct": 0.0,
+        "pct_gate_on_blocked": 0.0
+      },
+      "OOS_2023": {
+        "cagr": 0.7645,
+        "sharpe": 1.5892,
+        "ann_vol": 0.4094,
+        "mdd": -0.1918,
+        "total_x": 1.7645,
+        "round_trips_per_yr": 3.0,
+        "cost_drag_ann_pct": 0.4741,
+        "funding_drag_ann_pct": 7.2804,
+        "pct_gate_on_blocked": 2.7586
+      },
+      "OOS_2024_2026": {
+        "cagr": 0.1237,
+        "sharpe": 0.5042,
+        "ann_vol": 0.3568,
+        "mdd": -0.3481,
+        "total_x": 1.3917,
+        "round_trips_per_yr": 2.471,
+        "cost_drag_ann_pct": 0.4239,
+        "funding_drag_ann_pct": 5.6268,
+        "pct_gate_on_blocked": 2.5237
+      }
+    }
+  },
+  "c_selection_rule": {
+    "rule": "A_i ships iff (i) bootstrap MDD median improves >=5pp vs A0 AND (ii) OOS CAGR >=15% AND (iii) OOS Sharpe >= A0 Sharpe - 0.10. Order: A1 -> A2 -> A3 -> A0.",
+    "window_note": "Rule text qualifies OOS for (ii)/(iii) only; criterion (i) evaluated on FULL_2020H2_2026 (the only window containing the tail episodes the overlay insures against; OOS contains no gate-on vol crisis). OOS-bootstrap values reported alongside for the risk-manager.",
+    "criteria": {
+      "A1_VB": {
+        "i_mdd_median_improvement_FULL_pp": 8.1,
+        "i_pass": true,
+        "i_mdd_median_improvement_OOS_pp_COUNTEREVIDENCE": -0.45,
+        "ii_oos_cagr": 0.2043,
+        "ii_pass": true,
+        "iii_oos_sharpe": 0.7261,
+        "iii_threshold": 0.6543,
+        "iii_pass": true,
+        "PASSES": true
+      },
+      "A2_TS30": {
+        "i_mdd_median_improvement_FULL_pp": 5.09,
+        "i_pass": true,
+        "i_mdd_median_improvement_OOS_pp_COUNTEREVIDENCE": 0.0,
+        "ii_oos_cagr": 0.2174,
+        "ii_pass": true,
+        "iii_oos_sharpe": 0.7543,
+        "iii_threshold": 0.6543,
+        "iii_pass": true,
+        "PASSES": true
+      },
+      "A3_VB_TS": {
+        "i_mdd_median_improvement_FULL_pp": 8.28,
+        "i_pass": true,
+        "i_mdd_median_improvement_OOS_pp_COUNTEREVIDENCE": -0.45,
+        "ii_oos_cagr": 0.2043,
+        "ii_pass": true,
+        "iii_oos_sharpe": 0.7261,
+        "iii_threshold": 0.6543,
+        "iii_pass": true,
+        "PASSES": true
+      }
+    },
+    "verdict": "A1_VB",
+    "strict_oos_reading": "If criterion (i) were instead required on the OOS bootstrap: A1 -0.45pp, A2 0.00pp, A3 -0.45pp -> ALL FAIL -> ship A0 unchanged. Flagged explicitly; risk-manager owns the final call."
+  },
+  "d_stamp_exact_shipped": {
+    "config": "A1_VB (TG1x-hyst2 x VB(10,100,5)), 00:05 UTC taker, deadband +/-5%, isolated 1x",
+    "FULL": {
+      "cagr": 0.3377782998400076,
+      "sharpe": 0.9195067705212917,
+      "ann_vol": 0.4051106598880473,
+      "mdd": -0.42499256407558894,
+      "total_x": 6.232495378763439,
+      "n": 2295
+    },
+    "OOS": {
+      "cagr": 0.2053420358128848,
+      "sharpe": 0.7226989276776786,
+      "ann_vol": 0.33573146820882843,
+      "mdd": -0.3531087166440142,
+      "total_x": 2.4660171517700316,
+      "n": 1764
+    },
+    "A0_reference": {
+      "FULL": {
+        "cagr": 0.328910513508184,
+        "sharpe": 0.8689497992246612,
+        "ann_vol": 0.4363063902648886,
+        "mdd": -0.575570248704168,
+        "total_x": 5.977238633433339,
+        "n": 2295
+      },
+      "OOS": {
+        "cagr": 0.21772310433901154,
+        "sharpe": 0.7474127148178146,
+        "ann_vol": 0.3404081513377496,
+        "mdd": -0.3412432953501897,
+        "total_x": 2.590869726761802,
+        "n": 1764
+      }
+    },
+    "boundary_check": {
+      "A0_baseline": {
+        "FULL_2020H2_2026": {
+          "stamp_cagr": 0.328910513508184,
+          "qr_parity_cagr": 0.32817981065734814,
+          "dcagr_bp_per_yr": 7.307028508358737,
+          "stamp_mdd": -0.575570248704168,
+          "qr_parity_mdd": -0.5653390136386025,
+          "stamp_sharpe": 0.8689497992246612,
+          "qr_parity_sharpe": 0.8757814922475626
+        },
+        "OOS_2022_2026": {
+          "stamp_cagr": 0.21772310433901154,
+          "qr_parity_cagr": 0.2173731011105129,
+          "dcagr_bp_per_yr": 3.5000322849865206,
+          "stamp_mdd": -0.3412432953501897,
+          "qr_parity_mdd": -0.3348359593292878,
+          "stamp_sharpe": 0.7474127148178146,
+          "qr_parity_sharpe": 0.7543059233925904
+        },
+        "verdict": "OK"
+      },
+      "A1_VB": {
+        "FULL_2020H2_2026": {
+          "stamp_cagr": 0.3377782998400076,
+          "qr_parity_cagr": 0.3424652272406128,
+          "dcagr_bp_per_yr": -46.869274006051675,
+          "stamp_mdd": -0.42499256407558894,
+          "qr_parity_mdd": -0.3885289732747148,
+          "stamp_sharpe": 0.9195067705212917,
+          "qr_parity_sharpe": 0.9361820770186121
+        },
+        "OOS_2022_2026": {
+          "stamp_cagr": 0.2053420358128848,
+          "qr_parity_cagr": 0.20428921263827693,
+          "dcagr_bp_per_yr": 10.528231746078642,
+          "stamp_mdd": -0.3531087166440142,
+          "qr_parity_mdd": -0.34809052288039455,
+          "stamp_sharpe": 0.7226989276776786,
+          "qr_parity_sharpe": 0.7260907144403816
+        },
+        "verdict": "BOUNDARY BUG - INVESTIGATE"
+      }
+    },
+    "boundary_diagnosis": {
+      "flag": "A1 FULL stamp-vs-parity = -46.9bp/yr (>10bp threshold) -> DIAGNOSED, not a boundary bug",
+      "decomposition_bp_per_yr": {
+        "funding_convention_plus_fixed_q (close_exec - qr_parity)": 17.959645466603114,
+        "5min_exec_price (p05 - close)": -101.38657027016329,
+        "deadband (db5 - db0)": 36.5576507975085,
+        "total (db5 - qr_parity)": -46.869274006051675
+      },
+      "root_cause": "Single 5-min execution-timing event: breaker exit 00:05 UTC 2021-05-13 filled 47,095.47 vs decision close 49,595.76 (-504bp, -1,675 USDT on 0.67 BTC) during the verified May-2021 crash cascade (00:00 bar: $1.14B quote volume, low 45,596; corroborated by mark-price and 4h series). All other fills net ~+240 USDT favorable. Funding-stamp conventions +18bp/yr; deadband +37bp/yr.",
+      "interpretation": "QR-parity 'fill at decision close' is optimistic on crash-day overlay exits; stamp-exact is the honest number: shipped FULL MDD -42.5% (vs -38.9% parity), FULL CAGR 33.8%, OOS CAGR 20.5%, OOS Sharpe 0.723."
+    },
+    "deadband_check": {
+      "FULL_2020H2_2026": {
+        "cagr_db5": 0.3377782998400076,
+        "cagr_db0": 0.3341225347602568,
+        "dcagr_bp_per_yr": 36.5576507975085
+      },
+      "OOS_2022_2026": {
+        "cagr_db5": 0.2053420358128848,
+        "cagr_db0": 0.2041842312596891,
+        "dcagr_bp_per_yr": 11.57804553195696
+      },
+      "fees_usdt_db5": 748.1148132500002,
+      "fees_usdt_db0": 732.4910647449993,
+      "n_trades_db5": 40,
+      "n_trades_db0": 419,
+      "verdict": "PASS on fee channel: |748.11-732.49| USDT over 6.29y ~= 2.5bp/yr-start < 5bp/yr. CAGR delta +36.6bp/yr is fill-price noise on 379 avoided dust trades + funding-drift exposure, not cost drag."
+    }
+  },
+  "e_bootstrap": {
+    "design": {
+      "n_days": 1764,
+      "block_len": 60,
+      "n_boot": 2000
+    },
+    "FULL_per_arm": {
+      "A0_baseline": {
+        "cagr_median": 0.3178916276443713,
+        "cagr_ci95": [
+          -0.10255343475099973,
+          0.9713498433158555
+        ],
+        "sharpe_median": 0.8665909547518595,
+        "sharpe_ci95": [
+          -0.06646242606677315,
+          1.7185914270024145
+        ],
+        "mdd_median": -0.5554382207391299,
+        "mdd_ci95_worst_best": [
+          -0.8334027358900022,
+          -0.3194953231821665
+        ]
+      },
+      "A1_VB": {
+        "cagr_median": 0.3315788215177422,
+        "cagr_ci95": [
+          -0.056123347789009355,
+          0.924765974349063
+        ],
+        "sharpe_median": 0.9309303020444217,
+        "sharpe_ci95": [
+          0.03743674174122405,
+          1.7710956800183808
+        ],
+        "mdd_median": -0.4744354800815089,
+        "mdd_ci95_worst_best": [
+          -0.7460429184295382,
+          -0.29555486008170834
+        ]
+      },
+      "A2_TS30": {
+        "cagr_median": 0.35621741302141496,
+        "cagr_ci95": [
+          -0.06393045303161887,
+          0.9967653689725742
+        ],
+        "sharpe_median": 0.9435344392159771,
+        "sharpe_ci95": [
+          0.036135568258286045,
+          1.7533602171258251
+        ],
+        "mdd_median": -0.5045601656271589,
+        "mdd_ci95_worst_best": [
+          -0.7763905550057063,
+          -0.3067157215461872
+        ]
+      },
+      "A3_VB_TS": {
+        "cagr_median": 0.33753436258705416,
+        "cagr_ci95": [
+          -0.05439290773960208,
+          0.9432042060094145
+        ],
+        "sharpe_median": 0.9438155070245914,
+        "sharpe_ci95": [
+          0.043020998348800604,
+          1.7913231943545895
+        ],
+        "mdd_median": -0.47261607359400076,
+        "mdd_ci95_worst_best": [
+          -0.7414027918091284,
+          -0.29223212079524963
+        ]
+      }
+    },
+    "FULL_paired": [
+      {
+        "pair": "A1_VB - A0_baseline",
+        "dmdd_median": 0.060407930197305504,
+        "dmdd_ci95": [
+          -0.054402513453008235,
+          0.26753655256157866
+        ],
+        "p_dmdd_le_0": 0.2825,
+        "dcagr_median": 0.009964461229938104,
+        "p_dcagr_le_0": 0.4605,
+        "dsharpe_median": 0.05085689435852636,
+        "p_dsharpe_le_0": 0.3755
+      },
+      {
+        "pair": "A2_TS30 - A0_baseline",
+        "dmdd_median": 0.04478257278204856,
+        "dmdd_ci95": [
+          -0.01667187584758324,
+          0.14731689071599874
+        ],
+        "p_dmdd_le_0": 0.2215,
+        "dcagr_median": 0.03807475746024391,
+        "p_dcagr_le_0": 0.146,
+        "dsharpe_median": 0.07373543581882741,
+        "p_dsharpe_le_0": 0.1365
+      },
+      {
+        "pair": "A3_VB_TS - A0_baseline",
+        "dmdd_median": 0.06343340906382477,
+        "dmdd_ci95": [
+          -0.04851981679486573,
+          0.27603783937271986
+        ],
+        "p_dmdd_le_0": 0.2085,
+        "dcagr_median": 0.014953535096746129,
+        "p_dcagr_le_0": 0.43,
+        "dsharpe_median": 0.06488552320759888,
+        "p_dsharpe_le_0": 0.329
+      }
+    ],
+    "OOS_per_arm": {
+      "A0_baseline": {
+        "cagr_median": 0.23352601177793608,
+        "cagr_ci95": [
+          -0.08373942210812627,
+          0.687984158972696
+        ],
+        "sharpe_median": 0.7975428852416174,
+        "sharpe_ci95": [
+          -0.11721050008326558,
+          1.625085333359537
+        ],
+        "mdd_median": -0.37841340039222227,
+        "mdd_ci95_worst_best": [
+          -0.6362980862011894,
+          -0.22477134019896516
+        ]
+      },
+      "A1_VB": {
+        "cagr_median": 0.22035625919433088,
+        "cagr_ci95": [
+          -0.08824098388556645,
+          0.6615064014756717
+        ],
+        "sharpe_median": 0.7701192335641561,
+        "sharpe_ci95": [
+          -0.1452288117302923,
+          1.5928267214389118
+        ],
+        "mdd_median": -0.38293410280334717,
+        "mdd_ci95_worst_best": [
+          -0.6420215388368244,
+          -0.2301268307637432
+        ]
+      },
+      "A2_TS30": {
+        "cagr_median": 0.23352601177793608,
+        "cagr_ci95": [
+          -0.08373942210812627,
+          0.687984158972696
+        ],
+        "sharpe_median": 0.7975428852416174,
+        "sharpe_ci95": [
+          -0.11721050008326558,
+          1.625085333359537
+        ],
+        "mdd_median": -0.37841340039222227,
+        "mdd_ci95_worst_best": [
+          -0.6362980862011894,
+          -0.22477134019896516
+        ]
+      },
+      "A3_VB_TS": {
+        "cagr_median": 0.22035625919433088,
+        "cagr_ci95": [
+          -0.08824098388556645,
+          0.6615064014756717
+        ],
+        "sharpe_median": 0.7701192335641561,
+        "sharpe_ci95": [
+          -0.1452288117302923,
+          1.5928267214389118
+        ],
+        "mdd_median": -0.38293410280334717,
+        "mdd_ci95_worst_best": [
+          -0.6420215388368244,
+          -0.2301268307637432
+        ]
+      }
+    },
+    "OOS_paired": [
+      {
+        "pair": "A1_VB - A0_baseline",
+        "dmdd_median": 0.0,
+        "dmdd_ci95": [
+          -0.026381350575728314,
+          0.0024090089059746666
+        ],
+        "p_dmdd_le_0": 0.8135,
+        "dcagr_median": -0.012880760482170683,
+        "p_dcagr_le_0": 0.9625,
+        "dsharpe_median": -0.02674712384317307,
+        "p_dsharpe_le_0": 0.9505
+      },
+      {
+        "pair": "A2_TS30 - A0_baseline",
+        "dmdd_median": 0.0,
+        "dmdd_ci95": [
+          0.0,
+          0.0
+        ],
+        "p_dmdd_le_0": 1.0,
+        "dcagr_median": 0.0,
+        "p_dcagr_le_0": 1.0,
+        "dsharpe_median": 0.0,
+        "p_dsharpe_le_0": 1.0
+      },
+      {
+        "pair": "A3_VB_TS - A0_baseline",
+        "dmdd_median": 0.0,
+        "dmdd_ci95": [
+          -0.026381350575728314,
+          0.0024090089059746666
+        ],
+        "p_dmdd_le_0": 0.8135,
+        "dcagr_median": -0.012880760482170683,
+        "p_dcagr_le_0": 0.9625,
+        "dsharpe_median": -0.02674712384317307,
+        "p_dsharpe_le_0": 0.9505
+      }
+    ]
+  },
+  "f_episode2021": {
+    "A0_baseline": {
+      "equity_2021_04_01": 4.9472,
+      "equity_2021_12_31": 2.3011,
+      "ret_apr_dec_pct": -53.49,
+      "window_trough_date": "2021-12-17",
+      "window_trough_dd_vs_running_peak_pct": -56.46,
+      "weight_events": [
+        {
+          "effective_date": "2021-05-20",
+          "from_decision_close_of": "2021-05-19",
+          "decision_close": 36689.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-08-10",
+          "from_decision_close_of": "2021-08-09",
+          "decision_close": 46260.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-09-11",
+          "from_decision_close_of": "2021-09-10",
+          "decision_close": 44861.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-09-15",
+          "from_decision_close_of": "2021-09-14",
+          "decision_close": 47087.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-09-21",
+          "from_decision_close_of": "2021-09-20",
+          "decision_close": 43027.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-10-02",
+          "from_decision_close_of": "2021-10-01",
+          "decision_close": 48124.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-12-30",
+          "from_decision_close_of": "2021-12-29",
+          "decision_close": 46437.0,
+          "w_new": 0.0
+        }
+      ]
+    },
+    "A1_VB": {
+      "equity_2021_04_01": 3.9571,
+      "equity_2021_12_31": 2.5932,
+      "ret_apr_dec_pct": -34.47,
+      "window_trough_date": "2021-12-17",
+      "window_trough_dd_vs_running_peak_pct": -38.75,
+      "weight_events": [
+        {
+          "effective_date": "2021-05-06",
+          "from_decision_close_of": "2021-05-05",
+          "decision_close": 57498.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-05-11",
+          "from_decision_close_of": "2021-05-10",
+          "decision_close": 55870.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-05-13",
+          "from_decision_close_of": "2021-05-12",
+          "decision_close": 49596.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-08-10",
+          "from_decision_close_of": "2021-08-09",
+          "decision_close": 46260.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-09-11",
+          "from_decision_close_of": "2021-09-10",
+          "decision_close": 44861.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-09-15",
+          "from_decision_close_of": "2021-09-14",
+          "decision_close": 47087.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-09-21",
+          "from_decision_close_of": "2021-09-20",
+          "decision_close": 43027.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-10-02",
+          "from_decision_close_of": "2021-10-01",
+          "decision_close": 48124.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-12-30",
+          "from_decision_close_of": "2021-12-29",
+          "decision_close": 46437.0,
+          "w_new": 0.0
+        }
+      ]
+    },
+    "A2_TS30": {
+      "equity_2021_04_01": 4.9472,
+      "equity_2021_12_31": 2.7906,
+      "ret_apr_dec_pct": -43.59,
+      "window_trough_date": "2021-12-10",
+      "window_trough_dd_vs_running_peak_pct": -47.06,
+      "weight_events": [
+        {
+          "effective_date": "2021-05-18",
+          "from_decision_close_of": "2021-05-17",
+          "decision_close": 43566.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-08-10",
+          "from_decision_close_of": "2021-08-09",
+          "decision_close": 46260.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-09-11",
+          "from_decision_close_of": "2021-09-10",
+          "decision_close": 44861.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-09-15",
+          "from_decision_close_of": "2021-09-14",
+          "decision_close": 47087.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-09-21",
+          "from_decision_close_of": "2021-09-20",
+          "decision_close": 43027.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-10-02",
+          "from_decision_close_of": "2021-10-01",
+          "decision_close": 48124.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-12-11",
+          "from_decision_close_of": "2021-12-10",
+          "decision_close": 47136.0,
+          "w_new": 0.0
+        }
+      ]
+    },
+    "A3_VB_TS": {
+      "equity_2021_04_01": 3.9571,
+      "equity_2021_12_31": 2.6471,
+      "ret_apr_dec_pct": -33.1,
+      "window_trough_date": "2021-12-10",
+      "window_trough_dd_vs_running_peak_pct": -37.31,
+      "weight_events": [
+        {
+          "effective_date": "2021-05-06",
+          "from_decision_close_of": "2021-05-05",
+          "decision_close": 57498.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-05-11",
+          "from_decision_close_of": "2021-05-10",
+          "decision_close": 55870.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-05-13",
+          "from_decision_close_of": "2021-05-12",
+          "decision_close": 49596.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-08-10",
+          "from_decision_close_of": "2021-08-09",
+          "decision_close": 46260.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-09-11",
+          "from_decision_close_of": "2021-09-10",
+          "decision_close": 44861.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-09-15",
+          "from_decision_close_of": "2021-09-14",
+          "decision_close": 47087.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-09-21",
+          "from_decision_close_of": "2021-09-20",
+          "decision_close": 43027.0,
+          "w_new": 0.0
+        },
+        {
+          "effective_date": "2021-10-02",
+          "from_decision_close_of": "2021-10-01",
+          "decision_close": 48124.0,
+          "w_new": 1.0
+        },
+        {
+          "effective_date": "2021-12-11",
+          "from_decision_close_of": "2021-12-10",
+          "decision_close": 47136.0,
+          "w_new": 0.0
+        }
+      ]
+    },
+    "reference": {
+      "signal_close_date": "2021-05-19",
+      "close": 36689.0,
+      "rv10_trigger_date_A1": "2021-05-12",
+      "close_0512": 49596.0,
+      "ts30_fire_date_A2": "2021-05-17",
+      "close_0517": 43566.0
+    }
+  },
+  "g_sensitivity": {
+    "vb_surface": {
+      "full_mdd_span_pp": 22.06,
+      "full_cagr_span_pp": 13.23,
+      "note": "flat surface reproduced iff span small across X=80..120 (all k)"
+    },
+    "vb_surface_warning": "P&L surface NOT flat: FULL MDD spans -34.5% (X90k10) to -56.5% (X>=110); X>=110 misses the 2021 crash entirely; k=10 dominates k=5 in-sample AND OOS (OOS CAGR 22.7% vs 20.4%, MDD -33.5% vs -34.8%). Chosen (100,5) is defensible a priori but the benefit concentrates in X=90-100 with k>=5 -> amplifies selection-bias flag #4. Report-only; not re-selected.",
+    "ts_surface": {
+      "tau25_full_cagr": 0.3392,
+      "tau30_full_cagr": 0.3695,
+      "cliff_pp": 3.03,
+      "tau25_first_fire": {
+        "fire": "2021-01-27",
+        "close": 30381.0,
+        "rearm": "2021-08-09"
+      }
+    },
+    "ts_surface_warning": "tau surface non-monotone (tau20 38.1% / tau25 33.9% / tau30 37.0% / tau35 32.8% FULL CAGR) = documented knife-edge reproduced; tau25 lockout 2021-01-27@30,381 -> 2021-08-09 reproduced exactly. Validates TS as fallback-only."
+  },
+  "h_integrity": {
+    "worst_held_days": {
+      "A0_baseline": [
+        {
+          "date": "2021-05-19",
+          "net_ret_pct": -14.44
+        },
+        {
+          "date": "2021-01-21",
+          "net_ret_pct": -13.14
+        },
+        {
+          "date": "2021-05-12",
+          "net_ret_pct": -12.64
+        },
+        {
+          "date": "2021-09-07",
+          "net_ret_pct": -11.09
+        },
+        {
+          "date": "2020-09-03",
+          "net_ret_pct": -11.09
+        }
+      ],
+      "A1_VB": [
+        {
+          "date": "2021-05-12",
+          "net_ret_pct": -12.68
+        },
+        {
+          "date": "2021-09-07",
+          "net_ret_pct": -11.09
+        },
+        {
+          "date": "2020-09-03",
+          "net_ret_pct": -11.09
+        },
+        {
+          "date": "2021-02-23",
+          "net_ret_pct": -9.7
+        },
+        {
+          "date": "2021-09-20",
+          "net_ret_pct": -9.03
+        }
+      ],
+      "A2_TS30": [
+        {
+          "date": "2021-01-21",
+          "net_ret_pct": -13.14
+        },
+        {
+          "date": "2021-05-12",
+          "net_ret_pct": -12.64
+        },
+        {
+          "date": "2021-09-07",
+          "net_ret_pct": -11.09
+        },
+        {
+          "date": "2020-09-03",
+          "net_ret_pct": -11.09
+        },
+        {
+          "date": "2021-02-23",
+          "net_ret_pct": -9.66
+        }
+      ],
+      "A3_VB_TS": [
+        {
+          "date": "2021-05-12",
+          "net_ret_pct": -12.68
+        },
+        {
+          "date": "2021-09-07",
+          "net_ret_pct": -11.09
+        },
+        {
+          "date": "2020-09-03",
+          "net_ret_pct": -11.09
+        },
+        {
+          "date": "2021-02-23",
+          "net_ret_pct": -9.7
+        },
+        {
+          "date": "2021-09-20",
+          "net_ret_pct": -9.03
+        }
+      ]
+    },
+    "trade_stats": {
+      "A0_baseline": {
+        "n_trade_days_FULL": 1366,
+        "round_trips_FULL": 12,
+        "turnover_ann_FULL": 7.62,
+        "cost_drag_bp_per_yr_FULL": 38.1,
+        "flip_trades_pct": 1.6
+      },
+      "A1_VB": {
+        "n_trade_days_FULL": 1292,
+        "round_trips_FULL": 18,
+        "turnover_ann_FULL": 9.07,
+        "cost_drag_bp_per_yr_FULL": 45.3,
+        "flip_trades_pct": 2.6
+      },
+      "A2_TS30": {
+        "n_trade_days_FULL": 1345,
+        "round_trips_FULL": 12,
+        "turnover_ann_FULL": 7.55,
+        "cost_drag_bp_per_yr_FULL": 37.7,
+        "flip_trades_pct": 1.6
+      },
+      "A3_VB_TS": {
+        "n_trade_days_FULL": 1273,
+        "round_trips_FULL": 18,
+        "turnover_ann_FULL": 9.0,
+        "cost_drag_bp_per_yr_FULL": 45.0,
+        "flip_trades_pct": 2.7
+      }
+    },
+    "blocked_days": {
+      "decided_space_panel": {
+        "blocked": 80,
+        "gate_on": 1356,
+        "pct": 5.9
+      },
+      "held_space_FULL": {
+        "blocked": 80,
+        "gate_on": 1355,
+        "pct": 5.9
+      },
+      "strategist_basis_pct": 5.8
+    },
+    "funding_per_year": {
+      "A0_baseline": {
+        "2020": {
+          "funding_usdt_signed": -1489.07,
+          "pct_of_soy_equity": -14.89
+        },
+        "2021": {
+          "funding_usdt_signed": -12290.63,
+          "pct_of_soy_equity": -41.77
+        },
+        "2023": {
+          "funding_usdt_signed": -2574.84,
+          "pct_of_soy_equity": -11.16
+        },
+        "2024": {
+          "funding_usdt_signed": -7033.16,
+          "pct_of_soy_equity": -15.99
+        },
+        "2025": {
+          "funding_usdt_signed": -2582.94,
+          "pct_of_soy_equity": -3.98
+        },
+        "2026": {
+          "funding_usdt_signed": -713.42,
+          "pct_of_soy_equity": -1.25
+        }
+      },
+      "A1_VB": {
+        "2020": {
+          "funding_usdt_signed": -1489.07,
+          "pct_of_soy_equity": -14.89
+        },
+        "2021": {
+          "funding_usdt_signed": -7284.69,
+          "pct_of_soy_equity": -24.76
+        },
+        "2023": {
+          "funding_usdt_signed": -2695.16,
+          "pct_of_soy_equity": -10.66
+        },
+        "2024": {
+          "funding_usdt_signed": -6888.99,
+          "pct_of_soy_equity": -14.75
+        },
+        "2025": {
+          "funding_usdt_signed": -2694.4,
+          "pct_of_soy_equity": -3.98
+        },
+        "2026": {
+          "funding_usdt_signed": -743.6,
+          "pct_of_soy_equity": -1.25
+        }
+      }
+    },
+    "deflated_sharpe": {
+      "trial_family_size_N": 30,
+      "trial_family": {
+        "BH_spot": 0.464,
+        "VT": 0.35,
+        "TG1x_plain": 0.757,
+        "VT_TG": 0.672,
+        "VT_TG150": 0.621,
+        "VT_TG250": 0.445,
+        "VT_MOM12M": 0.68,
+        "A0_TG1x_hyst2": 0.754,
+        "A1_VB_100_5": 0.726,
+        "A2_TS30": 0.754,
+        "A3_VB_TS": 0.726,
+        "VB_X80_k3": 0.615,
+        "VB_X80_k5": 0.649,
+        "VB_X80_k10": 0.667,
+        "VB_X90_k3": 0.659,
+        "VB_X90_k5": 0.693,
+        "VB_X90_k10": 0.738,
+        "VB_X100_k3": 0.718,
+        "VB_X100_k5": 0.726,
+        "VB_X100_k10": 0.787,
+        "VB_X110_k3": 0.754,
+        "VB_X110_k5": 0.754,
+        "VB_X110_k10": 0.754,
+        "VB_X120_k3": 0.754,
+        "VB_X120_k5": 0.754,
+        "VB_X120_k10": 0.754,
+        "TS_tau20": 0.834,
+        "TS_tau25": 0.754,
+        "TS_tau30": 0.754,
+        "TS_tau35": 0.754
+      },
+      "var_of_trial_sharpes": 0.0113,
+      "SR_star_ann_expected_max_under_null": 0.22,
+      "results": {
+        "A0": {
+          "sharpe_ann": 0.754,
+          "skew": 0.85,
+          "excess_kurt": 8.11,
+          "dsr": 0.8833
+        },
+        "A1": {
+          "sharpe_ann": 0.726,
+          "skew": 0.86,
+          "excess_kurt": 8.47,
+          "dsr": 0.8704
+        }
+      },
+      "note": "Bailey-Lopez de Prado DSR. Trial family = every strategy-level config tested in this pipeline (QR horse race + robustness + hysteresis + BT arms + VB/TS surfaces), N=30, positively correlated trials -> DSR is conservative on V_N but the family excludes QR's two DEAD overlay research lines (funding-contrarian, taker-flow), which would add ~2-6 more effective trials."
+    }
+  },
+  "risk_flags": [
+    "1. OVERLAY EFFICACY IS IN-SAMPLE: VB's MDD benefit derives from the 2021 episode (in-sample for threshold choice, ledger flag #4). OOS 2022-26 VB is net cost: CAGR -1.3pp/yr, Sharpe -0.03, MDD -1.3pp worse; paired OOS bootstrap p(dCAGR<=0)=0.96, p(dMDD<=0)=0.81.",
+    "2. FULL-sample paired bootstrap: dMDD median +6.0pp but p(dMDD<=0)=0.283 (not significant); dCAGR p=0.46. The overlay's improvement is economically large, statistically unresolved.",
+    "3. SHIPPED MDD -42.5% (stamp-exact FULL) exceeds strategist projection -40%; sits inside user tolerance 40-50% but with reduced margin. One verified crash-cascade 5-min fill (2021-05-13, -504bp vs decision close) accounts for ~3.6pp of trough depth vs parity accounting.",
+    "4. SELECTION-RULE WINDOW AMBIGUITY: verdict hinges on reading criterion (i) on FULL (A1 ships) vs OOS (A0 ships). My reading: FULL (rule qualifies OOS explicitly for (ii)/(iii) only; bootstrap defined per arm x window in spec 13.4; tail insurance is only measurable where tails exist).",
+    "5. OOS point estimates vs target: shipped OOS CAGR 20.5% (>=15% target met), but 2024-26 sub-window CAGR 12.4% < 15%; OOS Sharpe 0.723. Honest forward ~15-20%/yr is achievable only if 2023-type trend years recur; 2022-type years earn 0 (flat).",
+    "6. Parameter surface is not flat in P&L terms (k=10 > k=5 everywhere; X>=110 useless) - the shipped (100,5) is mid-pack, not optimal; do not re-optimize (frozen), but size for model risk.",
+    "7. Statistical fragility inherited from QR: gate edge vs no-gate p~0.14-0.25; DSR(A0)=0.883, DSR(A1)=0.870 (N=30 trials) - below the 0.95 bar; evidence base ~2 bears.",
+    "8. Funding regime: 2021 in-market funding bleed -41.8% of start-of-year equity (A0) / -24.8% (A1); 2026 only -1.25%. A 2021-repeat compresses in-market CAGR toward zero; monitoring KPI per spec 14.",
+    "9. A1 vs A0 cost of insurance OOS: -1.3pp/yr CAGR + 2.6% extra blocked gate-on days; premium is dead cost in no-crisis regimes by construction.",
+    "10. Worst held day A1 = -12.68% (2021-05-12, breaker reacts next execution only); unconditional BTC worst day -40% (2020-03-12, flat) is the honest tail for any 1x long; no daily-close overlay reacts faster than the print."
+  ],
+  "artifacts": {
+    "code": [
+      "bt_00_parity.py",
+      "bt_01_horserace.py",
+      "bt_02_bootstrap.py",
+      "bt_03_stamp_exact.py",
+      "bt_03b_diagnose.py",
+      "bt_04_episode2021.py",
+      "bt_05_sensitivity.py",
+      "bt_06_integrity.py",
+      "bt_07_verdict.py",
+      "bt_common.py"
+    ],
+    "data": [
+      "bt_parity.json",
+      "bt_horserace.csv",
+      "bt_daily.csv",
+      "bt_trace_check.json",
+      "bt_bootstrap.json",
+      "bt_stamp_exact.json",
+      "bt_stamp_diagnose.json",
+      "bt_stamp_daily.csv",
+      "bt_trade_log.csv",
+      "bt_episode2021.json",
+      "bt_episode2021_daily.csv",
+      "bt_sensitivity_vb.csv",
+      "bt_sensitivity_ts.csv",
+      "bt_sensitivity.json",
+      "bt_integrity.json",
+      "bt_verdict.json"
+    ]
+  }
+}

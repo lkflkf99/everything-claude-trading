@@ -1,0 +1,183 @@
+{
+  "verdicts": [
+    {
+      "L": 1.5,
+      "lp_dist_pct": 66.53,
+      "const_dead": false,
+      "const_kill_episodes": [],
+      "const_FULL_cagr_pct": 44.79,
+      "const_FULL_mdd_pct": -59.53,
+      "const_FULL_sharpe": 0.917,
+      "const_OOS_cagr_pct": 26.74,
+      "const_OOS_mdd_pct": -49.88,
+      "const_n_trades": 83,
+      "naive_Lx_mdd_pct": -63.8,
+      "any_conditional_dies": false,
+      "best_cond_arm": "L1.5_rv50",
+      "best_cond_mdd_pct": -49.77,
+      "best_cond_cagr_pct": 38.11,
+      "strategist_rv60_mdd_pct": -54.7,
+      "strategist_rv60_cagr_pct": 38.38,
+      "verdict": "PASS-TO-QR",
+      "basis": "no liquidation or dust close on any of the 18 episodes, unconditional",
+      "mandate_breach": true,
+      "mandate_note": "breaches -50% ceiling at every variant"
+    },
+    {
+      "L": 2.0,
+      "lp_dist_pct": 49.8,
+      "const_dead": false,
+      "const_kill_episodes": [],
+      "const_FULL_cagr_pct": 51.59,
+      "const_FULL_mdd_pct": -74.85,
+      "const_FULL_sharpe": 0.917,
+      "const_OOS_cagr_pct": 30.63,
+      "const_OOS_mdd_pct": -61.21,
+      "const_n_trades": 190,
+      "naive_Lx_mdd_pct": -85.0,
+      "any_conditional_dies": false,
+      "best_cond_arm": "L2.0_rv50",
+      "best_cond_mdd_pct": -62.22,
+      "best_cond_cagr_pct": 41.05,
+      "strategist_rv60_mdd_pct": null,
+      "strategist_rv60_cagr_pct": null,
+      "verdict": "PASS-TO-QR",
+      "basis": "no liquidation or dust close on any of the 18 episodes, unconditional",
+      "mandate_breach": true,
+      "mandate_note": "breaches -50% ceiling at every variant"
+    },
+    {
+      "L": 3.0,
+      "lp_dist_pct": 33.07,
+      "const_dead": false,
+      "const_kill_episodes": [],
+      "const_FULL_cagr_pct": 44.88,
+      "const_FULL_mdd_pct": -92.32,
+      "const_FULL_sharpe": 0.902,
+      "const_OOS_cagr_pct": 25.75,
+      "const_OOS_mdd_pct": -79.6,
+      "const_n_trades": 393,
+      "naive_Lx_mdd_pct": -127.5,
+      "any_conditional_dies": false,
+      "best_cond_arm": "L3.0_rv60_dd20",
+      "best_cond_mdd_pct": -81.46,
+      "best_cond_cagr_pct": 34.31,
+      "strategist_rv60_mdd_pct": null,
+      "strategist_rv60_cagr_pct": null,
+      "verdict": "PASS-TO-QR",
+      "basis": "no liquidation or dust close on any of the 18 episodes, unconditional",
+      "mandate_breach": true,
+      "mandate_note": "breaches -50% ceiling at every variant"
+    },
+    {
+      "L": 5.0,
+      "lp_dist_pct": 19.68,
+      "const_dead": true,
+      "const_kill_episodes": [
+        1
+      ],
+      "const_FULL_cagr_pct": 1556600.57,
+      "const_FULL_mdd_pct": -74.67,
+      "const_FULL_sharpe": 4.758,
+      "const_OOS_cagr_pct": null,
+      "const_OOS_mdd_pct": null,
+      "const_n_trades": 107,
+      "naive_Lx_mdd_pct": -212.5,
+      "any_conditional_dies": false,
+      "best_cond_arm": "L5.0_rv50",
+      "best_cond_mdd_pct": -97.75,
+      "best_cond_cagr_pct": 6.2,
+      "strategist_rv60_mdd_pct": null,
+      "strategist_rv60_cagr_pct": null,
+      "verdict": "PASS-TO-QR (conditional only) + ECONOMIC-RUIN FLAG",
+      "basis": "liquidated unconditionally in ep1 (2021-01-11, pyramided entry, 7.5h before gate exit); rv10<=50/60% condition dodges the liquidation but the book still grinds to -98% MDD with negative CAGR",
+      "mandate_breach": true,
+      "mandate_note": "breaches -50% ceiling at every variant"
+    },
+    {
+      "L": 10.0,
+      "lp_dist_pct": 9.64,
+      "const_dead": true,
+      "const_kill_episodes": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12,
+        17
+      ],
+      "const_FULL_cagr_pct": 5.370936518800662e+22,
+      "const_FULL_mdd_pct": -20.73,
+      "const_FULL_sharpe": 11.031,
+      "const_OOS_cagr_pct": null,
+      "const_OOS_mdd_pct": null,
+      "const_n_trades": 12,
+      "naive_Lx_mdd_pct": -425.0,
+      "any_conditional_dies": true,
+      "best_cond_arm": "L10.0_rv50",
+      "best_cond_mdd_pct": -73.39,
+      "best_cond_cagr_pct": 15420.06,
+      "strategist_rv60_mdd_pct": null,
+      "strategist_rv60_cagr_pct": null,
+      "verdict": "KILLED",
+      "basis": "liquidated in 11/18 episodes unconditionally (first: ep1, 2020-08-02 flash dump, day 14); rv10<=50/60% conditions still die in ep1 (2020-09-03): calm-to-crash gap days are invisible to vol state",
+      "mandate_breach": true,
+      "mandate_note": "breaches -50% ceiling at every variant"
+    }
+  ],
+  "ladder_meta": {
+    "tightest_L_survives_all_episodes_const": 3.0,
+    "tightest_L_survives_all_episodes_conditional": 5.0,
+    "tightest_L_survives_all_but_one_const": 5.0,
+    "note_all_but_one": "5x const dies only in ep1 (2021-01-11); 10x dies in 11/18 (not all-but-one). 'Survives' = no exchange liquidation; 3x const ends with -92.3% MDD = economic near-ruin.",
+    "n_episodes": 18,
+    "episodes_killing_each_L": {
+      "1.5": [],
+      "2.0": [],
+      "3.0": [],
+      "5.0": [
+        1
+      ],
+      "10.0": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12,
+        17
+      ]
+    }
+  },
+  "forensics": {
+    "kill_5x_const_ep1": {
+      "kill_time": "2021-01-11 16:35 (mark 30,473.55 < LP 30,506; gate exit was 00:05 2021-01-12)",
+      "reading": "rv10 was >=0.60 for the whole week before the kill (0.63-0.95 from 2021-01-02 onward). An rv10<=60% rule is at 1x from 00:05 01-03, 8.5 days before the kill bar -> dodges the 5x liquidation (confirmed: L5.0_rv60 dead=False), but the toggle whipsaw still costs -98.7% MDD."
+    },
+    "kill_10x_rv60_ep1": {
+      "kill_time": "2020-09-03 23:25 (rv60 rule had dodged the 2020-08-02 flash dump)",
+      "reading": "rv10 0.32-0.45 all week -> rule is AT 10x into the 2020-09-03 -11% gap day; 10x LP = 9.64% -> dies. Calm-to-crash gap days are invisible to vol state. 10x is not saveable by rv10 gates."
+    },
+    "kill_10x_const_ep12": {
+      "kill_time": "2024-04-13 20:05 (entry rv10 0.461, leveraged under rv60)",
+      "reading": "rv10 oscillated 0.51-0.62 around the 0.60 threshold: deleveraged 00:05 04-03 (rv10 0.618), RE-leveraged 00:05 04-05 (rv10 0.527), out 00:05 04-10 (0.604), back IN 00:05 04-11 (0.599) -> at 10x on the kill bar. Threshold knife-edge: survival is threshold luck, not skill."
+    },
+    "kill_10x_const_ep11": {
+      "kill_time": "2024-01-12 22:20 (entry rv10 0.353)",
+      "reading": "rv10 0.59-0.63 all week, straddling 0.60: out 00:05 01-09 (0.606), back IN 00:05 01-12 (0.590) -> killed the same night. Knife-edge again."
+    },
+    "kill_10x_const_ep17": {
+      "kill_time": "2025-10-10 21:10 (entry rv10 0.461)",
+      "reading": "rv10 0.24-0.35 the whole week -> every vol rule is fully leveraged into the 2025-10-10 cascade. Pure calm-to-crash gap; undodgeable."
+    }
+  }
+}

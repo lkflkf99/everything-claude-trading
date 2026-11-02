@@ -1,0 +1,35 @@
+== 1. Rebalance formula ==
+  PASS delta=Q/6 rounded to step d=0.1
+  PASS Q reduced by delta Q'=0.5
+  PASS X top-up hand value X=12.006
+  PASS proceeds then reserve draw Xp=11.988 Xr=0.018000000000000682
+  PASS q restored exactly 0.5 with backstop q=0.500000
+  PASS R reduced by draw R=4.981999999999999
+  PASS equity continuity (E' = E - fees) dE=-0.018000 vs -fees=-0.018000
+  PASS unmet flagged when reserve exhausted unmet=0.008000000000000682
+  PASS proceeds-only reading honored 
+== 2. Liquidation check ==
+  PASS LP formula value LP=10772.03
+  PASS LP 1.5/1.005x EP when WB=0.5*notional ratio=1.49254
+  PASS LP ratio consistent with WB level ratio=1.4951
+  PASS LP increases with WB 
+  PASS trigger condition 
+  PASS MMR up -> LP down (short) 
+== 3. Funding timestamp alignment & cashflow ==
+  PASS ms jitter floored to hour 1793577600000
+  PASS floored ts on 00/08/16 grid 
+  PASS short receives positive funding cf=5.0
+  PASS short pays negative funding cf=-5.0
+  PASS funding_cashflow scales with Q 
+== 4. Downside sweep: extract-only, no add ==
+  PASS excess margin hand value w=18.0
+  PASS q restored to 0.5 after sweep q=0.5
+  PASS no sweep at flat price 
+  PASS wallet cap binds (w<=M) w=5.0 bind=True
+  PASS sweep returns only (w, bind) -> no position change possible 
+== 5. Step rounding ==
+  PASS floor_step basic 
+  PASS floor_step exact multiple 
+  PASS rebalance None below step 
+
+ALL 28 CHECKS PASSED

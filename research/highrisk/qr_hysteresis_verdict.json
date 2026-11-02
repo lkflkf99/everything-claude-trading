@@ -1,0 +1,5 @@
+{
+  "variant": "TG1x_hyst2 (2% band, 5th gate variant, Bonferroni alpha 0.01)",
+  "round_trips_plain": 27,
+  "round_trips_hyst": 12
+}

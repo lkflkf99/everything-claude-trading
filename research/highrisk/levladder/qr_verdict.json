@@ -1,0 +1,241 @@
+{
+  "stage": "quant-researcher -> algo-strategist",
+  "date": "2026-11-02",
+  "question": "upgrade shipped TG1x-hyst2 x VB(10,100,5) 1x book to higher leverage?",
+  "harness": {
+    "checks": [
+      {
+        "window": "FULL_2020H2_2026",
+        "metric": "cagr_median",
+        "got": 0.3315788215177422,
+        "want": 0.3315788215177422,
+        "pass": true
+      },
+      {
+        "window": "FULL_2020H2_2026",
+        "metric": "sharpe_median",
+        "got": 0.9309303020444217,
+        "want": 0.9309303020444217,
+        "pass": true
+      },
+      {
+        "window": "FULL_2020H2_2026",
+        "metric": "mdd_median",
+        "got": -0.4744354800815089,
+        "want": -0.4744354800815089,
+        "pass": true
+      },
+      {
+        "window": "OOS_2022_2026",
+        "metric": "cagr_median",
+        "got": 0.22035625919433088,
+        "want": 0.22035625919433088,
+        "pass": true
+      },
+      {
+        "window": "OOS_2022_2026",
+        "metric": "sharpe_median",
+        "got": 0.7701192335641561,
+        "want": 0.7701192335641561,
+        "pass": true
+      },
+      {
+        "window": "OOS_2022_2026",
+        "metric": "mdd_median",
+        "got": -0.38293410280334717,
+        "want": -0.38293410280334717,
+        "pass": true
+      }
+    ],
+    "all_pass": true,
+    "meaning": "shipped_A1_VB_qr_parity through this harness reproduces bt_verdict.json e_bootstrap medians bit-for-bit -> harness and design are identical to the shipped 1x bootstrap."
+  },
+  "sample_sizes": {
+    "FULL_2020H2_2026": 2295,
+    "OOS_2022_2026": 1764
+  },
+  "limitation": "bootstrap resamples close-to-close daily net returns; intraday (5m mark) liquidation paths are outside its geometry. Analyst's 5m sims: no kills <=2x on the realized path, but deep bootstrap resamples at >=2x approach LP distances where intraday kills become plausible (2x LP ~50% adverse from a pyramided EP).",
+  "a_is_the_uplift_real": {
+    "const_1.5_vs_1x": {
+      "dcagr_median_pp_FULL": 11.01,
+      "p_dcagr_le_0_FULL": 0.1785,
+      "dcagr_median_pp_OOS": 7.33,
+      "p_dcagr_le_0_OOS": 0.189,
+      "dmdd_median_pp_FULL": -15.34,
+      "p_dmdd_le_0_FULL": 1.0
+    },
+    "const_2.0_vs_1x": {
+      "dcagr_median_pp_FULL": 17.47,
+      "p_dcagr_le_0_FULL": 0.2455,
+      "dmdd_median_pp_FULL": -27.39,
+      "p_dmdd_le_0_FULL": 1.0
+    },
+    "reading": "CAGR uplift is economically large but statistically UNRESOLVED (~82% of resamples positive at 1.5x, p=0.18; ~76% at 2x, p=0.25). MDD worsening is statistically CERTAIN: p(dMDD<=0)=1.0000 at every rung - all 2000 paired resamples draw down deeper under leverage."
+  },
+  "b_risk_adjusted_truth": {
+    "realized_sharpe_FULL": {
+      "const_1.0": 0.918,
+      "const_1.5": 0.917,
+      "strategist_1.5_rv60": 0.877,
+      "const_2.0": 0.918,
+      "const_3.0": 0.903
+    },
+    "realized_calmar_FULL": {
+      "const_1.0": 0.793,
+      "const_1.5": 0.754,
+      "strategist_1.5_rv60": 0.703,
+      "const_2.0": 0.691,
+      "const_3.0": 0.488
+    },
+    "dsharpe_vs_1x": {
+      "const_1.5": {
+        "median": 0.0005,
+        "p_le_0": 0.4775
+      },
+      "strategist_1.5_rv60": {
+        "median": -0.0442,
+        "p_le_0": 0.748
+      },
+      "const_2.0": {
+        "median": -0.0026,
+        "p_le_0": 0.5775
+      },
+      "const_3.0": {
+        "median": -0.0152,
+        "p_le_0": 0.877
+      }
+    },
+    "reading": "Leverage scales return AND risk symmetrically: realized Sharpe is flat (0.917-0.918 at 1x/1.5x/2x; dSharpe median ~0, p~0.5) and DEGRADES at 3x (0.903) as churn convexity bites. Calmar deteriorates monotonically 0.79 -> 0.75 -> 0.69 -> 0.49. Raw CAGR peaks at 2x (51.6% > 3x 44.9%) while risk-adjusted performance peaks at 1x. Leverage buys raw CAGR only."
+  },
+  "c_selection_bias": {
+    "family_size": 9,
+    "best_variant": "L1.5_rv50_dd20",
+    "best_variant_dmdd_realized_pp": 9.765648430280038,
+    "best_variant_dmdd_boot_median_pp": 6.453908573605665,
+    "p_naive": 0.0835,
+    "p_bonferroni": 0.7515000000000001,
+    "p_holm": 0.6839999999999999,
+    "p_romanowolf_maxstat": 0.01,
+    "E_max_under_null_pp": 1.2487377487631115,
+    "p_at_least_one_variant_improves_uncentred": 0.9835,
+    "pre_registered_strategist_rv60": {
+      "dmdd_median_pp_FULL_vs_const15": 4.69,
+      "p_FULL": 0.077,
+      "dmdd_median_pp_OOS_vs_const15": 2.63,
+      "p_OOS": 0.104,
+      "dcagr_median_pp_FULL_vs_const15": -6.29
+    },
+    "reading": "Even the BEST of the 9 scanned variants fails the naive resampling test (p=0.084) and dies under Bonferroni (0.75)/Holm (0.68). The Romano-Wolf max-statistic says the family's best improvement exceeds what selection alone produces (p=0.010; E[max|null]=+1.3pp vs +9.8pp realized) - so a real but modest MDD effect exists (+6.3pp boot median, CI95 [-2.1,+15.7] crosses 0). The pre-registered rv60 arm (bias-free): +4.7pp median, p=0.077 FULL / 0.104 OOS - NOT significant, costs -6.3pp/yr CAGR. No conditional rule delivers a mandate-rescuing MDD after correction."
+  },
+  "d_mandate_fit": [
+    {
+      "arm": "const_1.0",
+      "realized_cagr_pct": 33.72,
+      "realized_mdd_pct": -42.5,
+      "realized_sharpe": 0.918,
+      "realized_calmar": 0.793,
+      "boot_mdd_median_pct": -49.35,
+      "boot_mdd_ci95_worst_pct": -76.06,
+      "p_mdd_worse_than_50pct": 0.48,
+      "fits_mandate_40_50_realized": true,
+      "min_mdd_tolerance_pct_realized": 43.0,
+      "min_mdd_tolerance_pct_boot_median": 50.0
+    },
+    {
+      "arm": "const_1.5",
+      "realized_cagr_pct": 44.87,
+      "realized_mdd_pct": -59.53,
+      "realized_sharpe": 0.917,
+      "realized_calmar": 0.754,
+      "boot_mdd_median_pct": -65.2,
+      "boot_mdd_ci95_worst_pct": -89.95,
+      "p_mdd_worse_than_50pct": 0.894,
+      "fits_mandate_40_50_realized": false,
+      "min_mdd_tolerance_pct_realized": 60.0,
+      "min_mdd_tolerance_pct_boot_median": 66.0
+    },
+    {
+      "arm": "strategist_1.5_rv60",
+      "realized_cagr_pct": 38.46,
+      "realized_mdd_pct": -54.7,
+      "realized_sharpe": 0.877,
+      "realized_calmar": 0.703,
+      "boot_mdd_median_pct": -60.66,
+      "boot_mdd_ci95_worst_pct": -86.39,
+      "p_mdd_worse_than_50pct": 0.794,
+      "fits_mandate_40_50_realized": false,
+      "min_mdd_tolerance_pct_realized": 55.0,
+      "min_mdd_tolerance_pct_boot_median": 61.0
+    },
+    {
+      "arm": "const_2.0",
+      "realized_cagr_pct": 51.7,
+      "realized_mdd_pct": -74.85,
+      "realized_sharpe": 0.918,
+      "realized_calmar": 0.691,
+      "boot_mdd_median_pct": -78.17,
+      "boot_mdd_ci95_worst_pct": -96.38,
+      "p_mdd_worse_than_50pct": 0.992,
+      "fits_mandate_40_50_realized": false,
+      "min_mdd_tolerance_pct_realized": 75.0,
+      "min_mdd_tolerance_pct_boot_median": 79.0
+    },
+    {
+      "arm": "const_3.0",
+      "realized_cagr_pct": 45.07,
+      "realized_mdd_pct": -92.32,
+      "realized_sharpe": 0.903,
+      "realized_calmar": 0.488,
+      "boot_mdd_median_pct": -93.59,
+      "boot_mdd_ci95_worst_pct": -99.78,
+      "p_mdd_worse_than_50pct": 1.0,
+      "fits_mandate_40_50_realized": false,
+      "min_mdd_tolerance_pct_realized": 93.0,
+      "min_mdd_tolerance_pct_boot_median": 94.0
+    },
+    {
+      "arm": "L1.5_rv50_dd20 (post-hoc best of 9)",
+      "realized_cagr_pct": 38.02,
+      "realized_mdd_pct": -49.77,
+      "realized_sharpe": 0.892,
+      "realized_calmar": 0.764,
+      "boot_mdd_median_pct": -58.37,
+      "boot_mdd_ci95_worst_pct": -84.65,
+      "p_mdd_worse_than_50pct": 0.751,
+      "fits_mandate_40_50_realized": true,
+      "min_mdd_tolerance_pct_realized": 50.0,
+      "min_mdd_tolerance_pct_boot_median": 59.0
+    }
+  ],
+  "e_recommendation": {
+    "arms_to_algo_strategist": [],
+    "conditional_path": {
+      "if_user_raises_tolerance_to_60pct": {
+        "arm": "const_1.5",
+        "frozen_definition": {
+          "signal": "TG1x-hyst2 (QR-frozen, unchanged)",
+          "overlay": "VB(10,100,5) (frozen, unchanged)",
+          "margin": "isolated, dedicated sub-account",
+          "leverage_target": "1.5x equity, constant (no conditional)",
+          "deadband": "+/-5% of 1.5x target (shipped mechanic extended to L)",
+          "execution": "00:05 UTC taker, 5bp/side, full-clip",
+          "liquidation_distance_at_entry": "~66.5% adverse (tier-1 MMR)"
+        },
+        "expected": "FULL CAGR 44.8% (vs 33.7%), realized MDD -59.5%, boot MDD median -65.2% CI95 worst -90.0%, P(MDD<-50%)=0.89; dCAGR +11.0pp p=0.18; Sharpe unchanged 0.917; Calmar 0.75 (vs 0.79)",
+        "requires": "risk-manager amends the 1x hard cap (risk_checks.json) AND user raises MDD tolerance to >=60% (>=66% to cover the bootstrap median)"
+      },
+      "if_tolerance_55pct": "strategist_1.5_rv60 (spec section 8, pre-registered) is the only arm with realized MDD (-54.7%) near the band, but its bootstrap median -60.7% still breaches 55%; offer only with the statistical caveat attached"
+    },
+    "stay_at_1x_if": "mandate stays 40-50%. Shipped book: realized -42.5%, boot median -49.4%, P(breach 50%)=0.48 - the current mandate already tolerates a coin-flip breach probability at 1x",
+    "killed": "3x (realized -92.3%, economic near-ruin, CAGR<2x => dominated), 5x/10x (liquidated on realized path per analyst 5m sims)",
+    "bottom_line": "1.5x improves CAGR but NO arm fits the 40-50% mandate. The uplift is directionally likely (p=0.18) but not statistically proven; the MDD cost is certain (p=1.0). User must raise tolerance to ~60% (1.5x constant) or stay at 1x. There is no statistically honest path to 2x+."
+  },
+  "risk_manager_handoff_flags": [
+    "MDD worsening under leverage is statistically certain (p=1.0000, all 2000 resamples) - this is a deterministic scaling fact, not a risk estimate.",
+    "CAGR uplift at 1.5x: 82% of resamples positive, p=0.18 - same 'economically large, statistically unresolved' signature as the VB overlay itself (bt_verdict flag 2).",
+    "Bootstrap is close-to-close; intraday liquidation channel priced separately by analyst (no kills <=2x realized). At 2x, boot CI95 worst -96.4% approaches pyramided-EP LP distances; if 2x is ever reconsidered, a 5m-path bootstrap is mandatory first.",
+    "Funding regime scaling: 2021-style in-market funding 35%/yr at 1x becomes 52.5%/yr at 1.5x, 70%/yr at 2x (analyst drag table, L-linear). risk_checks.json stress_A (25%/yr in-market) cut OOS CAGR 20.4%->11.1% at 1x; the same stress at 1.5x would compress it toward ~9% (linear extrapolation, not re-simulated).",
+    "Even at shipped 1x, 48% of bootstrap resamples breach the -50% ceiling (book accounting; 42% on QR-parity series). The mandate band itself sits at the edge of the 1x envelope.",
+    "Conditional rules add threshold knife-edge toggles (analyst forensics eps 11/12: survival was threshold luck) for a non-significant +4.7pp MDD median benefit at -6.3pp/yr CAGR cost."
+  ]
+}

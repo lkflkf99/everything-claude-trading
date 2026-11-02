@@ -1,0 +1,8 @@
+peak_date,trough_date,depth_pct,days_to_trough,days_underwater,recovered,rv10_at_peak,rv10_max_in_ep,rv10_crossed_100_before_trough,gate_off_days_in_ep
+2020-09-02,2020-09-08,-18.7,6,49,True,45.0,81.0,False,0
+2020-11-25,2020-11-27,-10.9,2,5,True,56.0,86.0,False,0
+2021-01-10,2021-01-27,-27.4,17,29,True,95.0,125.0,True,0
+2021-02-22,2021-02-28,-22.0,6,19,True,78.0,107.0,True,0
+2021-03-21,2023-03-10,-56.5,719,1072,True,70.0,159.0,True,540
+2024-03-15,2024-10-14,-33.5,213,268,True,46.0,107.0,True,76
+2024-12-21,2025-04-22,-29.0,122,678,False,46.0,129.0,True,324

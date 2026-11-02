@@ -1,0 +1,235 @@
+{
+  "accounting": "stamp-exact: 00:05 UTC exec @ 00:05-bar open, real funding stamps, qty floor 0.001 BTC, E0=10000 USDT, TC=5bp",
+  "windows": {
+    "A1_VB_db5": {
+      "FULL_2020H2_2026": {
+        "cagr": 0.3377782998400076,
+        "sharpe": 0.9195067705212917,
+        "ann_vol": 0.4051106598880473,
+        "mdd": -0.42499256407558894,
+        "total_x": 6.232495378763439,
+        "n": 2295
+      },
+      "OOS_2022_2026": {
+        "cagr": 0.2053420358128848,
+        "sharpe": 0.7226989276776786,
+        "ann_vol": 0.33573146820882843,
+        "mdd": -0.3531087166440142,
+        "total_x": 2.4660171517700316,
+        "n": 1764
+      }
+    },
+    "A1_VB_db0": {
+      "FULL_2020H2_2026": {
+        "cagr": 0.3341225347602568,
+        "sharpe": 0.92142805535033,
+        "ann_vol": 0.3983804460298022,
+        "mdd": -0.41811832020201445,
+        "total_x": 6.126176805601205,
+        "n": 2295
+      },
+      "OOS_2022_2026": {
+        "cagr": 0.2041842312596891,
+        "sharpe": 0.7264448748438248,
+        "ann_vol": 0.33012690621383817,
+        "mdd": -0.3492528951859477,
+        "total_x": 2.4545902820600243,
+        "n": 1764
+      }
+    },
+    "A0_baseline_db5": {
+      "FULL_2020H2_2026": {
+        "cagr": 0.328910513508184,
+        "sharpe": 0.8689497992246612,
+        "ann_vol": 0.4363063902648886,
+        "mdd": -0.575570248704168,
+        "total_x": 5.977238633433339,
+        "n": 2295
+      },
+      "OOS_2022_2026": {
+        "cagr": 0.21772310433901154,
+        "sharpe": 0.7474127148178146,
+        "ann_vol": 0.3404081513377496,
+        "mdd": -0.3412432953501897,
+        "total_x": 2.590869726761802,
+        "n": 1764
+      }
+    },
+    "A0_baseline_db0": {
+      "FULL_2020H2_2026": {
+        "cagr": 0.3296086155635307,
+        "sharpe": 0.8794709338622765,
+        "ann_vol": 0.4272800407371671,
+        "mdd": -0.5632568074335935,
+        "total_x": 5.997009094909733,
+        "n": 2295
+      },
+      "OOS_2022_2026": {
+        "cagr": 0.21758558546234008,
+        "sharpe": 0.7555438591251495,
+        "ann_vol": 0.33356068012949336,
+        "mdd": -0.3347750655785726,
+        "total_x": 2.589455981800029,
+        "n": 1764
+      }
+    }
+  },
+  "boundary_check": {
+    "A0_baseline": {
+      "FULL_2020H2_2026": {
+        "stamp_cagr": 0.328910513508184,
+        "qr_parity_cagr": 0.32817981065734814,
+        "dcagr_bp_per_yr": 7.307028508358737,
+        "stamp_mdd": -0.575570248704168,
+        "qr_parity_mdd": -0.5653390136386025,
+        "stamp_sharpe": 0.8689497992246612,
+        "qr_parity_sharpe": 0.8757814922475626
+      },
+      "OOS_2022_2026": {
+        "stamp_cagr": 0.21772310433901154,
+        "qr_parity_cagr": 0.2173731011105129,
+        "dcagr_bp_per_yr": 3.5000322849865206,
+        "stamp_mdd": -0.3412432953501897,
+        "qr_parity_mdd": -0.3348359593292878,
+        "stamp_sharpe": 0.7474127148178146,
+        "qr_parity_sharpe": 0.7543059233925904
+      },
+      "verdict": "OK"
+    },
+    "A1_VB": {
+      "FULL_2020H2_2026": {
+        "stamp_cagr": 0.3377782998400076,
+        "qr_parity_cagr": 0.3424652272406128,
+        "dcagr_bp_per_yr": -46.869274006051675,
+        "stamp_mdd": -0.42499256407558894,
+        "qr_parity_mdd": -0.3885289732747148,
+        "stamp_sharpe": 0.9195067705212917,
+        "qr_parity_sharpe": 0.9361820770186121
+      },
+      "OOS_2022_2026": {
+        "stamp_cagr": 0.2053420358128848,
+        "qr_parity_cagr": 0.20428921263827693,
+        "dcagr_bp_per_yr": 10.528231746078642,
+        "stamp_mdd": -0.3531087166440142,
+        "qr_parity_mdd": -0.34809052288039455,
+        "stamp_sharpe": 0.7226989276776786,
+        "qr_parity_sharpe": 0.7260907144403816
+      },
+      "verdict": "BOUNDARY BUG - INVESTIGATE"
+    }
+  },
+  "deadband_check": {
+    "A0_baseline": {
+      "FULL_2020H2_2026": {
+        "cagr_db5": 0.328910513508184,
+        "cagr_db0": 0.3296086155635307,
+        "dcagr_bp_per_yr": -6.981020553467054
+      },
+      "OOS_2022_2026": {
+        "cagr_db5": 0.21772310433901154,
+        "cagr_db0": 0.21758558546234008,
+        "dcagr_bp_per_yr": 1.3751887667146079
+      },
+      "fees_usdt_db5": 466.0726308200001,
+      "fees_usdt_db0": 465.4239561850004,
+      "n_trades_db5": 31,
+      "n_trades_db0": 460
+    },
+    "A1_VB": {
+      "FULL_2020H2_2026": {
+        "cagr_db5": 0.3377782998400076,
+        "cagr_db0": 0.3341225347602568,
+        "dcagr_bp_per_yr": 36.5576507975085
+      },
+      "OOS_2022_2026": {
+        "cagr_db5": 0.2053420358128848,
+        "cagr_db0": 0.2041842312596891,
+        "dcagr_bp_per_yr": 11.57804553195696
+      },
+      "fees_usdt_db5": 748.1148132500002,
+      "fees_usdt_db0": 732.4910647449993,
+      "n_trades_db5": 40,
+      "n_trades_db0": 419
+    }
+  },
+  "funding_per_year": {
+    "A0_baseline": {
+      "2020": {
+        "funding_usdt_signed": -1489.07,
+        "pct_of_soy_equity": -14.89
+      },
+      "2021": {
+        "funding_usdt_signed": -12290.63,
+        "pct_of_soy_equity": -41.77
+      },
+      "2023": {
+        "funding_usdt_signed": -2574.84,
+        "pct_of_soy_equity": -11.16
+      },
+      "2024": {
+        "funding_usdt_signed": -7033.16,
+        "pct_of_soy_equity": -15.99
+      },
+      "2025": {
+        "funding_usdt_signed": -2582.94,
+        "pct_of_soy_equity": -3.98
+      },
+      "2026": {
+        "funding_usdt_signed": -713.42,
+        "pct_of_soy_equity": -1.25
+      }
+    },
+    "A1_VB": {
+      "2020": {
+        "funding_usdt_signed": -1489.07,
+        "pct_of_soy_equity": -14.89
+      },
+      "2021": {
+        "funding_usdt_signed": -7284.69,
+        "pct_of_soy_equity": -24.76
+      },
+      "2023": {
+        "funding_usdt_signed": -2695.16,
+        "pct_of_soy_equity": -10.66
+      },
+      "2024": {
+        "funding_usdt_signed": -6888.99,
+        "pct_of_soy_equity": -14.75
+      },
+      "2025": {
+        "funding_usdt_signed": -2694.4,
+        "pct_of_soy_equity": -3.98
+      },
+      "2026": {
+        "funding_usdt_signed": -743.6,
+        "pct_of_soy_equity": -1.25
+      }
+    }
+  },
+  "trade_stats": {
+    "A1_VB_db5": {
+      "n_trades": 40,
+      "total_fees_usdt": 748.1148132500002,
+      "missing_p05_days": 0,
+      "final_equity_usdt": 62312.28066004941
+    },
+    "A1_VB_db0": {
+      "n_trades": 419,
+      "total_fees_usdt": 732.4910647449993,
+      "missing_p05_days": 0,
+      "final_equity_usdt": 61249.453454791845
+    },
+    "A0_baseline_db5": {
+      "n_trades": 31,
+      "total_fees_usdt": 466.0726308200001,
+      "missing_p05_days": 0,
+      "final_equity_usdt": 59760.22761414164
+    },
+    "A0_baseline_db0": {
+      "n_trades": 460,
+      "total_fees_usdt": 465.4239561850004,
+      "missing_p05_days": 0,
+      "final_equity_usdt": 59958.04134562498
+    }
+  }
+}

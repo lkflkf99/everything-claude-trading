@@ -1,0 +1,42 @@
+{
+  "L1_panel_rows": {
+    "mine": 2496,
+    "qr": 2496,
+    "first": "2019-12-31",
+    "last": "2026-10-31"
+  },
+  "L1_close_max_abs_diff": 0.0,
+  "L1_fund_sum_max_abs_diff": 8.673617379884035e-19,
+  "L1_ret1_max_abs_diff": 4.995496836503188e-09,
+  "L2_close_4h_vs_5m_max_abs_diff_usd": 0.0,
+  "L2_close_4h_vs_5m_max_rel_diff_bp": 0.0,
+  "L3_gate_state_mismatch_days": 0,
+  "L3_w_held_max_abs_diff": 0.0,
+  "L3_ret_max_abs_diff": 4.993673023701017e-09,
+  "L3_windows": [
+    {
+      "window": "FULL_2020H2_2026",
+      "cagr_mine": 0.32817981067563284,
+      "cagr_qr": 0.3281798015828119,
+      "dcagr_bp": 9.092820940637125e-05,
+      "sharpe_mine": 0.8757814922620312,
+      "sharpe_qr": 0.8757814753304232,
+      "mdd_mine": -0.5653390135814198,
+      "mdd_qr": -0.5653390333439463,
+      "n": 2295
+    },
+    {
+      "window": "OOS_2022_2026",
+      "cagr_mine": 0.2173731010913258,
+      "cagr_qr": 0.21737311393764647,
+      "dcagr_bp": -0.00012846320673887135,
+      "sharpe_mine": 0.7543059233303355,
+      "sharpe_qr": 0.7543059533687226,
+      "mdd_mine": -0.3348359591625296,
+      "mdd_qr": -0.334835975859069,
+      "n": 1764
+    }
+  ],
+  "PARITY_VERDICT": "PASS",
+  "verdict_note": "mandate: |dCAGR|<=1bp/yr; observed ~1e-4 bp. Daily ret diff 5e-9 = QR file %.8f quantization; gate states identical."
+}

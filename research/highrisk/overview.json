@@ -1,0 +1,18 @@
+{
+  "span_start": "2019-12-31 00:00:00",
+  "span_end": "2026-10-31 20:00:00",
+  "n_4h_bars": 14976,
+  "n_days": 2496,
+  "price_first": 7232.69,
+  "price_last": 77522.6,
+  "total_return_x": 10.72,
+  "cagr_pct": 41.5,
+  "ann_vol_4h_pct": 58.9,
+  "ann_vol_daily_pct": 60.1,
+  "daily_ret_mean_bp": 14.59,
+  "daily_ret_std_pct": 3.15,
+  "daily_sharpe_rf0": 0.89,
+  "daily_skew": -0.56,
+  "daily_kurtosis_excess": 13.8,
+  "pct_up_days": 51.1
+}

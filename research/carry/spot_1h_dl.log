@@ -1,0 +1,135 @@
+  monthly 2019-12 rows=744 total=744 sha256=ok
+  monthly 2020-01 rows=744 total=1488 sha256=ok
+  monthly 2020-02 rows=690 total=2178 sha256=ok
+  monthly 2020-03 rows=743 total=2921 sha256=ok
+  monthly 2020-04 rows=718 total=3639 sha256=ok
+  monthly 2020-05 rows=744 total=4383 sha256=ok
+  monthly 2020-06 rows=717 total=5100 sha256=ok
+  monthly 2020-07 rows=744 total=5844 sha256=ok
+  monthly 2020-08 rows=744 total=6588 sha256=ok
+  monthly 2020-09 rows=720 total=7308 sha256=ok
+  monthly 2020-10 rows=744 total=8052 sha256=ok
+  monthly 2020-11 rows=719 total=8771 sha256=ok
+  monthly 2020-12 rows=740 total=9511 sha256=ok
+  monthly 2021-01 rows=744 total=10255 sha256=ok
+  monthly 2021-02 rows=671 total=10926 sha256=ok
+  monthly 2021-03 rows=743 total=11669 sha256=ok
+  monthly 2021-04 rows=715 total=12384 sha256=ok
+  monthly 2021-05 rows=744 total=13128 sha256=ok
+  monthly 2021-06 rows=720 total=13848 sha256=ok
+  monthly 2021-07 rows=744 total=14592 sha256=ok
+  monthly 2021-08 rows=740 total=15332 sha256=ok
+  monthly 2021-09 rows=718 total=16050 sha256=ok
+  monthly 2021-10 rows=744 total=16794 sha256=ok
+  monthly 2021-11 rows=720 total=17514 sha256=ok
+  monthly 2021-12 rows=744 total=18258 sha256=ok
+  monthly 2022-01 rows=744 total=19002 sha256=ok
+  monthly 2022-02 rows=672 total=19674 sha256=ok
+  monthly 2022-03 rows=744 total=20418 sha256=ok
+  monthly 2022-04 rows=720 total=21138 sha256=ok
+  monthly 2022-05 rows=744 total=21882 sha256=ok
+  monthly 2022-06 rows=720 total=22602 sha256=ok
+  monthly 2022-07 rows=744 total=23346 sha256=ok
+  monthly 2022-08 rows=744 total=24090 sha256=ok
+  monthly 2022-09 rows=720 total=24810 sha256=ok
+  monthly 2022-10 rows=744 total=25554 sha256=ok
+  monthly 2022-11 rows=720 total=26274 sha256=ok
+  monthly 2022-12 rows=744 total=27018 sha256=ok
+  monthly 2023-01 rows=744 total=27762 sha256=ok
+  monthly 2023-02 rows=672 total=28434 sha256=ok
+  monthly 2023-03 rows=743 total=29177 sha256=ok
+  monthly 2023-04 rows=720 total=29897 sha256=ok
+  monthly 2023-05 rows=744 total=30641 sha256=ok
+  monthly 2023-06 rows=720 total=31361 sha256=ok
+  monthly 2023-07 rows=744 total=32105 sha256=ok
+  monthly 2023-08 rows=744 total=32849 sha256=ok
+  monthly 2023-09 rows=720 total=33569 sha256=ok
+  monthly 2023-10 rows=744 total=34313 sha256=ok
+  monthly 2023-11 rows=720 total=35033 sha256=ok
+  monthly 2023-12 rows=744 total=35777 sha256=ok
+  monthly 2024-01 rows=744 total=36521 sha256=ok
+  monthly 2024-02 rows=696 total=37217 sha256=ok
+  monthly 2024-03 rows=744 total=37961 sha256=ok
+  monthly 2024-04 rows=720 total=38681 sha256=ok
+  monthly 2024-05 rows=744 total=39425 sha256=ok
+  monthly 2024-06 rows=720 total=40145 sha256=ok
+  monthly 2024-07 rows=744 total=40889 sha256=ok
+  monthly 2024-08 rows=744 total=41633 sha256=ok
+  monthly 2024-09 rows=720 total=42353 sha256=ok
+  monthly 2024-10 rows=744 total=43097 sha256=ok
+  monthly 2024-11 rows=720 total=43817 sha256=ok
+  monthly 2024-12 rows=744 total=44561 sha256=ok
+  monthly 2025-01 rows=744 total=45305 sha256=ok
+  monthly 2025-02 rows=672 total=45977 sha256=ok
+  monthly 2025-03 rows=744 total=46721 sha256=ok
+  monthly 2025-04 rows=720 total=47441 sha256=ok
+  monthly 2025-05 rows=744 total=48185 sha256=ok
+  monthly 2025-06 rows=720 total=48905 sha256=ok
+  monthly 2025-07 rows=744 total=49649 sha256=ok
+  monthly 2025-08 rows=744 total=50393 sha256=ok
+  monthly 2025-09 rows=720 total=51113 sha256=ok
+  monthly 2025-10 rows=744 total=51857 sha256=ok
+  monthly 2025-11 rows=720 total=52577 sha256=ok
+  monthly 2025-12 rows=744 total=53321 sha256=ok
+  monthly 2026-01 rows=744 total=54065 sha256=ok
+  monthly 2026-02 rows=672 total=54737 sha256=ok
+  monthly 2026-03 rows=744 total=55481 sha256=ok
+  monthly 2026-04 rows=720 total=56201 sha256=ok
+  monthly 2026-05 rows=744 total=56945 sha256=ok
+  monthly 2026-06 rows=720 total=57665 sha256=ok
+  monthly 2026-07 rows=744 total=58409 sha256=ok
+  monthly 2026-08 rows=744 total=59153 sha256=ok
+  monthly 2026-09 rows=720 total=59873 sha256=ok
+  monthly 2026-10 404, will try daily files
+  daily 2026-10-01 rows=24 total=59897 sha256=ok
+  daily 2026-10-02 rows=24 total=59921 sha256=ok
+  daily 2026-10-03 rows=24 total=59945 sha256=ok
+  daily 2026-10-04 rows=24 total=59969 sha256=ok
+  daily 2026-10-05 rows=24 total=59993 sha256=ok
+  daily 2026-10-06 rows=24 total=60017 sha256=ok
+  daily 2026-10-07 rows=24 total=60041 sha256=ok
+  daily 2026-10-08 rows=24 total=60065 sha256=ok
+  daily 2026-10-09 rows=24 total=60089 sha256=ok
+  daily 2026-10-10 rows=24 total=60113 sha256=ok
+  daily 2026-10-11 rows=24 total=60137 sha256=ok
+  daily 2026-10-12 rows=24 total=60161 sha256=ok
+  daily 2026-10-13 rows=24 total=60185 sha256=ok
+  daily 2026-10-14 rows=24 total=60209 sha256=ok
+  daily 2026-10-15 rows=24 total=60233 sha256=ok
+  daily 2026-10-16 rows=24 total=60257 sha256=ok
+  daily 2026-10-17 rows=24 total=60281 sha256=ok
+  daily 2026-10-18 rows=24 total=60305 sha256=ok
+  daily 2026-10-19 rows=24 total=60329 sha256=ok
+  daily 2026-10-20 rows=24 total=60353 sha256=ok
+  daily 2026-10-21 rows=24 total=60377 sha256=ok
+  daily 2026-10-22 rows=24 total=60401 sha256=ok
+  daily 2026-10-23 rows=24 total=60425 sha256=ok
+  daily 2026-10-24 rows=24 total=60449 sha256=ok
+  daily 2026-10-25 rows=24 total=60473 sha256=ok
+  daily 2026-10-26 rows=24 total=60497 sha256=ok
+  daily 2026-10-27 rows=24 total=60521 sha256=ok
+  daily 2026-10-28 rows=24 total=60545 sha256=ok
+  daily 2026-10-29 rows=24 total=60569 sha256=ok
+  daily 2026-10-30 rows=24 total=60593 sha256=ok
+  daily 2026-10-31 rows=24 total=60617 sha256=ok
+  daily 2026-11-01 rows=24 total=60641 sha256=ok
+GAPS: 15 discontinuities
+  2020-02-09 01:00 UTC -> 2020-02-09 03:00 UTC missing~1 bars
+  2020-02-19 11:00 UTC -> 2020-02-19 17:00 UTC missing~5 bars
+  2020-03-04 09:00 UTC -> 2020-03-04 11:00 UTC missing~1 bars
+  2020-04-25 01:00 UTC -> 2020-04-25 04:00 UTC missing~2 bars
+  2020-06-28 01:00 UTC -> 2020-06-28 05:00 UTC missing~3 bars
+  2020-11-30 05:00 UTC -> 2020-11-30 07:00 UTC missing~1 bars
+  2020-12-21 14:00 UTC -> 2020-12-21 18:00 UTC missing~3 bars
+  2020-12-25 01:00 UTC -> 2020-12-25 03:00 UTC missing~1 bars
+  2021-02-11 03:00 UTC -> 2021-02-11 05:00 UTC missing~1 bars
+  2021-03-06 01:00 UTC -> 2021-03-06 03:00 UTC missing~1 bars
+  2021-04-20 01:00 UTC -> 2021-04-20 04:00 UTC missing~2 bars
+  2021-04-25 04:00 UTC -> 2021-04-25 08:00 UTC missing~3 bars
+  2021-08-13 01:00 UTC -> 2021-08-13 06:00 UTC missing~4 bars
+  2021-09-29 06:00 UTC -> 2021-09-29 09:00 UTC missing~2 bars
+  2023-03-24 12:00 UTC -> 2023-03-24 14:00 UTC missing~1 bars
+WROTE /Users/kelvin.k.lam/everything-claude-trading/research/data/binance_spot_btcusdt_1h.csv rows=60641
+WROTE /Users/kelvin.k.lam/everything-claude-trading/research/data/binance_spot_btcusdt_4h.csv rows=15148
+COVERAGE 2019-12-01 00:00 UTC -> 2026-11-01 23:00 UTC
+CHECKSUM_MISMATCHES 0 []

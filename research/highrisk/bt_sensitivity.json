@@ -1,0 +1,17 @@
+{
+  "vb_surface_flatness": {
+    "full_mdd_span_pp": 22.06,
+    "full_cagr_span_pp": 13.23,
+    "note": "flat surface reproduced iff span small across X=80..120 (all k)"
+  },
+  "ts_tau25_cliff": {
+    "tau25_full_cagr": 0.3392,
+    "tau30_full_cagr": 0.3695,
+    "cliff_pp": 3.03,
+    "tau25_first_fire": {
+      "fire": "2021-01-27",
+      "close": 30381.0,
+      "rearm": "2021-08-09"
+    }
+  }
+}

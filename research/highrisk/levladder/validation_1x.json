@@ -1,0 +1,71 @@
+{
+  "targets": {
+    "n_episodes": {
+      "got": 18,
+      "want": 18,
+      "pass": true
+    },
+    "n_trades_1x": {
+      "got": 40,
+      "want": 40,
+      "pass": true
+    },
+    "FULL_cagr": {
+      "got": 33.67,
+      "want": 33.78,
+      "pass": true
+    },
+    "FULL_mdd": {
+      "got": -42.5,
+      "want": -42.5,
+      "pass": true
+    },
+    "OOS_cagr": {
+      "got": 20.48,
+      "want": 20.53,
+      "pass": true
+    },
+    "OOS_mdd": {
+      "got": -35.31,
+      "want": -35.31,
+      "pass": true
+    },
+    "fund_2021_pct": {
+      "got": -24.76,
+      "want": -24.76,
+      "pass": true
+    },
+    "fund_2024_pct": {
+      "got": -14.75,
+      "want": -14.75,
+      "pass": true
+    },
+    "fund_2026_pct": {
+      "got": -1.24,
+      "want": -1.25,
+      "pass": true
+    },
+    "episode_days_match": {
+      "got": true,
+      "pass": true
+    }
+  },
+  "all_pass": true,
+  "flags_1x": [
+    "no_p05@2026-10-28",
+    "trade_proxy@a@2023-02-24",
+    "trade_proxy@a@2026-10-29",
+    "trade_proxy@e@2023-02-24",
+    "trade_proxy@e@2026-10-29",
+    "trade_proxy@m@2020-12-17",
+    "trade_proxy@m@2023-02-24",
+    "trade_proxy@m@2023-11-10",
+    "trade_proxy@m@2026-10-29",
+    "trade_proxy@pre@2023-02-24",
+    "trade_proxy@pre@2026-10-29",
+    "unobserved@a@2026-10-28",
+    "unobserved@e@2026-10-28",
+    "unobserved@m@2026-10-28"
+  ],
+  "note": "1x arm re-simulates deadband rebalances; tolerance absorbs mark-vs-trade stamp pricing and rebalance-day fill differences."
+}

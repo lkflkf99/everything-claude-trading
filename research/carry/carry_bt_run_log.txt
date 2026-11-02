@@ -1,0 +1,164 @@
+========================================================================================
+RUN A  spec-literal down-sweep (q=0.5), reserve backstop ON, terminate at 1st liq
+========================================================================================
+{
+  "terminated": true,
+  "termination": {
+    "t_liq": "2020-04-02 17:00:00+00:00",
+    "LP": 7131.91,
+    "Q": 0.6,
+    "M_before": -43.94,
+    "R_before": 6085.59,
+    "spot_px": 7083.96,
+    "margin_residual": 0.0,
+    "E_terminal": 10331.72,
+    "note": "short force-closed at LP; maintenance margin consumed by clearance; spot leg sold at containing-hour close (taker)"
+  },
+  "years": 0.257,
+  "pnl": 331.72,
+  "ann_on_N": 0.20673,
+  "t_nw10": 1.81,
+  "n_rebalances": 2,
+  "extract_binds": 1
+}
+
+========================================================================================
+RUN B  proposed minimal fix (carry-only sweep + reserve backstop) — 5 configs
+========================================================================================
+                     ann_on_N_%  ann_on_C_%    pnl_$  sharpe  maxDD_%  t_NW10  n_rebal  rebal_cost_$  liq_events  min_liq_dist_%  unmet
+config                                                                                                                                 
+base_t20_close_high      10.825       6.765  4628.31   8.250   -0.694    8.63       15         28.42           0           20.92      0
+theta15                   6.265       3.915  2678.57   7.146   -0.697    7.95       20         23.90           0           22.13      0
+theta25                  14.970       9.356  6400.58   8.542   -0.830    8.77       12         29.54           0            3.04      7
+exec_next_open           10.824       6.765  4628.01   8.248   -0.694    8.62       15         28.42           0           20.92      0
+scan_close               11.741       7.338  5020.02   8.332   -0.830    8.76       14         28.15           0           18.01      0
+
+--- entry/exit (base) ---
+{
+  "entry": {
+    "t0": "2019-12-31 00:00:00+00:00",
+    "P_p0": 7240.8,
+    "P_s0": 7246.0,
+    "Q": 0.863,
+    "N_realized": 6248.81,
+    "M0": 3125.0,
+    "R0": 612.32,
+    "fee_entry": 9.38
+  },
+  "exit": {
+    "t_end": "2026-10-31 23:55:00+00:00",
+    "perp_close": 77522.6,
+    "spot_close": 77582.02,
+    "Q_end": 0.059,
+    "fee_exit": 6.86
+  }
+}
+
+--- funding & flows (base) ---
+{
+  "funding_total": 4693.18,
+  "funding_pos": 4956.95,
+  "funding_neg": -263.77,
+  "n_funding_events": 7490,
+  "n_extractions": 5430,
+  "extract_total": 4652.17,
+  "n_reserve_draws": 10,
+  "reserve_draw_total": 1110.21,
+  "fee_entry": 9.38,
+  "fee_exit": 6.86,
+  "rebal_costs": 28.42,
+  "mark_src": {
+    "csv": 3294,
+    "mark5": 4181,
+    "perp5": 24,
+    "missing": 331
+  },
+  "funding_grid_ok": true,
+  "spot4h_missing": 20,
+  "n_gap_bars_proxy": 2894
+}
+
+--- circuit breaker & negative stretches (base) ---
+{
+  "n_cb_triggers": 0,
+  "cb_triggers": [],
+  "n_neg_stretches": 497,
+  "neg_stretches_top5": [
+    {
+      "start": "2020-03-12 16:00:00+00:00",
+      "end": "2020-03-20 08:00:00+00:00",
+      "n_events": 24,
+      "days": 8.0,
+      "cum_bp": -103.72
+    },
+    {
+      "start": "2020-03-28 00:00:00+00:00",
+      "end": "2020-04-02 00:00:00+00:00",
+      "n_events": 16,
+      "days": 5.33,
+      "cum_bp": -40.73
+    },
+    {
+      "start": "2022-11-09 16:00:00+00:00",
+      "end": "2022-11-11 16:00:00+00:00",
+      "n_events": 7,
+      "days": 2.33,
+      "cum_bp": -32.05
+    },
+    {
+      "start": "2021-07-19 16:00:00+00:00",
+      "end": "2021-07-22 00:00:00+00:00",
+      "n_events": 8,
+      "days": 2.67,
+      "cum_bp": -15.9
+    },
+    {
+      "start": "2021-07-23 08:00:00+00:00",
+      "end": "2021-07-26 00:00:00+00:00",
+      "n_events": 9,
+      "days": 3.0,
+      "cum_bp": -15.66
+    }
+  ]
+}
+
+--- liquidation monitor (base) ---
+{
+  "n_liq_mark": 0,
+  "n_liq_gap_proxy": 0,
+  "min_liq_dist": 0.20918406921041766,
+  "min_liq_date": "2020-12-26 21:45:00+00:00",
+  "min_liq_proxy": false,
+  "stress_min_liq_dist": {
+    "covid_2020": 0.5491,
+    "bull_2021": 0.2092,
+    "bear_2022": 1.073
+  }
+}
+
+--- per-year PnL (base) ---
+          pnl  years  ann_on_N  ann_on_C  n_rebal  rebal_cost  funding
+year                                                                  
+2020  1099.25  1.000  0.175880  0.109925      7.0       13.14  1130.84
+2021  1958.68  0.997  0.314250  0.196406      5.0        9.59  1976.44
+2022   124.43  0.997  0.019964  0.012478      0.0        0.00   125.77
+2023   240.28  0.997  0.038550  0.024094      0.0        0.00   243.93
+2024   753.34  1.000  0.120535  0.075334      2.0        3.78   750.82
+2025   338.92  0.997  0.054377  0.033985      1.0        1.91   338.90
+2026   109.08  0.830  0.021024  0.013140      0.0        0.00   114.74
+
+--- segments (base) ---
+pre_breakpoint: {"pnl": 4448.45, "years": 5.718, "ann_on_N": 0.124479914356401, "ann_on_C": 0.07779994647275063, "n_rebal": 15, "rebal_cost": 28.42, "funding": 4498.81}
+post_breakpoint: {"pnl": 187.4, "years": 1.118, "ann_on_N": 0.026823622723100713, "ann_on_C": 0.016764764201937947, "n_rebal": 0, "rebal_cost": 0.0, "funding": 194.09}
+covid_2020: {"pnl": 44.67, "years": 0.11, "ann_on_N": 0.06521407672101523, "ann_on_C": 0.04075879795063452, "n_rebal": 0, "rebal_cost": 0.0, "funding": 39.32}
+bull_2021: {"pnl": 1662.92, "years": 0.578, "ann_on_N": 0.46025744923050954, "ann_on_C": 0.2876609057690685, "n_rebal": 8, "rebal_cost": 15.23, "funding": 1693.92}
+bear_2022: {"pnl": 124.43, "years": 0.997, "ann_on_N": 0.01996404799726176, "ann_on_C": 0.0124775299982886, "n_rebal": 0, "rebal_cost": 0.0, "funding": 125.77}
+
+--- per-year / segments across robustness configs (ann_on_N) ---
+base_t20_close_high      post-bp ann_on_N=2.682%  pnl=187.4$  ann_full=10.825%  minDD=-0.694%  liq=0  minDist=20.92%
+theta15                  post-bp ann_on_N=1.137%  pnl=79.41$  ann_full=6.265%  minDD=-0.697%  liq=0  minDist=22.13%
+theta25                  post-bp ann_on_N=4.501%  pnl=314.45$  ann_full=14.970%  minDD=-0.830%  liq=0  minDist=3.04%
+exec_next_open           post-bp ann_on_N=2.682%  pnl=187.4$  ann_full=10.824%  minDD=-0.694%  liq=0  minDist=20.92%
+scan_close               post-bp ann_on_N=3.182%  pnl=222.34$  ann_full=11.741%  minDD=-0.830%  liq=0  minDist=18.01%
+
+QR consistency: post-bp net ann on N = 2.682% vs QR forward 3.1% CI[2.0, 4.2] -> INSIDE

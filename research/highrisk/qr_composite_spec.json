@@ -1,0 +1,28 @@
+{
+  "name": "BTC perp 200d-gated long (TG1x) / vol-targeted variant (VT_TG)",
+  "universe": "Binance USDT-margined BTCUSDT perpetual",
+  "signal": {
+    "close": "daily close UTC of perp",
+    "sma200": "SMA200(t) = mean(close[t-199..t]) of daily closes",
+    "gate(t)": "1 if close(t) > sma200(t) else 0",
+    "rv30(t)": "std(daily simple returns t-29..t) * sqrt(365)",
+    "vol_scale(t)": "min(2.0, 0.50 / rv30(t))"
+  },
+  "position": {
+    "TG1x": "w(t+1) = gate(t)",
+    "VT_TG": "w(t+1) = min(2.0, vol_scale(t) * gate(t))  [cap binds first: never > 2x]",
+    "rebalance": "daily at 00:00 UTC (trade at close of day t = open of day t+1)"
+  },
+  "costs_funding": {
+    "taker_fee": "5bp per side on |change in notional weight| (incl. drift rebalance)",
+    "funding": "w * sum(8h funding rates that day); long pays when positive, receives when negative",
+    "expected_funding_drag": "TG1x: only in-market ~50-60% of days; drag = avg_w * ann funding (~5.7%/yr OOS for VT_TG, ~similar for TG1x when in-market)"
+  },
+  "frozen_params": {
+    "sma_window": 200,
+    "vol_target": 0.5,
+    "vol_window": 30,
+    "lev_cap": 2.0
+  },
+  "no_other_overlays": "funding tilt and taker-flow overlay tested and REJECTED (see qr_funding_*, qr_taker_*)"
+}
